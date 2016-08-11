@@ -128,6 +128,7 @@ type
     N12: TMenuItem;
     N13: TMenuItem;
     procedure ActionHelpAboutExecute(Sender: TObject);
+    procedure ActionSearchFindInFilesExecute(Sender: TObject);
   private
   public
   end;
@@ -138,13 +139,23 @@ var
 implementation
 
 uses
-  Hope.About;
+  Hope.About, Hope.FindInFiles;
 
 {$R *.dfm}
 
 procedure TFormMain.ActionHelpAboutExecute(Sender: TObject);
 begin
   with TFormAbout.Create(Self) do
+  try
+    Show;
+  finally
+    Free;
+  end;
+end;
+
+procedure TFormMain.ActionSearchFindInFilesExecute(Sender: TObject);
+begin
+  with TFormFindInFiles.Create(Self) do
   try
     Show;
   finally

@@ -4,7 +4,8 @@ uses
   Vcl.Forms,
   Hope.Main in 'Forms\Hope.Main.pas' {FormMain},
   Hope.Common in 'DataModules\Hope.Common.pas' {DataModuleCommon: TDataModule},
-  Hope.About in 'Forms\Hope.About.pas' {FormAbout};
+  Hope.About in 'Forms\Hope.About.pas' {FormAbout},
+  Hope.FindInFiles in 'Forms\Hope.FindInFiles.pas' {FormFindInFiles};
 
 {$R *.res}
 

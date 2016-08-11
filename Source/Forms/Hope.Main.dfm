@@ -273,6 +273,7 @@ object FormMain: TFormMain
       Category = 'Search'
       Caption = '&Find in files...'
       ShortCut = 24646
+      OnExecute = ActionSearchFindInFilesExecute
     end
     object ActionSearchFindNext: TSearchFindNext
       Category = 'Search'
