@@ -43,6 +43,9 @@ object FormMain: TFormMain
       object MenuItemEditUndo: TMenuItem
         Action = ActionEditUndo
       end
+      object MenuItemEditRedo: TMenuItem
+        Action = ActionEditRedo
+      end
       object N3: TMenuItem
         Caption = '-'
       end
@@ -67,6 +70,15 @@ object FormMain: TFormMain
     end
     object MenuItemSearch: TMenuItem
       Caption = '&Search'
+      object MenuItemEditSearchFind: TMenuItem
+        Action = ActionSearchFind
+      end
+      object MenuItemEditSearchFindNext: TMenuItem
+        Action = ActionSearchFindNext
+      end
+      object MenuItemEditSearchReplace: TMenuItem
+        Action = ActionSearchReplace
+      end
     end
     object MenuItemView: TMenuItem
       Caption = '&View'
@@ -102,15 +114,6 @@ object FormMain: TFormMain
       Caption = 'Save &As...'
       Hint = 'Save As|Saves the active file with a new name'
       ImageIndex = 30
-    end
-    object ActionFileRun: TFileRun
-      Category = 'File'
-      Browse = False
-      BrowseDlg.Title = 'Run'
-      Caption = '&Run...'
-      Hint = 'Run|Runs an application'
-      Operation = 'open'
-      ShowCmd = scShowNormal
     end
     object ActionFileExit: TFileExit
       Category = 'File'
@@ -193,5 +196,17 @@ object FormMain: TFormMain
       Category = 'Help'
       Caption = 'About'
     end
+  end
+  object DockServer: TJvDockServer
+    LeftSplitterStyle.Cursor = crHSplit
+    LeftSplitterStyle.ParentColor = False
+    RightSplitterStyle.Cursor = crHSplit
+    RightSplitterStyle.ParentColor = False
+    TopSplitterStyle.Cursor = crVSplit
+    TopSplitterStyle.ParentColor = False
+    BottomSplitterStyle.Cursor = crVSplit
+    BottomSplitterStyle.ParentColor = False
+    Left = 264
+    Top = 104
   end
 end
