@@ -1,0 +1,18 @@
+[submodule "Submodules/Virtual-TreeView"]
+	path = Submodules/Virtual-TreeView
+	url = git@github.com:Virtual-TreeView/Virtual-TreeView.git
+[submodule "Submodules/SynEdit"]
+	path = Submodules/SynEdit
+	url = git@github.com:SynEdit/SynEdit.git
+[submodule "Submodules/dwscript"]
+	path = Submodules/dwscript
+	url = git@bitbucket.org:egrange/dwscript.git
+[submodule "Submodules/FastMM4"]
+	path = Submodules/FastMM4
+	url = git@github.com:pleriche/FastMM4.git
+[submodule "Submodules/mORMot"]
+	path = Submodules/mORMot
+	url = git@github.com:synopse/mORMot.git
+[submodule "Submodules/dcef3"]
+	path = Submodules/dcef3
+	url = git@github.com:hgourvest/dcef3.git
