@@ -7,7 +7,7 @@ uses
   JvDockControlForm, JvDockDelphiStyle;
 
 type
-  TDataModule1 = class(TDataModule)
+  TDataModuleCommon = class(TDataModule)
     JvDockDelphiStyle: TJvDockDelphiStyle;
   private
     { Private-Deklarationen }
@@ -16,7 +16,7 @@ type
   end;
 
 var
-  DataModule1: TDataModule1;
+  DataModuleCommon: TDataModuleCommon;
 
 implementation
 
