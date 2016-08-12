@@ -20,7 +20,25 @@ object FormMain: TFormMain
     object MenuItemFile: TMenuItem
       Caption = '&File'
       object MenuItemFileNew: TMenuItem
-        Caption = 'New...'
+        Caption = 'New'
+        object MenuItemFileNewProject: TMenuItem
+          Caption = '&Project'
+        end
+        object N1: TMenuItem
+          Caption = '-'
+        end
+        object NewUnit1: TMenuItem
+          Action = ActionFileNewUnit
+        end
+        object ActionFileNewCSS1: TMenuItem
+          Action = ActionFileNewCSS
+        end
+        object N2: TMenuItem
+          Caption = '-'
+        end
+        object More1: TMenuItem
+          Action = ActionFileNewMore
+        end
       end
       object MenuItemFileOpen: TMenuItem
         Action = ActionFileOpen
@@ -228,10 +246,23 @@ object FormMain: TFormMain
   object ActionList: TActionList
     Left = 176
     Top = 104
+    object ActionFileNewProject: TAction
+      Category = 'File'
+      Caption = 'New Project'
+    end
+    object ActionFileNewUnit: TAction
+      Category = 'File'
+      Caption = 'New Unit'
+    end
     object ActionProjectBuild: TAction
       Category = 'Project'
       Caption = 'Build'
       ShortCut = 8312
+    end
+    object ActionFileNewCSS: TAction
+      Category = 'File'
+      Caption = 'New CSS'
+      Visible = False
     end
     object ActionFileOpen: TFileOpen
       Category = 'File'
@@ -453,6 +484,10 @@ object FormMain: TFormMain
     object ActionToolsCodeTemplates: TAction
       Category = 'Tools'
       Caption = 'Code Templates...'
+    end
+    object ActionFileNewMore: TAction
+      Category = 'File'
+      Caption = 'More...'
     end
   end
   object DockServer: TJvDockServer

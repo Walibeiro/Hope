@@ -127,6 +127,16 @@ type
     N11: TMenuItem;
     N12: TMenuItem;
     N13: TMenuItem;
+    MenuItemFileNewProject: TMenuItem;
+    N1: TMenuItem;
+    ActionFileNewProject: TAction;
+    ActionFileNewUnit: TAction;
+    NewUnit1: TMenuItem;
+    N2: TMenuItem;
+    More1: TMenuItem;
+    ActionFileNewMore: TAction;
+    ActionFileNewCSS: TAction;
+    ActionFileNewCSS1: TMenuItem;
     procedure ActionHelpAboutExecute(Sender: TObject);
     procedure ActionSearchFindInFilesExecute(Sender: TObject);
   private
