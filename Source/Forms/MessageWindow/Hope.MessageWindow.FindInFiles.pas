@@ -6,7 +6,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.Menus, VirtualTrees, Hope.MessageWindow;
 
 type
   TFormMessagesFindInFiles = class(TFormMessageWindow)

@@ -5,6 +5,9 @@ object FormMessageWindow: TFormMessageWindow
   ClientHeight = 152
   ClientWidth = 784
   Color = clBtnFace
+  DockSite = True
+  DragKind = dkDock
+  DragMode = dmAutomatic
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -44,5 +47,10 @@ object FormMessageWindow: TFormMessageWindow
     object MenuItemSaveMessagesToFile: TMenuItem
       Caption = 'Save Messages To File...'
     end
+  end
+  object DockClient: TJvDockClient
+    DirectDrag = False
+    Left = 128
+    Top = 32
   end
 end

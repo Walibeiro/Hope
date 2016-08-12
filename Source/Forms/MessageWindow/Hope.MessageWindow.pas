@@ -6,7 +6,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.Menus;
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.Menus,
+  JvComponentBase, JvDockControlForm;
 
 type
   TFormMessageWindow = class(TForm)
@@ -16,15 +17,27 @@ type
     MenuItemCopyMessageToClipboard: TMenuItem;
     MenuItemCopyMessagesToClipboard: TMenuItem;
     MenuItemSaveMessagesToFile: TMenuItem;
+    DockClient: TJvDockClient;
   private
     { Private-Deklarationen }
   public
-    { Public-Deklarationen }
+    procedure AfterConstruction; override;
   end;
 
 implementation
 
+uses
+  Hope.Common;
+
 {$R *.dfm}
+
+{ TFormMessageWindow }
+
+procedure TFormMessageWindow.AfterConstruction;
+begin
+  inherited;
+  DockClient.DockStyle := DataModuleCommon.JvDockDelphiStyle;
+end;
 
 end.
 
