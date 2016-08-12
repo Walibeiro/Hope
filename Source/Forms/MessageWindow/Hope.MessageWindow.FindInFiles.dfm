@@ -1,13 +1,16 @@
 inherited FormMessagesFindInFiles: TFormMessagesFindInFiles
+  Left = 0
+  Top = 0
   Caption = 'Find in Files'
-  ClientHeight = 180
-  ClientWidth = 650
+  ClientHeight = 488
+  ClientWidth = 992
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
   Font.Height = -12
   Font.Name = 'Segoe UI'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 15
-  inherited VirtualStringTree1: TVirtualStringTree
-    Width = 650
-    Height = 180
-  end
 end

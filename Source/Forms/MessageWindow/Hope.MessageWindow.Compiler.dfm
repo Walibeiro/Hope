@@ -1,13 +1,16 @@
 inherited FormCompilerMessages: TFormCompilerMessages
+  Left = 0
+  Top = 0
   Caption = 'Compiler Messages'
-  ClientHeight = 194
-  ClientWidth = 683
+  ClientHeight = 488
+  ClientWidth = 992
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
   Font.Height = -12
   Font.Name = 'Segoe UI'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 15
-  inherited VirtualStringTree1: TVirtualStringTree
-    Width = 683
-    Height = 194
-  end
 end

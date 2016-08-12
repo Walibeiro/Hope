@@ -1,13 +1,16 @@
 inherited FormOutputMessages: TFormOutputMessages
+  Left = 0
+  Top = 0
   Caption = 'Output Messages'
-  ClientHeight = 150
-  ClientWidth = 657
+  ClientHeight = 427
+  ClientWidth = 713
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
   Font.Height = -12
   Font.Name = 'Segoe UI'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 15
-  inherited VirtualStringTree1: TVirtualStringTree
-    Width = 657
-    Height = 150
-  end
 end
