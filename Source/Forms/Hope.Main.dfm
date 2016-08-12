@@ -240,6 +240,9 @@ object FormMain: TFormMain
     end
     object MenuItemHelp: TMenuItem
       Caption = '&Help'
+      object MenuItemHelpAbout: TMenuItem
+        Action = ActionHelpAbout
+      end
     end
   end
   object ActionList: TActionList
@@ -372,7 +375,7 @@ object FormMain: TFormMain
     end
     object ActionHelpAbout: TAction
       Category = 'Help'
-      Caption = 'About'
+      Caption = '&About'
       OnExecute = ActionHelpAboutExecute
     end
     object ActionFileSave: TAction

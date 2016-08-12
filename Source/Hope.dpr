@@ -15,24 +15,29 @@ uses
   Hope.Dialogs.NewMore in 'Forms\Dialogs\Hope.Dialogs.NewMore.pas' {FormObjectGallery},
   Hope.Dialogs.Preferences in 'Forms\Dialogs\Hope.Dialogs.Preferences.pas' {FormPreferences},
   Hope.Dialogs.ProjectOptions in 'Forms\Dialogs\Hope.Dialogs.ProjectOptions.pas' {FormProjectOptions},
+  Hope.Editor in 'Forms\Editor\Hope.Editor.pas' {FormEditor},
+  Hope.History in 'History\Hope.History.pas',
   Hope.Main in 'Forms\Hope.Main.pas' {FormMain},
-  Hope.MessageWindow.Compiler in 'Forms\Hope.MessageWindow.Compiler.pas' {FormCompilerMessages},
-  Hope.MessageWindow.FindInFiles in 'Forms\Hope.MessageWindow.FindInFiles.pas' {FormMessagesFindInFiles},
-  Hope.MessageWindow.Output in 'Forms\Hope.MessageWindow.Output.pas' {FormOutputMessages},
+  Hope.MessageWindow.Compiler in 'Forms\MessageWindow\Hope.MessageWindow.Compiler.pas' {FormCompilerMessages},
+  Hope.MessageWindow.FindInFiles in 'Forms\MessageWindow\Hope.MessageWindow.FindInFiles.pas' {FormMessagesFindInFiles},
+  Hope.MessageWindow.Output in 'Forms\MessageWindow\Hope.MessageWindow.Output.pas' {FormOutputMessages},
   Hope.Project in 'Project\Hope.Project.pas',
   Hope.ProjectList in 'Project\Hope.ProjectList.pas',
   Hope.ProjectManager in 'Forms\Hope.ProjectManager.pas' {FormProjectManager},
   Hope.UnicodeExplorer in 'Forms\Hope.UnicodeExplorer.pas' {FormUnicodeExplorer},
   Hope.UnitManager in 'Forms\Hope.UnitManager.pas' {FormUnitManager},
-  Hope.WelcomePage in 'Forms\Hope.WelcomePage.pas' {FormWelcomePage};
+  Hope.WelcomePage in 'Forms\Hope.WelcomePage.pas' {FormWelcomePage},
+  Hope.Paths in 'Hope.Paths.pas',
+  Hope.MessageWindow in 'Forms\MessageWindow\Hope.MessageWindow.pas' {FormMessageWindow};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TFormMain, FormMain);
   Application.CreateForm(TDataModuleCommon, DataModuleCommon);
+  Application.CreateForm(TFormMain, FormMain);
+  Application.CreateForm(TFormMessageWindow, FormMessageWindow);
   Application.Run;
 end.
 

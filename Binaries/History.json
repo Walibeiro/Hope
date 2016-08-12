@@ -1,0 +1,10 @@
+{
+	"Projects" : [
+		"C:\\Projects\\A.proj",
+		"C:\\Projects\\B.proj"
+	],
+	"Units" : [
+		"C:\\Projects\\A.pas",
+		"C:\\Projects\\B.pas"
+	]
+}

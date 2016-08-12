@@ -9,7 +9,8 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.Actions,
   Vcl.ActnList, Vcl.Menus, Vcl.StdActns,
   JvStdEditActions, JvDockTree, JvDockControlForm, JvDockDelphiStyle,
-  JvComponentBase;
+  JvComponentBase,
+  Hope.Common, Hope.WelcomePage;
 
 type
   TFormMain = class(TForm)
@@ -83,7 +84,9 @@ type
     MenuItemFileCloseProject: TMenuItem;
     MenuItemFileExit: TMenuItem;
     MenuItemFileNew: TMenuItem;
+    MenuItemFileNewMore: TMenuItem;
     MenuItemFileNewProject: TMenuItem;
+    MenuItemFileNewUnit: TMenuItem;
     MenuItemFileOpen: TMenuItem;
     MenuItemFileOpenProject: TMenuItem;
     MenuItemFileOpenRecent: TMenuItem;
@@ -92,6 +95,7 @@ type
     MenuItemFileSaveProject: TMenuItem;
     MenuItemFileSaveProjectAs: TMenuItem;
     MenuItemHelp: TMenuItem;
+    MenuItemHelpAbout: TMenuItem;
     MenuItemPackages: TMenuItem;
     MenuItemProject: TMenuItem;
     MenuItemProjectAddToProject: TMenuItem;
@@ -123,8 +127,6 @@ type
     MenuItemViewFileBrowser: TMenuItem;
     MenuItemViewUnits: TMenuItem;
     MenuItemViewWelcomePage: TMenuItem;
-    MenuItemFileNewMore: TMenuItem;
-    MenuItemFileNewUnit: TMenuItem;
     N01: TMenuItem;
     N02: TMenuItem;
     N03: TMenuItem;
@@ -141,14 +143,19 @@ type
     N14: TMenuItem;
     N15: TMenuItem;
     procedure ActionHelpAboutExecute(Sender: TObject);
-    procedure ActionSearchFindInFilesExecute(Sender: TObject);
     procedure ActionProjectOptionsExecute(Sender: TObject);
+    procedure ActionSearchFindInFilesExecute(Sender: TObject);
+    procedure ActionToolsCodeTemplatesExecute(Sender: TObject);
+    procedure ActionToolsColorPickerExecute(Sender: TObject);
     procedure ActionToolsPreferencesExecute(Sender: TObject);
     procedure ActionToolsUnicodeExplorerExecute(Sender: TObject);
-    procedure ActionToolsColorPickerExecute(Sender: TObject);
-    procedure ActionToolsCodeTemplatesExecute(Sender: TObject);
   private
+    FWelcomePage: TFormWelcomePage;
   public
+    procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
+
+    procedure LoadProject(ProjectName: string);
   end;
 
 var
@@ -162,6 +169,29 @@ uses
   Hope.Dialogs.CodeTemplates;
 
 {$R *.dfm}
+
+{ TFormMain }
+
+procedure TFormMain.AfterConstruction;
+begin
+  inherited;
+
+  DockServer.DockStyle := DataModuleCommon.JvDockDelphiStyle;
+  FWelcomePage := TFormWelcomePage.Create(nil);
+  FWelcomePage.Show;
+  FWelcomePage.Update;
+end;
+
+procedure TFormMain.BeforeDestruction;
+begin
+  FWelcomePage.Free;
+  inherited;
+end;
+
+procedure TFormMain.LoadProject(ProjectName: string);
+begin
+
+end;
 
 procedure TFormMain.ActionHelpAboutExecute(Sender: TObject);
 begin

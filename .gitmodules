@@ -16,3 +16,9 @@
 [submodule "Submodules/dcef3"]
 	path = Submodules/dcef3
 	url = git@github.com:hgourvest/dcef3.git
+[submodule "Submodules/tango-icon-theme"]
+	path = Submodules/tango-icon-theme
+	url = git@github.com:stephenc/tango-icon-theme.git
+[submodule "Submodules/numix-icon-theme"]
+	path = Submodules/numix-icon-theme
+	url = git@github.com:stephenc/numix-icon-theme.git
