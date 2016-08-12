@@ -19,6 +19,3 @@
 [submodule "Submodules/tango-icon-theme"]
 	path = Submodules/tango-icon-theme
 	url = git@github.com:stephenc/tango-icon-theme.git
-[submodule "Submodules/numix-icon-theme"]
-	path = Submodules/numix-icon-theme
-	url = git@github.com:stephenc/numix-icon-theme.git
