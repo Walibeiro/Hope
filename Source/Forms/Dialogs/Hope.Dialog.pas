@@ -1,5 +1,7 @@
 unit Hope.Dialog;
 
+{$I Hope.inc}
+
 interface
 
 uses

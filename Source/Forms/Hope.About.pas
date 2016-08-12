@@ -1,5 +1,7 @@
 unit Hope.About;
 
+{$I Hope.inc}
+
 interface
 
 uses

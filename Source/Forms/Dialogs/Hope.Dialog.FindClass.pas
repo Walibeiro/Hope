@@ -1,10 +1,13 @@
 unit Hope.Dialog.FindClass;
 
+{$I Hope.inc}
+
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Hope.Dialog, Vcl.StdCtrls;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, 
+  Hope.Dialog;
 
 type
   TFormFindClass = class(TFormDialog)
@@ -13,9 +16,6 @@ type
   public
     { Public-Deklarationen }
   end;
-
-var
-  FormFindClass: TFormFindClass;
 
 implementation
 

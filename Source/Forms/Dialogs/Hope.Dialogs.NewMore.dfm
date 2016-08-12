@@ -1,16 +1,18 @@
-object FormObjectGallery: TFormObjectGallery
-  Left = 0
-  Top = 0
+inherited FormObjectGallery: TFormObjectGallery
   Caption = 'Gallery'
-  ClientHeight = 423
-  ClientWidth = 860
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  OldCreateOrder = False
+  ClientWidth = 992
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
+  inherited ButtonOK: TButton
+    Left = 747
+    Top = 390
+  end
+  inherited ButtonCancel: TButton
+    Left = 828
+    Top = 390
+  end
+  inherited ButtonHelp: TButton
+    Left = 909
+    Top = 390
+  end
 end

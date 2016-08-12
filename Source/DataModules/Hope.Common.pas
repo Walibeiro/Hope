@@ -1,5 +1,7 @@
 unit Hope.Common;
 
+{$I Hope.inc}
+
 interface
 
 uses

@@ -1,16 +1,19 @@
-object FormGotoLineNumber: TFormGotoLineNumber
-  Left = 0
-  Top = 0
+inherited FormGotoLineNumber: TFormGotoLineNumber
   Caption = 'Goto Line Number'
-  ClientHeight = 155
-  ClientWidth = 291
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  OldCreateOrder = False
+  ClientHeight = 165
+  ClientWidth = 352
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
+  inherited ButtonOK: TButton
+    Left = 107
+    Top = 132
+  end
+  inherited ButtonCancel: TButton
+    Left = 188
+    Top = 132
+  end
+  inherited ButtonHelp: TButton
+    Left = 269
+    Top = 132
+  end
 end

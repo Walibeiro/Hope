@@ -1,5 +1,7 @@
 unit Hope.Main;
 
+{$I Hope.inc}
+
 interface
 
 uses
@@ -21,6 +23,11 @@ type
     ActionFileClose: TAction;
     ActionFileCloseProject: TAction;
     ActionFileExit: TFileExit;
+    ActionFileNewCSS: TAction;
+    ActionFileNewCSS1: TMenuItem;
+    ActionFileNewMore: TAction;
+    ActionFileNewProject: TAction;
+    ActionFileNewUnit: TAction;
     ActionFileOpen: TFileOpen;
     ActionFileOpenProject: TFileOpen;
     ActionFileOpenRecent: TAction;
@@ -36,7 +43,8 @@ type
     ActionProjectCompile: TAction;
     ActionProjectCompileAll: TAction;
     ActionProjectDelete: TAction;
-    ActionProjectInformation: TAction;
+    ActionProjectMetrics: TAction;
+    ActionProjectOptions: TAction;
     ActionProjectStatistics: TAction;
     ActionProjectSyntaxCheck: TAction;
     ActionRunAbort: TAction;
@@ -49,10 +57,10 @@ type
     ActionSearchFindNext: TSearchFindNext;
     ActionSearchGotoLineNumber: TAction;
     ActionSearchReplace: TSearchReplace;
-    ActionToolsASCII: TAction;
     ActionToolsCodeTemplates: TAction;
     ActionToolsColorPicker: TAction;
     ActionToolsPreferences: TAction;
+    ActionToolsUnicodeExplorer: TAction;
     ActionViewClassExplorer: TAction;
     ActionViewFileBrowser: TAction;
     ActionViewUnits: TAction;
@@ -75,6 +83,7 @@ type
     MenuItemFileCloseProject: TMenuItem;
     MenuItemFileExit: TMenuItem;
     MenuItemFileNew: TMenuItem;
+    MenuItemFileNewProject: TMenuItem;
     MenuItemFileOpen: TMenuItem;
     MenuItemFileOpenProject: TMenuItem;
     MenuItemFileOpenRecent: TMenuItem;
@@ -91,7 +100,7 @@ type
     MenuItemProjectCompile: TMenuItem;
     MenuItemProjectCompileAll: TMenuItem;
     MenuItemProjectDeleteFromProject: TMenuItem;
-    MenuItemProjectInformation: TMenuItem;
+    MenuItemProjectMetrics: TMenuItem;
     MenuItemProjectOptions: TMenuItem;
     MenuItemProjectStatistics: TMenuItem;
     MenuItemProjectSyntaxCheck: TMenuItem;
@@ -114,6 +123,8 @@ type
     MenuItemViewFileBrowser: TMenuItem;
     MenuItemViewUnits: TMenuItem;
     MenuItemViewWelcomePage: TMenuItem;
+    MenuItemFileNewMore: TMenuItem;
+    MenuItemFileNewUnit: TMenuItem;
     N01: TMenuItem;
     N02: TMenuItem;
     N03: TMenuItem;
@@ -127,18 +138,15 @@ type
     N11: TMenuItem;
     N12: TMenuItem;
     N13: TMenuItem;
-    MenuItemFileNewProject: TMenuItem;
-    N1: TMenuItem;
-    ActionFileNewProject: TAction;
-    ActionFileNewUnit: TAction;
-    NewUnit1: TMenuItem;
-    N2: TMenuItem;
-    More1: TMenuItem;
-    ActionFileNewMore: TAction;
-    ActionFileNewCSS: TAction;
-    ActionFileNewCSS1: TMenuItem;
+    N14: TMenuItem;
+    N15: TMenuItem;
     procedure ActionHelpAboutExecute(Sender: TObject);
     procedure ActionSearchFindInFilesExecute(Sender: TObject);
+    procedure ActionProjectOptionsExecute(Sender: TObject);
+    procedure ActionToolsPreferencesExecute(Sender: TObject);
+    procedure ActionToolsUnicodeExplorerExecute(Sender: TObject);
+    procedure ActionToolsColorPickerExecute(Sender: TObject);
+    procedure ActionToolsCodeTemplatesExecute(Sender: TObject);
   private
   public
   end;
@@ -149,7 +157,9 @@ var
 implementation
 
 uses
-  Hope.About, Hope.Dialogs.FindInFiles;
+  Hope.About, Hope.Dialogs.FindInFiles, Hope.Dialogs.ProjectOptions,
+  Hope.Dialogs.Preferences, Hope.ColorPicker, Hope.UnicodeExplorer,
+  Hope.Dialogs.CodeTemplates;
 
 {$R *.dfm}
 
@@ -157,7 +167,17 @@ procedure TFormMain.ActionHelpAboutExecute(Sender: TObject);
 begin
   with TFormAbout.Create(Self) do
   try
-    Show;
+    ShowModal;
+  finally
+    Free;
+  end;
+end;
+
+procedure TFormMain.ActionProjectOptionsExecute(Sender: TObject);
+begin
+  with TFormProjectOptions.Create(Self) do
+  try
+    ShowModal;
   finally
     Free;
   end;
@@ -167,7 +187,47 @@ procedure TFormMain.ActionSearchFindInFilesExecute(Sender: TObject);
 begin
   with TFormFindInFiles.Create(Self) do
   try
-    Show;
+    ShowModal;
+  finally
+    Free;
+  end;
+end;
+
+procedure TFormMain.ActionToolsCodeTemplatesExecute(Sender: TObject);
+begin
+  with TFormCodeTemplates.Create(Self) do
+  try
+    ShowModal;
+  finally
+    Free;
+  end;
+end;
+
+procedure TFormMain.ActionToolsColorPickerExecute(Sender: TObject);
+begin
+  with TFormColorPicker.Create(Self) do
+  try
+    ShowModal;
+  finally
+    Free;
+  end;
+end;
+
+procedure TFormMain.ActionToolsPreferencesExecute(Sender: TObject);
+begin
+  with TFormPreferences.Create(Self) do
+  try
+    ShowModal;
+  finally
+    Free;
+  end;
+end;
+
+procedure TFormMain.ActionToolsUnicodeExplorerExecute(Sender: TObject);
+begin
+  with TFormUnicodeExplorer.Create(Self) do
+  try
+    ShowModal;
   finally
     Free;
   end;

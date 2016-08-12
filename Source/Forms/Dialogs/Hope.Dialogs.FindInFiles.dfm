@@ -1,16 +1,19 @@
-object FormFindInFiles: TFormFindInFiles
-  Left = 0
-  Top = 0
+inherited FormFindInFiles: TFormFindInFiles
   Caption = 'Find in Files'
-  ClientHeight = 437
-  ClientWidth = 528
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  OldCreateOrder = False
+  ClientHeight = 285
+  ClientWidth = 567
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
+  inherited ButtonOK: TButton
+    Left = 322
+    Top = 252
+  end
+  inherited ButtonCancel: TButton
+    Left = 403
+    Top = 252
+  end
+  inherited ButtonHelp: TButton
+    Left = 484
+    Top = 252
+  end
 end

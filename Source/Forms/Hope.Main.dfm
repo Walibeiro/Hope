@@ -7,13 +7,13 @@ object FormMain: TFormMain
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
   Font.Style = []
   Menu = MainMenu
   OldCreateOrder = False
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object MainMenu: TMainMenu
     Left = 104
     Top = 104
@@ -24,19 +24,19 @@ object FormMain: TFormMain
         object MenuItemFileNewProject: TMenuItem
           Caption = '&Project'
         end
-        object N1: TMenuItem
+        object N14: TMenuItem
           Caption = '-'
         end
-        object NewUnit1: TMenuItem
+        object MenuItemFileNewUnit: TMenuItem
           Action = ActionFileNewUnit
         end
         object ActionFileNewCSS1: TMenuItem
           Action = ActionFileNewCSS
         end
-        object N2: TMenuItem
+        object N15: TMenuItem
           Caption = '-'
         end
-        object More1: TMenuItem
+        object MenuItemFileNewMore: TMenuItem
           Action = ActionFileNewMore
         end
       end
@@ -176,11 +176,11 @@ object FormMain: TFormMain
       object MenuItemProjectSyntaxCheck: TMenuItem
         Action = ActionProjectSyntaxCheck
       end
-      object MenuItemProjectInformation: TMenuItem
-        Action = ActionProjectInformation
-      end
       object MenuItemProjectStatistics: TMenuItem
         Action = ActionProjectStatistics
+      end
+      object MenuItemProjectMetrics: TMenuItem
+        Action = ActionProjectMetrics
       end
       object N08: TMenuItem
         Caption = '-'
@@ -195,8 +195,7 @@ object FormMain: TFormMain
         Caption = '-'
       end
       object MenuItemProjectOptions: TMenuItem
-        Caption = 'Options'
-        ShortCut = 24698
+        Action = ActionProjectOptions
       end
     end
     object MenuItemRun: TMenuItem
@@ -230,10 +229,10 @@ object FormMain: TFormMain
         Caption = '-'
       end
       object MenuItemToolsASCIIChart: TMenuItem
-        Caption = 'ASCII Chart...'
+        Action = ActionToolsUnicodeExplorer
       end
       object MenuItemToolsColorPicker: TMenuItem
-        Caption = 'Color Picker...'
+        Action = ActionToolsColorPicker
       end
       object N13: TMenuItem
         Caption = '-'
@@ -433,10 +432,6 @@ object FormMain: TFormMain
       Category = 'Project'
       Caption = 'Syntax Check'
     end
-    object ActionProjectInformation: TAction
-      Category = 'Project'
-      Caption = 'Information'
-    end
     object ActionProjectStatistics: TAction
       Category = 'Project'
       Caption = 'Statistics'
@@ -472,22 +467,36 @@ object FormMain: TFormMain
     object ActionToolsPreferences: TAction
       Category = 'Tools'
       Caption = '&Preferences...'
+      OnExecute = ActionToolsPreferencesExecute
     end
-    object ActionToolsASCII: TAction
+    object ActionToolsUnicodeExplorer: TAction
       Category = 'Tools'
-      Caption = 'ASCII Chart'
+      Caption = 'Unicode Explorer...'
+      OnExecute = ActionToolsUnicodeExplorerExecute
     end
     object ActionToolsColorPicker: TAction
       Category = 'Tools'
-      Caption = 'Color Picker'
+      Caption = 'Color Picker...'
+      OnExecute = ActionToolsColorPickerExecute
     end
     object ActionToolsCodeTemplates: TAction
       Category = 'Tools'
       Caption = 'Code Templates...'
+      OnExecute = ActionToolsCodeTemplatesExecute
     end
     object ActionFileNewMore: TAction
       Category = 'File'
       Caption = 'More...'
+    end
+    object ActionProjectMetrics: TAction
+      Category = 'Project'
+      Caption = 'Metrics'
+    end
+    object ActionProjectOptions: TAction
+      Category = 'Project'
+      Caption = 'Options...'
+      ShortCut = 24698
+      OnExecute = ActionProjectOptionsExecute
     end
   end
   object DockServer: TJvDockServer

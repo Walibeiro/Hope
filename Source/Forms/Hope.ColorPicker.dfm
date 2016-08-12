@@ -1,9 +1,9 @@
-object FormUnitManager: TFormUnitManager
+object FormColorPicker: TFormColorPicker
   Left = 0
   Top = 0
-  Caption = 'Unit Manager'
-  ClientHeight = 893
-  ClientWidth = 467
+  Caption = 'Color Picker'
+  ClientHeight = 392
+  ClientWidth = 605
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

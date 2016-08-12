@@ -1,5 +1,7 @@
 unit Hope.Compiler;
 
+{$I Hope.inc}
+
 interface
 
 uses

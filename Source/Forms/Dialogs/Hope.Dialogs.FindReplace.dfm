@@ -1,16 +1,19 @@
-object FormFind: TFormFind
-  Left = 0
-  Top = 0
+inherited FormFind: TFormFind
   Caption = 'Find'
-  ClientHeight = 423
-  ClientWidth = 860
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  OldCreateOrder = False
+  ClientHeight = 320
+  ClientWidth = 618
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
+  inherited ButtonOK: TButton
+    Left = 373
+    Top = 287
+  end
+  inherited ButtonCancel: TButton
+    Left = 454
+    Top = 287
+  end
+  inherited ButtonHelp: TButton
+    Left = 535
+    Top = 287
+  end
 end
