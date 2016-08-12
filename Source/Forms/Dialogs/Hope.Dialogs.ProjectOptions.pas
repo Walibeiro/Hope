@@ -1,4 +1,4 @@
-unit Hope.ProjectOptions;
+unit Hope.Dialogs.ProjectOptions;
 
 interface
 

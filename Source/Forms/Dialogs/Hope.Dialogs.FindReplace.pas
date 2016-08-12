@@ -1,4 +1,4 @@
-unit Hope.NewMore;
+unit Hope.Dialogs.FindReplace;
 
 interface
 
@@ -7,7 +7,7 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
 
 type
-  TFormObjectGallery = class(TForm)
+  TFormFind = class(TForm)
   private
     { Private-Deklarationen }
   public
@@ -19,3 +19,4 @@ implementation
 {$R *.dfm}
 
 end.
+

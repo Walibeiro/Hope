@@ -149,7 +149,7 @@ var
 implementation
 
 uses
-  Hope.About, Hope.FindInFiles;
+  Hope.About, Hope.Dialogs.FindInFiles;
 
 {$R *.dfm}
 

@@ -1,4 +1,4 @@
-unit Hope.FindInFiles;
+unit Hope.Dialogs.NewMore;
 
 interface
 
@@ -7,7 +7,7 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
 
 type
-  TFormFindInFiles = class(TForm)
+  TFormObjectGallery = class(TForm)
   private
     { Private-Deklarationen }
   public
@@ -19,4 +19,3 @@ implementation
 {$R *.dfm}
 
 end.
-

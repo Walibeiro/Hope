@@ -1,4 +1,4 @@
-unit Hope.GotoLineNumber;
+unit Hope.Dialogs.Preferences;
 
 interface
 
@@ -7,7 +7,7 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
 
 type
-  TFormGotoLineNumber = class(TForm)
+  TFormPreferences = class(TForm)
   private
     { Private-Deklarationen }
   public

@@ -1,4 +1,4 @@
-unit Hope.Preferences;
+unit Hope.Dialogs.FindInFiles;
 
 interface
 
@@ -7,7 +7,7 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
 
 type
-  TFormPreferences = class(TForm)
+  TFormFindInFiles = class(TForm)
   private
     { Private-Deklarationen }
   public

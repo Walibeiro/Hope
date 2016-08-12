@@ -1,4 +1,4 @@
-unit Hope.FindReplace;
+unit Hope.Dialogs.GotoLineNumber;
 
 interface
 
@@ -7,7 +7,7 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
 
 type
-  TFormFind = class(TForm)
+  TFormGotoLineNumber = class(TForm)
   private
     { Private-Deklarationen }
   public
