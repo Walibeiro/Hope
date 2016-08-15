@@ -5,12 +5,15 @@ object FormWelcomePage: TFormWelcomePage
   ClientHeight = 565
   ClientWidth = 823
   Color = clBtnFace
+  DragKind = dkDock
+  DragMode = dmAutomatic
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
   OldCreateOrder = False
+  OnStartDock = FormStartDock
   PixelsPerInch = 96
   TextHeight = 15
   object Chromium: TChromium

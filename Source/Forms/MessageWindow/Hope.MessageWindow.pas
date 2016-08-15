@@ -7,19 +7,16 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.Menus,
-  JvComponentBase, JvDockControlForm;
+  Hope.DockingForm;
 
 type
-  TFormMessageWindow = class(TForm)
+  TFormMessageWindow = class(TFormDockable)
     TreeMessages: TVirtualStringTree;
     PopupMenu: TPopupMenu;
     MenuItemClearMessages: TMenuItem;
     MenuItemCopyMessageToClipboard: TMenuItem;
     MenuItemCopyMessagesToClipboard: TMenuItem;
     MenuItemSaveMessagesToFile: TMenuItem;
-    DockClient: TJvDockClient;
-  private
-    { Private-Deklarationen }
   public
     procedure AfterConstruction; override;
   end;
@@ -36,8 +33,6 @@ uses
 procedure TFormMessageWindow.AfterConstruction;
 begin
   inherited;
-  DockClient.DockStyle := DataModuleCommon.JvDockDelphiStyle;
 end;
 
 end.
-

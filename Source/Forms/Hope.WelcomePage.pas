@@ -22,6 +22,7 @@ type
     procedure ChromiumProcessMessageReceived(Sender: TObject;
       const browser: ICefBrowser; sourceProcess: TCefProcessId;
       const message: ICefProcessMessage; out Result: Boolean);
+    procedure FormStartDock(Sender: TObject; var DragObject: TDragDockObject);
   private
     FMimeTypeCache: TMIMETypeCache;
     FServer: THttpApi2Server;
@@ -127,6 +128,13 @@ begin
     Result := True;
   end else
     Result := False;
+end;
+
+procedure TFormWelcomePage.FormStartDock(Sender: TObject;
+  var DragObject: TDragDockObject);
+begin
+  DragObject := TDragDockObjectEx.Create(Self);
+  DragObject.Brush.Color := clAqua; // this will display a red outline
 end;
 
 procedure TFormWelcomePage.RequestHandler(Request: TWebRequest;

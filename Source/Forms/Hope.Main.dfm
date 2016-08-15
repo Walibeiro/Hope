@@ -5,6 +5,7 @@ object FormMain: TFormMain
   ClientHeight = 538
   ClientWidth = 897
   Color = clBtnFace
+  DockSite = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -12
@@ -12,8 +13,79 @@ object FormMain: TFormMain
   Font.Style = []
   Menu = MainMenu
   OldCreateOrder = False
+  OnDockOver = FormDockOver
+  OnGetSiteInfo = FormGetSiteInfo
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 15
+  object SplitterLeft: TSplitter
+    Left = 129
+    Top = 0
+    Height = 429
+    Visible = False
+  end
+  object SplitterRight: TSplitter
+    Left = 765
+    Top = 0
+    Height = 429
+    Align = alRight
+    Visible = False
+  end
+  object SplitterBottom: TSplitter
+    Left = 0
+    Top = 429
+    Width = 897
+    Height = 3
+    Cursor = crVSplit
+    Align = alBottom
+    Visible = False
+  end
+  object PanelLeft: TPanel
+    Left = 0
+    Top = 0
+    Width = 129
+    Height = 429
+    Align = alLeft
+    BevelOuter = bvNone
+    Caption = 'LeftDock'
+    DockSite = True
+    TabOrder = 0
+    Visible = False
+  end
+  object PanelBottom: TPanel
+    Left = 0
+    Top = 432
+    Width = 897
+    Height = 106
+    Align = alBottom
+    BevelOuter = bvNone
+    Caption = 'BottomDock'
+    DockSite = True
+    TabOrder = 1
+    Visible = False
+  end
+  object PanelRight: TPanel
+    Left = 768
+    Top = 0
+    Width = 129
+    Height = 429
+    Align = alRight
+    BevelOuter = bvNone
+    Caption = 'RightDock'
+    DockSite = True
+    TabOrder = 2
+    Visible = False
+  end
+  object PanelMain: TPanel
+    Left = 132
+    Top = 0
+    Width = 633
+    Height = 429
+    Align = alClient
+    BevelOuter = bvNone
+    Caption = 'Panel'
+    TabOrder = 3
+  end
   object MainMenu: TMainMenu
     Left = 104
     Top = 104
@@ -501,17 +573,5 @@ object FormMain: TFormMain
       ShortCut = 24698
       OnExecute = ActionProjectOptionsExecute
     end
-  end
-  object DockServer: TJvDockServer
-    LeftSplitterStyle.Cursor = crHSplit
-    LeftSplitterStyle.ParentColor = False
-    RightSplitterStyle.Cursor = crHSplit
-    RightSplitterStyle.ParentColor = False
-    TopSplitterStyle.Cursor = crVSplit
-    TopSplitterStyle.ParentColor = False
-    BottomSplitterStyle.Cursor = crVSplit
-    BottomSplitterStyle.ParentColor = False
-    Left = 256
-    Top = 104
   end
 end

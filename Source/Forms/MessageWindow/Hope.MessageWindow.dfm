@@ -1,19 +1,8 @@
-object FormMessageWindow: TFormMessageWindow
-  Left = 0
-  Top = 0
+inherited FormMessageWindow: TFormMessageWindow
   Caption = 'Message Window'
   ClientHeight = 152
   ClientWidth = 784
-  Color = clBtnFace
-  DockSite = True
-  DragKind = dkDock
-  DragMode = dmAutomatic
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  OldCreateOrder = False
+  OnStartDock = FormStartDock
   PixelsPerInch = 96
   TextHeight = 13
   object TreeMessages: TVirtualStringTree
@@ -47,10 +36,5 @@ object FormMessageWindow: TFormMessageWindow
     object MenuItemSaveMessagesToFile: TMenuItem
       Caption = 'Save Messages To File...'
     end
-  end
-  object DockClient: TJvDockClient
-    DirectDrag = False
-    Left = 128
-    Top = 32
   end
 end

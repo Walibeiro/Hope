@@ -1,10 +1,14 @@
 object FormUnitManager: TFormUnitManager
   Left = 0
   Top = 0
+  BorderStyle = bsSizeToolWin
   Caption = 'Unit Manager'
-  ClientHeight = 499
+  ClientHeight = 502
   ClientWidth = 227
   Color = clBtnFace
+  DockSite = True
+  DragKind = dkDock
+  DragMode = dmAutomatic
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -12
@@ -25,7 +29,7 @@ object FormUnitManager: TFormUnitManager
     Left = 0
     Top = 29
     Width = 227
-    Height = 470
+    Height = 473
     Align = alClient
     Header.AutoSizeIndex = 0
     Header.Font.Charset = DEFAULT_CHARSET

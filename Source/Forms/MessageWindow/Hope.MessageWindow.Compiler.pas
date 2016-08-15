@@ -6,7 +6,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Hope.MessageWindow;
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Hope.MessageWindow,
+  JvComponentBase, JvDockControlForm, Vcl.Menus, VirtualTrees;
 
 type
   TFormCompilerMessages = class(TFormMessageWindow)

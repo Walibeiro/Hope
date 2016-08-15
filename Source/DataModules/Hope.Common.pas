@@ -17,7 +17,7 @@ uses
 
 type
   TDataModuleCommon = class(TDataModule)
-    JvDockDelphiStyle: TJvDockDelphiStyle;
+    DockDelphiStyle: TJvDockDelphiStyle;
     SynEditSearch: TSynEditSearch;
     SynObjectPascal: TSynMultiSyn;
     SynEditRegexSearch: TSynEditRegexSearch;
