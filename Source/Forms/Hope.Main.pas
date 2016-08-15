@@ -8,20 +8,19 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.Actions,
   Vcl.ActnList, Vcl.Menus, Vcl.StdActns, Vcl.ExtCtrls, Vcl.ComCtrls,
-  Vcl.Tabs, Vcl.DockTabSet,
   Hope.Common, Hope.WelcomePage, Hope.ProjectManager, Hope.UnitManager,
-  Hope.MessageWindow.Compiler, Hope.MessageWindow.Output, Hope.DockingHost,
-  JvStdEditActions;
+  Hope.MessageWindow.Compiler, Hope.MessageWindow.Output, Hope.Docking.Host,
+  Vcl.StdCtrls;
 
 type
   TFormMain = class(TForm)
-    ActionEditCopy: TJvEditCopy;
-    ActionEditCut: TJvEditCut;
-    ActionEditDelete: TJvEditDelete;
-    ActionEditPaste: TJvEditPaste;
+    ActionEditCopy: TEditCopy;
+    ActionEditCut: TEditCut;
+    ActionEditDelete: TEditDelete;
+    ActionEditPaste: TEditPaste;
     ActionEditRedo: TAction;
-    ActionEditSelectAll: TJvEditSelectAll;
-    ActionEditUndo: TJvEditUndo;
+    ActionEditSelectAll: TEditSelectAll;
+    ActionEditUndo: TEditUndo;
     ActionFileClose: TAction;
     ActionFileCloseProject: TAction;
     ActionFileExit: TFileExit;
@@ -142,13 +141,13 @@ type
     N13: TMenuItem;
     N14: TMenuItem;
     N15: TMenuItem;
-    PanelLeft: TPanel;
     PanelBottom: TPanel;
+    PanelLeft: TPanel;
+    PanelMain: TPanel;
     PanelRight: TPanel;
+    SplitterBottom: TSplitter;
     SplitterLeft: TSplitter;
     SplitterRight: TSplitter;
-    PanelMain: TPanel;
-    SplitterBottom: TSplitter;
     procedure ActionHelpAboutExecute(Sender: TObject);
     procedure ActionProjectOptionsExecute(Sender: TObject);
     procedure ActionSearchFindInFilesExecute(Sender: TObject);
@@ -161,6 +160,10 @@ type
       Y: Integer; State: TDragState; var Accept: Boolean);
     procedure FormGetSiteInfo(Sender: TObject; DockClient: TControl;
       var InfluenceRect: TRect; MousePos: TPoint; var CanDock: Boolean);
+    procedure PanelUnDock(Sender: TObject; Client: TControl;
+      NewTarget: TWinControl; var Allow: Boolean);
+    procedure PanelMainDockDrop(Sender: TObject; Source: TDragDockObject; X,
+      Y: Integer);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -168,7 +171,6 @@ type
     FProjectManager: TFormProjectManager;
     FCompilerMessages: TFormCompilerMessages;
     FOutputMessages: TFormOutputMessages;
-    FBottomDock: TFormDockHost;
     procedure CMDockClient(var Message: TCMDockClient); message CM_DOCKCLIENT;
     function ComputeDockingRect(var DockRect: TRect; MousePos: TPoint): TAlign;
   public
@@ -188,7 +190,7 @@ implementation
 uses
   Hope.About, Hope.Dialogs.FindInFiles, Hope.Dialogs.ProjectOptions,
   Hope.Dialogs.Preferences, Hope.ColorPicker, Hope.UnicodeExplorer,
-  Hope.Dialogs.CodeTemplates, Hope.DockingForm;
+  Hope.Dialogs.CodeTemplates, Hope.Docking.Form;
 
 {$R *.dfm}
 
@@ -203,7 +205,6 @@ begin
   FProjectManager := TFormProjectManager.Create(nil);
   FCompilerMessages := TFormCompilerMessages.Create(nil);
   FOutputMessages := TFormOutputMessages.Create(nil);
-  FBottomDock := TFormDockHost.Create(nil);
 end;
 
 procedure TFormMain.BeforeDestruction;
@@ -315,32 +316,50 @@ begin
 end;
 
 procedure TFormMain.FormShow(Sender: TObject);
+var
+  Host: TFormDockHost;
 begin
-(*
-  FWelcomePage.ManualDock(PanelMain);
   FUnitManager.ManualDock(PanelLeft);
+  ShowDockPanel(PanelLeft, True, FUnitManager);
+
   FProjectManager.ManualDock(PanelRight);
+  ShowDockPanel(PanelRight, True, FProjectManager);
 
-  FCompilerMessages.ManualDock(FBottomDock.PanelDock);
-  FOutputMessages.ManualDock(FBottomDock.PanelDock);
+  Host := TFormDockHost.Create(Application);
+  Host.IsPaged := True;
+  Host.BoundsRect := Self.BoundsRect;
+  FCompilerMessages.ManualDock(Host.PanelDock, nil, alClient);
+  FCompilerMessages.DockSite := False;
+  FOutputMessages.ManualDock(Host.PanelDock, nil, alClient);
+  FOutputMessages.DockSite := False;
+  Host.IsPaged := True;
+  Host.ManualDock(PanelBottom);
+  ShowDockPanel(PanelBottom, True, Host);
 
-//  FBottomDock.ManualDock(PanelBottom);
-*)
-
-
+  FWelcomePage.ManualDock(PanelMain);
   FWelcomePage.Show;
-  FUnitManager.Show;
-  FProjectManager.Show;
-  FBottomDock.Show;
-  FCompilerMessages.Show;
-  FOutputMessages.Show;
-
   FWelcomePage.Update;
 end;
 
 procedure TFormMain.LoadProject(ProjectName: string);
 begin
 
+end;
+
+procedure TFormMain.PanelMainDockDrop(Sender: TObject; Source: TDragDockObject;
+  X, Y: Integer);
+begin
+  if PanelMain.UseDockManager then
+    PanelMain.DockManager.ResetBounds(True);
+end;
+
+procedure TFormMain.PanelUnDock(Sender: TObject; Client: TControl;
+  NewTarget: TWinControl; var Allow: Boolean);
+begin
+  // OnUnDock gets called BEFORE the client is undocked, in order to optionally
+  // disallow the undock. DockClientCount is never 0 when called from this event.
+  if (Sender as TPanel).DockClientCount = 1 then
+    ShowDockPanel(Sender as TPanel, False, nil);
 end;
 
 procedure TFormMain.ShowDockPanel(APanel: TPanel; MakeVisible: Boolean;
@@ -355,7 +374,7 @@ begin
     APanel.Visible := MakeVisible;
     if MakeVisible then
     begin
-      APanel.Width := ClientWidth div 3;
+      APanel.Width := ClientWidth div 4;
       SplitterLeft.Left := APanel.Width + SplitterLeft.Width;
     end;
   end
@@ -366,7 +385,7 @@ begin
     APanel.Visible := MakeVisible;
     if MakeVisible then
     begin
-      APanel.Width := ClientWidth div 3;
+      APanel.Width := ClientWidth div 4;
       SplitterRight.Left := APanel.Left - SplitterRight.Width;
     end;
   end
@@ -377,7 +396,7 @@ begin
     APanel.Visible := MakeVisible;
     if MakeVisible then
     begin
-      APanel.Height := ClientWidth div 3;
+      APanel.Height := ClientWidth div 5;
       SplitterRight.Top := ClientHeight - APanel.Height - SplitterBottom.Width;
     end;
   end;

@@ -2,8 +2,8 @@ object FormMain: TFormMain
   Left = 0
   Top = 0
   Caption = 'HOPE - Integrated Object Pascal Development Envirionment'
-  ClientHeight = 538
-  ClientWidth = 897
+  ClientHeight = 699
+  ClientWidth = 999
   Color = clBtnFace
   DockSite = True
   Font.Charset = DEFAULT_CHARSET
@@ -21,20 +21,20 @@ object FormMain: TFormMain
   object SplitterLeft: TSplitter
     Left = 129
     Top = 0
-    Height = 429
+    Height = 590
     Visible = False
   end
   object SplitterRight: TSplitter
-    Left = 765
+    Left = 867
     Top = 0
-    Height = 429
+    Height = 590
     Align = alRight
     Visible = False
   end
   object SplitterBottom: TSplitter
     Left = 0
-    Top = 429
-    Width = 897
+    Top = 590
+    Width = 999
     Height = 3
     Cursor = crVSplit
     Align = alBottom
@@ -44,18 +44,19 @@ object FormMain: TFormMain
     Left = 0
     Top = 0
     Width = 129
-    Height = 429
+    Height = 590
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'LeftDock'
     DockSite = True
     TabOrder = 0
     Visible = False
+    OnUnDock = PanelUnDock
   end
   object PanelBottom: TPanel
     Left = 0
-    Top = 432
-    Width = 897
+    Top = 593
+    Width = 999
     Height = 106
     Align = alBottom
     BevelOuter = bvNone
@@ -63,28 +64,32 @@ object FormMain: TFormMain
     DockSite = True
     TabOrder = 1
     Visible = False
+    OnUnDock = PanelUnDock
   end
   object PanelRight: TPanel
-    Left = 768
+    Left = 870
     Top = 0
     Width = 129
-    Height = 429
+    Height = 590
     Align = alRight
     BevelOuter = bvNone
     Caption = 'RightDock'
     DockSite = True
     TabOrder = 2
     Visible = False
+    OnUnDock = PanelUnDock
   end
   object PanelMain: TPanel
     Left = 132
     Top = 0
-    Width = 633
-    Height = 429
+    Width = 735
+    Height = 590
     Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel'
+    DockSite = True
     TabOrder = 3
+    OnDockDrop = PanelMainDockDrop
   end
   object MainMenu: TMainMenu
     Left = 104
@@ -399,41 +404,41 @@ object FormMain: TFormMain
       Caption = 'F&ind First'
       Hint = 'Find First|Finds the first occurance of specified text'
     end
-    object ActionEditCut: TJvEditCut
+    object ActionEditCut: TEditCut
       Category = 'Edit'
       Caption = 'Cu&t'
       Hint = 'Cut|Cuts the selection and puts it on the Clipboard'
       ImageIndex = 0
       ShortCut = 16472
     end
-    object ActionEditCopy: TJvEditCopy
+    object ActionEditCopy: TEditCopy
       Category = 'Edit'
       Caption = '&Copy'
       Hint = 'Copy|Copies the selection and puts it on the Clipboard'
       ImageIndex = 1
       ShortCut = 16451
     end
-    object ActionEditPaste: TJvEditPaste
+    object ActionEditPaste: TEditPaste
       Category = 'Edit'
       Caption = '&Paste'
       Hint = 'Paste|Inserts Clipboard contents'
       ImageIndex = 2
       ShortCut = 16470
     end
-    object ActionEditSelectAll: TJvEditSelectAll
+    object ActionEditSelectAll: TEditSelectAll
       Category = 'Edit'
       Caption = 'Select &All'
       Hint = 'Select All|Selects the entire document'
       ShortCut = 16449
     end
-    object ActionEditUndo: TJvEditUndo
+    object ActionEditUndo: TEditUndo
       Category = 'Edit'
       Caption = '&Undo'
       Hint = 'Undo|Reverts the last action'
       ImageIndex = 3
       ShortCut = 16474
     end
-    object ActionEditDelete: TJvEditDelete
+    object ActionEditDelete: TEditDelete
       Category = 'Edit'
       Caption = '&Delete'
       Hint = 'Delete|Erases the selection'

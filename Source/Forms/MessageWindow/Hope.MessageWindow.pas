@@ -7,7 +7,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.Menus,
-  Hope.DockingForm;
+  Hope.Docking.Form;
 
 type
   TFormMessageWindow = class(TFormDockable)

@@ -6,7 +6,6 @@ object FormWelcomePage: TFormWelcomePage
   ClientWidth = 823
   Color = clBtnFace
   DragKind = dkDock
-  DragMode = dmAutomatic
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -12

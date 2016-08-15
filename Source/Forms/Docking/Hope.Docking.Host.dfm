@@ -24,6 +24,7 @@ inherited FormDockHost: TFormDockHost
     TabOrder = 0
     OnDockDrop = PanelDockDrop
     OnDockOver = PanelDockOver
+    OnGetSiteInfo = FormGetSiteInfo
     OnUnDock = PanelUnDock
   end
   object TabSet: TTabSet

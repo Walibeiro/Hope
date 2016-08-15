@@ -1,35 +1,30 @@
-object FormUnitManager: TFormUnitManager
+inherited FormUnitManager: TFormUnitManager
   Left = 0
   Top = 0
-  BorderStyle = bsSizeToolWin
   Caption = 'Unit Manager'
   ClientHeight = 502
   ClientWidth = 227
-  Color = clBtnFace
-  DockSite = True
-  DragKind = dkDock
-  DragMode = dmAutomatic
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
   Font.Height = -12
   Font.Name = 'Segoe UI'
-  Font.Style = []
-  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 15
   object ToolBar: TToolBar
     Left = 0
     Top = 0
     Width = 227
-    Height = 29
+    Height = 23
+    AutoSize = True
+    ButtonHeight = 23
+    ButtonWidth = 25
     Caption = 'ToolBar'
     TabOrder = 0
+    Transparent = False
   end
   object TreeUnitStructure: TVirtualStringTree
     Left = 0
-    Top = 29
+    Top = 23
     Width = 227
-    Height = 473
+    Height = 479
     Align = alClient
     Header.AutoSizeIndex = 0
     Header.Font.Charset = DEFAULT_CHARSET

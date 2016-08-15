@@ -39,7 +39,10 @@ implementation
 {$R *.dfm}
 
 uses
-  Hope.Main, Hope.Common;
+  Hope.Main, Hope.Common, Hope.DockingUtils;
+
+const
+  CWelcomePageURI = 'http://localhost:8092/index.html';
 
 { TFormWelcomePage }
 
@@ -76,11 +79,10 @@ procedure TFormWelcomePage.ChromiumBeforeResourceLoad(Sender: TObject;
 var
   u: TUrlParts;
 begin
-  // redirect home to google
   if CefParseUrl(request.Url, u) then
     if (u.host = 'home') then
     begin
-      u.host := 'http://localhost:8092/index.html';
+      u.host := CWelcomePageURI;
       request.Url := CefCreateUrl(u);
     end;
 end;
@@ -133,8 +135,8 @@ end;
 procedure TFormWelcomePage.FormStartDock(Sender: TObject;
   var DragObject: TDragDockObject);
 begin
-  DragObject := TDragDockObjectEx.Create(Self);
-  DragObject.Brush.Color := clAqua; // this will display a red outline
+  // create a customized DragDropObject
+  DragObject := TTransparentDragDockObject.Create(Self);
 end;
 
 procedure TFormWelcomePage.RequestHandler(Request: TWebRequest;
@@ -143,7 +145,7 @@ var
   FileName: TFileName;
   FS: TFileStream;
   WriteOnlyStream: TWriteOnlyBlockStream;
-  RootPath: String;
+  RootPath: string;
 begin
   FileName := Request.URL;
   Delete(FileName, 1, 1);
@@ -178,8 +180,13 @@ end;
 
 procedure TFormWelcomePage.Update;
 begin
-  if Chromium.Visible then
-    Chromium.Load('http://localhost:8092/index.html');
+  if not Chromium.Visible then
+    Exit;
+
+  if Chromium.Browser.MainFrame.Url = CWelcomePageURI then
+    Chromium.Browser.Reload
+  else
+    Chromium.Browser.MainFrame.LoadUrl(CWelcomePageURI);
 end;
 
 end.

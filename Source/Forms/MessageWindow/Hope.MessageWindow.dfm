@@ -2,7 +2,6 @@ inherited FormMessageWindow: TFormMessageWindow
   Caption = 'Message Window'
   ClientHeight = 152
   ClientWidth = 784
-  OnStartDock = FormStartDock
   PixelsPerInch = 96
   TextHeight = 13
   object TreeMessages: TVirtualStringTree

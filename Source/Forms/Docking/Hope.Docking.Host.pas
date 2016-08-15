@@ -1,11 +1,11 @@
-unit Hope.DockingHost;
+unit Hope.Docking.Host;
 
 interface
 
 uses
   System.SysUtils, System.Classes, System.Types, WinApi.Windows,
   WinApi.Messages, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
-  Vcl.Tabs, Vcl.ExtCtrls, Hope.DockingForm;
+  Vcl.Tabs, Vcl.ExtCtrls, Hope.Docking.Form;
 
 type
   TFormDockHost = class(TFormDockable)
@@ -51,7 +51,7 @@ begin
     Action := caFree;
   end
   else
-    Action := caHide;
+    inherited FormClose(Sender, Action);
 end;
 
 procedure TFormDockHost.DoFloat(AControl: TControl);

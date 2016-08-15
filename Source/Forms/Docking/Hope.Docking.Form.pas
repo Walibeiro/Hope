@@ -1,4 +1,4 @@
-unit Hope.DockingForm;
+unit Hope.Docking.Form;
 
 interface
 
@@ -32,7 +32,7 @@ implementation
 
 uses
   VCL.ComCtrls,
-  Hope.DockingUtils, Hope.DockingHost;
+  Hope.DockingUtils, Hope.Docking.Host, Hope.Main;
 
 { TFormDockable }
 
@@ -133,7 +133,7 @@ begin
         TFormDockHost(HostDockSite.Owner).Hide;
     end
     else;
-//      MainForm.ShowDockPanel(HostDockSite as TPanel, False, nil);
+      FormMain.ShowDockPanel(HostDockSite as TPanel, False, nil);
 
   Action := caHide;
 end;

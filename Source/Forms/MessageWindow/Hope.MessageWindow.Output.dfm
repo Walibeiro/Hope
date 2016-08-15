@@ -1,13 +1,13 @@
 inherited FormOutputMessages: TFormOutputMessages
   Caption = 'Output Messages'
-  ClientHeight = 427
-  ClientWidth = 713
+  ClientHeight = 153
+  ClientWidth = 702
   Font.Height = -12
   Font.Name = 'Segoe UI'
   PixelsPerInch = 96
   TextHeight = 15
   inherited TreeMessages: TVirtualStringTree
-    Width = 713
-    Height = 427
+    Width = 702
+    Height = 153
   end
 end

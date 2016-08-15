@@ -29,8 +29,8 @@ uses
   Hope.UnicodeExplorer in 'Forms\Hope.UnicodeExplorer.pas' {FormUnicodeExplorer},
   Hope.UnitManager in 'Forms\Hope.UnitManager.pas' {FormUnitManager},
   Hope.WelcomePage in 'Forms\Hope.WelcomePage.pas' {FormWelcomePage},
-  Hope.DockingHost in 'Forms\Docking\Hope.DockingHost.pas' {FormDockHost},
-  Hope.DockingForm in 'Forms\Docking\Hope.DockingForm.pas' {FormDockable},
+  Hope.Docking.Host in 'Forms\Docking\Hope.Docking.Host.pas' {FormDockHost},
+  Hope.Docking.Form in 'Forms\Docking\Hope.Docking.Form.pas' {FormDockable},
   Hope.DockingUtils in 'Utils\Hope.DockingUtils.pas';
 
 {$R *.res}

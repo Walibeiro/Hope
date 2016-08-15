@@ -7,12 +7,17 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ToolWin, Vcl.ComCtrls,
-  VirtualTrees;
+  VirtualTrees, Hope.Docking.Form;
 
 type
-  TFormProjectManager = class(TForm)
+  TFormProjectManager = class(TFormDockable)
     ToolBar: TToolBar;
     TreeProject: TVirtualStringTree;
+    ToolButton1: TToolButton;
+    ToolButton2: TToolButton;
+    ToolButton3: TToolButton;
+    ToolButton4: TToolButton;
+    ToolButton5: TToolButton;
     procedure FormStartDock(Sender: TObject; var DragObject: TDragDockObject);
   private
     { Private-Deklarationen }
@@ -23,7 +28,7 @@ type
 implementation
 
 uses
-  Hope.Common;
+  Hope.Common, Hope.Main;
 
 {$R *.dfm}
 
