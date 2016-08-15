@@ -1,14 +1,11 @@
-unit Hope.Project;
+unit Hope.ProjectFiles;
 
 interface
 
 {$I Hope.inc}
 
-uses
-  Hope.ProjectFiles;
-
 type
-  THopeProject = class
+  THopeProjectFile = class
   public
   end;
 
