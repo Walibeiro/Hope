@@ -58,6 +58,7 @@ type
     ActionSearchFindNext: TSearchFindNext;
     ActionSearchGotoLineNumber: TAction;
     ActionSearchReplace: TSearchReplace;
+    ActionToolsAsciiChart: TAction;
     ActionToolsCodeTemplates: TAction;
     ActionToolsColorPicker: TAction;
     ActionToolsPreferences: TAction;
@@ -117,10 +118,11 @@ type
     MenuItemSearchFindInFiles: TMenuItem;
     MenuItemSearchGotoLineNumber: TMenuItem;
     MenuItemTools: TMenuItem;
-    MenuItemToolsASCIIChart: TMenuItem;
+    MenuItemToolsAsciiChart: TMenuItem;
     MenuItemToolsCodeTemplates: TMenuItem;
     MenuItemToolsColorPicker: TMenuItem;
     MenuItemToolsPreferences: TMenuItem;
+    MenuItemToolsUnicodeExplorer: TMenuItem;
     MenuItemView: TMenuItem;
     MenuItemViewClassExplorer: TMenuItem;
     MenuItemViewFileBrowser: TMenuItem;
@@ -164,6 +166,7 @@ type
       NewTarget: TWinControl; var Allow: Boolean);
     procedure PanelMainDockDrop(Sender: TObject; Source: TDragDockObject; X,
       Y: Integer);
+    procedure ActionToolsAsciiChartExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -188,9 +191,9 @@ var
 implementation
 
 uses
-  Hope.About, Hope.Dialogs.FindInFiles, Hope.Dialogs.ProjectOptions,
-  Hope.Dialogs.Preferences, Hope.ColorPicker, Hope.UnicodeExplorer,
-  Hope.Dialogs.CodeTemplates, Hope.Docking.Form;
+  Hope.About, Hope.AsciiChart, Hope.ColorPicker, Hope.Dialogs.CodeTemplates,
+  Hope.Dialogs.FindInFiles, Hope.Dialogs.Preferences,
+  Hope.Dialogs.ProjectOptions, Hope.Docking.Form, Hope.UnicodeExplorer;
 
 {$R *.dfm}
 
@@ -403,6 +406,16 @@ begin
 
   if MakeVisible and (Client <> nil) then
     Client.Show;
+end;
+
+procedure TFormMain.ActionToolsAsciiChartExecute(Sender: TObject);
+begin
+  with TFormAsciiChart.Create(Self) do
+  try
+    ShowModal;
+  finally
+    Free;
+  end;
 end;
 
 procedure TFormMain.ActionHelpAboutExecute(Sender: TObject);

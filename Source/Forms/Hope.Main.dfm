@@ -305,7 +305,7 @@ object FormMain: TFormMain
       object N12: TMenuItem
         Caption = '-'
       end
-      object MenuItemToolsASCIIChart: TMenuItem
+      object MenuItemToolsUnicodeExplorer: TMenuItem
         Action = ActionToolsUnicodeExplorer
       end
       object MenuItemToolsColorPicker: TMenuItem
@@ -313,6 +313,9 @@ object FormMain: TFormMain
       end
       object N13: TMenuItem
         Caption = '-'
+      end
+      object MenuItemToolsAsciiChart: TMenuItem
+        Action = ActionToolsAsciiChart
       end
     end
     object MenuItemHelp: TMenuItem
@@ -577,6 +580,11 @@ object FormMain: TFormMain
       Caption = 'Options...'
       ShortCut = 24698
       OnExecute = ActionProjectOptionsExecute
+    end
+    object ActionToolsAsciiChart: TAction
+      Category = 'Tools'
+      Caption = 'ASCII Chart'
+      OnExecute = ActionToolsAsciiChartExecute
     end
   end
 end

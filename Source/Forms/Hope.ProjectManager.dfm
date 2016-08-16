@@ -19,7 +19,7 @@ inherited FormProjectManager: TFormProjectManager
     object ToolButton1: TToolButton
       Left = 0
       Top = 0
-      Caption = 'ToolButton1'
+      Caption = 'ToolButton'
       ImageIndex = 0
       Style = tbsDropDown
     end
