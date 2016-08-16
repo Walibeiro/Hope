@@ -13,16 +13,18 @@ type
     FAssertions: Boolean;
     FOptimizations: Boolean;
     FHintsLevel: Integer;
+    FConditionalDefines: string;
   protected
     procedure ReadJson(const JsonValue: TdwsJsonObject); override;
     procedure WriteJson(const JsonValue: TdwsJsonObject); override;
 
     property Assertions: Boolean read FAssertions write FAssertions;
+    property ConditionalDefines: string read FConditionalDefines write FConditionalDefines;
     property Optimizations: Boolean read FOptimizations write FOptimizations;
     property HintsLevel: Integer read FHintsLevel write FHintsLevel;
   end;
 
-  THopeCodeGenOptions = class(THopeJsonBase)
+  THopeCodeGenJavaScriptOptions = class(THopeJsonBase)
   private
     FObfuscation: Boolean;
     FRangeChecking: Boolean;
@@ -61,7 +63,7 @@ type
   THopeProjectOptions = class(THopeJsonBase)
   private
     FCompilerOptions: THopeCompilerOptions;
-    FCodeGenOptions: THopeCodeGenOptions;
+    FCodeGenOptions: THopeCodeGenJavaScriptOptions;
   protected
     procedure ReadJson(const JsonValue: TdwsJsonObject); override;
     procedure WriteJson(const JsonValue: TdwsJsonObject); override;
@@ -69,7 +71,7 @@ type
     procedure AfterConstruction; override;
 
     property CompilerOptions: THopeCompilerOptions read FCompilerOptions;
-    property CodeGenOptions: THopeCodeGenOptions read FCodeGenOptions;
+    property CodeGenOptions: THopeCodeGenJavaScriptOptions read FCodeGenOptions;
   end;
 
 implementation
@@ -79,6 +81,7 @@ implementation
 procedure THopeCompilerOptions.ReadJson(const JsonValue: TdwsJsonObject);
 begin
   FAssertions := JsonValue.GetValue('Assertions', FAssertions);
+  FConditionalDefines := JsonValue.GetValue('Optimizations', FConditionalDefines);
   FOptimizations := JsonValue.GetValue('Optimizations', FOptimizations);
   FHintsLevel := JsonValue.GetValue('HintsLevel', FHintsLevel);
 end;
@@ -86,14 +89,15 @@ end;
 procedure THopeCompilerOptions.WriteJson(const JsonValue: TdwsJsonObject);
 begin
   JsonValue.AddValue('Assertions', FAssertions);
+  JsonValue.AddValue('Optimizations', FConditionalDefines);
   JsonValue.AddValue('Optimizations', FOptimizations);
   JsonValue.AddValue('HintsLevel', FHintsLevel);
 end;
 
 
-{ THopeCodeGenOptions }
+{ THopeCodeGenJavaScriptOptions }
 
-procedure THopeCodeGenOptions.ReadJson(const JsonValue: TdwsJsonObject);
+procedure THopeCodeGenJavaScriptOptions.ReadJson(const JsonValue: TdwsJsonObject);
 begin
   FObfuscation := JsonValue.GetValue('Obfuscation', FObfuscation);
   FRangeChecking := JsonValue.GetValue('RangeChecking', FRangeChecking);
@@ -111,7 +115,7 @@ begin
   FVerbosity := JsonValue.GetValue('Verbosity', FVerbosity);
 end;
 
-procedure THopeCodeGenOptions.WriteJson(const JsonValue: TdwsJsonObject);
+procedure THopeCodeGenJavaScriptOptions.WriteJson(const JsonValue: TdwsJsonObject);
 begin
   JsonValue.AddValue('Obfuscation', FObfuscation);
   JsonValue.AddValue('RangeChecking', FRangeChecking);
