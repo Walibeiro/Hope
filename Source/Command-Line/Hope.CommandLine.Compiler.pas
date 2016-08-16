@@ -4,19 +4,19 @@ interface
 
 uses
   dwsUtils, dwsComp, dwsCompiler, dwsExprs, dwsJSCodeGen, dwsJSLibModule,
-  dwsCodeGen, Arguments;
+  dwsCodeGen, Hope.CommandLine.Arguments;
 
 type
   THopeCommandLineCompiler = class(TRefCountedObject)
   private
-    FArguments: TOP2JSArguments;
+    FArguments: THopeCommandLineArguments;
     FDelphiWebScript: TDelphiWebScript;
     FCodeGen: TdwsJSCodeGen;
     FJSLib: TdwsJSLibModule;
   public
-    constructor Create(Arguments: TOP2JSArguments);
+    constructor Create(Arguments: THopeCommandLineArguments);
 
-    property Arguments: TOP2JSArguments read FArguments;
+    property Arguments: THopeCommandLineArguments read FArguments;
   end;
 
 implementation
@@ -26,7 +26,7 @@ uses
 
 { THopeCommandLineCompiler }
 
-constructor THopeCommandLineCompiler.Create(Arguments: TOP2JSArguments);
+constructor THopeCommandLineCompiler.Create(Arguments: THopeCommandLineArguments);
 var
   Prog: IdwsProgram;
   CodePas, CodeJS: string;
@@ -65,4 +65,3 @@ begin
 end;
 
 end.
-
