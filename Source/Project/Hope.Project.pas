@@ -11,8 +11,8 @@ type
   THopeProject = class(THopeJsonBase)
   private
     FName: string;
-    FCreate: TDateTime;
-    FModified: TDateTime;
+    FCreateDateTime: TDateTime;
+    FModifiedDateTime: TDateTime;
     FAuthor: string;
     FCompany: string;
     FDescription: string;
@@ -26,8 +26,8 @@ type
     procedure AfterConstruction; override;
 
     property Name: string read FName write FName;
-    property Create: TDateTime read FCreate write FCreate;
-    property Modified: TDateTime read FModified write FModified;
+    property CreateDateTime: TDateTime read FCreateDateTime write FCreateDateTime;
+    property ModifiedDateTime: TDateTime read FModifiedDateTime write FModifiedDateTime;
     property Author: string read FAuthor write FAuthor;
     property Company: string read FCompany write FCompany;
     property Description: string read FDescription write FDescription;
@@ -38,25 +38,56 @@ type
 
 implementation
 
+uses
+  System.SysUtils;
+
 { THopeProject }
 
 procedure THopeProject.AfterConstruction;
 begin
   inherited;
+
+  FCreateDateTime := Now;
+  FModifiedDateTime := Now;
+
   FOptions := THopeProjectOptions.Create;
 //  FFiles := THopeProjectFiles.Create;
 end;
 
 procedure THopeProject.ReadJson(const JsonValue: TdwsJsonObject);
+var
+  FormatSetting: TFormatSettings;
 begin
-  inherited;
+  FormatSetting := TFormatSettings.Create('en-US');
 
+  FName := JsonValue.GetValue('Name', FName);
+  FCreateDateTime := StrToDateTime(JsonValue.GetValue('Create', DateTimeToStr(FCreateDateTime, FormatSetting)), FormatSetting);
+  FModifiedDateTime := StrToDateTime(JsonValue.GetValue('Modified', DateTimeToStr(FModifiedDateTime, FormatSetting)), FormatSetting);
+  FAuthor := JsonValue.GetValue('Author', FAuthor);
+  FCompany := JsonValue.GetValue('Company', FCompany);
+  FDescription := JsonValue.GetValue('Description', FDescription);
+  FKeywords := JsonValue.GetValue('Keywords', FKeywords);
+  FUrl := JsonValue.GetValue('Url', FUrl);
+
+  FOptions.LoadFromJson(JsonValue);
 end;
 
 procedure THopeProject.WriteJson(const JsonValue: TdwsJsonObject);
+var
+  FormatSetting: TFormatSettings;
 begin
-  inherited;
+  FormatSetting := TFormatSettings.Create('en-US');
 
+  JsonValue.AddValue('Name', FName);
+  JsonValue.AddValue('Create', DateTimeToStr(FCreateDateTime, FormatSetting));
+  JsonValue.AddValue('Modified', DateTimeToStr(FModifiedDateTime, FormatSetting));
+  JsonValue.AddValue('Author', FAuthor);
+  JsonValue.AddValue('Company', FCompany);
+  JsonValue.AddValue('Description', FDescription);
+  JsonValue.AddValue('Keywords', FKeywords);
+  JsonValue.AddValue('Url', FUrl);
+
+  FOptions.SaveToJson(JsonValue);
 end;
 
 end.

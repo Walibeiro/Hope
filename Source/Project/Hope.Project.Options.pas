@@ -11,11 +11,15 @@ type
   THopeCompilerOptions = class(THopeJsonBase)
   private
     FAssertions: Boolean;
-    FOptimize: Boolean;
+    FOptimizations: Boolean;
     FHintsLevel: Integer;
   protected
     procedure ReadJson(const JsonValue: TdwsJsonObject); override;
     procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+
+    property Assertions: Boolean read FAssertions write FAssertions;
+    property Optimizations: Boolean read FOptimizations write FOptimizations;
+    property HintsLevel: Integer read FHintsLevel write FHintsLevel;
   end;
 
   THopeCodeGenOptions = class(THopeJsonBase)
@@ -63,6 +67,9 @@ type
     procedure WriteJson(const JsonValue: TdwsJsonObject); override;
   public
     procedure AfterConstruction; override;
+
+    property CompilerOptions: THopeCompilerOptions read FCompilerOptions;
+    property CodeGenOptions: THopeCodeGenOptions read FCodeGenOptions;
   end;
 
 implementation
@@ -71,14 +78,16 @@ implementation
 
 procedure THopeCompilerOptions.ReadJson(const JsonValue: TdwsJsonObject);
 begin
-  inherited;
-
+  FAssertions := JsonValue.GetValue('Assertions', FAssertions);
+  FOptimizations := JsonValue.GetValue('Optimizations', FOptimizations);
+  FHintsLevel := JsonValue.GetValue('HintsLevel', FHintsLevel);
 end;
 
 procedure THopeCompilerOptions.WriteJson(const JsonValue: TdwsJsonObject);
 begin
-  inherited;
-
+  JsonValue.AddValue('Assertions', FAssertions);
+  JsonValue.AddValue('Optimizations', FOptimizations);
+  JsonValue.AddValue('HintsLevel', FHintsLevel);
 end;
 
 
@@ -86,14 +95,38 @@ end;
 
 procedure THopeCodeGenOptions.ReadJson(const JsonValue: TdwsJsonObject);
 begin
-  inherited;
-
+  FObfuscation := JsonValue.GetValue('Obfuscation', FObfuscation);
+  FRangeChecking := JsonValue.GetValue('RangeChecking', FRangeChecking);
+  FInstanceChecking := JsonValue.GetValue('InstanceChecking', FInstanceChecking);
+  FConditionChecking := JsonValue.GetValue('ConditionChecking', FConditionChecking);
+  FLoopChecking := JsonValue.GetValue('LoopChecking', FLoopChecking);
+  FInlineMagics := JsonValue.GetValue('InlineMagics', FInlineMagics);
+  FIgnorePublishedInImplementation := JsonValue.GetValue('IgnorePublishedInImplementation', FIgnorePublishedInImplementation);
+  FEmitSourceLocation := JsonValue.GetValue('EmitSourceLocation', FEmitSourceLocation);
+  FEmitRTTI := JsonValue.GetValue('EmitRTTI', FEmitRTTI);
+  FDevirtualize := JsonValue.GetValue('Devirtualize', FDevirtualize);
+  FMainBody := JsonValue.GetValue('MainBody', FMainBody);
+  FCodePacking := JsonValue.GetValue('CodePacking', FCodePacking);
+  FSmartLinking := JsonValue.GetValue('SmartLinking', FSmartLinking);
+  FVerbosity := JsonValue.GetValue('Verbosity', FVerbosity);
 end;
 
 procedure THopeCodeGenOptions.WriteJson(const JsonValue: TdwsJsonObject);
 begin
-  inherited;
-
+  JsonValue.AddValue('Obfuscation', FObfuscation);
+  JsonValue.AddValue('RangeChecking', FRangeChecking);
+  JsonValue.AddValue('InstanceChecking', FInstanceChecking);
+  JsonValue.AddValue('ConditionChecking', FConditionChecking);
+  JsonValue.AddValue('LoopChecking', FLoopChecking);
+  JsonValue.AddValue('InlineMagics', FInlineMagics);
+  JsonValue.AddValue('IgnorePublishedInImplementation', FIgnorePublishedInImplementation);
+  JsonValue.AddValue('EmitSourceLocation', FEmitSourceLocation);
+  JsonValue.AddValue('EmitRTTI', FEmitRTTI);
+  JsonValue.AddValue('Devirtualize', FDevirtualize);
+  JsonValue.AddValue('MainBody', FMainBody);
+  JsonValue.AddValue('CodePacking', FCodePacking);
+  JsonValue.AddValue('SmartLinking', FSmartLinking);
+  JsonValue.AddValue('Verbosity', FVerbosity);
 end;
 
 
