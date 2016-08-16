@@ -1,4 +1,4 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{233DEA5A-4A2E-40E8-9F05-26FAD1D9793E}</ProjectGuid>
         <ProjectVersion>16.1</ProjectVersion>
@@ -89,6 +89,7 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <Debugger_RunParams>C:\Users\Public\Code\FreeDWScript\Test\Algorithms\bottles_of_beer.pas /test=fooba</Debugger_RunParams>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
@@ -105,54 +106,13 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="Arguments.pas"/>
-        <DCCReference Include="Compiler.pas"/>
-        <DCCReference Include="..\..\Source\SourceUtils\dwsCodeGen.pas"/>
-        <DCCReference Include="..\..\Source\dwsComp.pas"/>
-        <DCCReference Include="..\..\Source\dwsCompiler.pas"/>
-        <DCCReference Include="..\..\Source\dwsCompilerUtils.pas"/>
-        <DCCReference Include="..\..\Source\dwsConnectorExprs.pas"/>
-        <DCCReference Include="..\..\Source\dwsConnectorSymbols.pas"/>
-        <DCCReference Include="..\..\Source\dwsConstExprs.pas"/>
-        <DCCReference Include="..\..\Source\dwsConvExprs.pas"/>
-        <DCCReference Include="..\..\Source\dwsCoreExprs.pas"/>
-        <DCCReference Include="..\..\Source\dwsDataContext.pas"/>
-        <DCCReference Include="..\..\Source\dwsDateTime.pas"/>
-        <DCCReference Include="..\..\Source\dwsErrors.pas"/>
-        <DCCReference Include="..\..\Source\dwsExprList.pas"/>
-        <DCCReference Include="..\..\Source\dwsExprs.pas"/>
-        <DCCReference Include="..\..\Source\dwsExternalSymbols.pas"/>
-        <DCCReference Include="..\..\Source\dwsFileFunctions.pas"/>
-        <DCCReference Include="..\..\Source\dwsFileSystem.pas"/>
-        <DCCReference Include="..\..\Source\dwsFunctions.pas"/>
-        <DCCReference Include="..\..\Source\dwsInfo.pas"/>
-        <DCCReference Include="..\..\Source\JSCodeGen\dwsJSCodeGen.pas"/>
-        <DCCReference Include="..\..\Source\JSCodeGen\dwsJSFilter.pas"/>
-        <DCCReference Include="..\..\Libraries\JSLib\dwsJSLibModule.pas"/>
-        <DCCReference Include="..\..\Source\JSCodeGen\dwsJSMin.pas"/>
-        <DCCReference Include="..\..\Source\dwsJSON.pas"/>
-        <DCCReference Include="..\..\Source\dwsLanguageExtension.pas"/>
-        <DCCReference Include="..\..\Source\dwsMagicExprs.pas"/>
-        <DCCReference Include="..\..\Source\dwsMathFunctions.pas"/>
-        <DCCReference Include="..\..\Source\dwsMethodExprs.pas"/>
-        <DCCReference Include="..\..\Source\dwsOperators.pas"/>
-        <DCCReference Include="..\..\Source\dwsPascalTokenizer.pas"/>
-        <DCCReference Include="..\..\Source\dwsRelExprs.pas"/>
-        <DCCReference Include="..\..\Source\dwsResultFunctions.pas"/>
-        <DCCReference Include="..\..\Source\dwsRTTIFunctions.pas"/>
-        <DCCReference Include="..\..\Source\dwsSetOfExprs.pas"/>
-        <DCCReference Include="..\..\Source\dwsStack.pas"/>
-        <DCCReference Include="..\..\Source\dwsStringFunctions.pas"/>
-        <DCCReference Include="..\..\Source\dwsStrings.pas"/>
-        <DCCReference Include="..\..\Source\dwsSymbols.pas"/>
-        <DCCReference Include="..\..\Source\dwsSystemOperators.pas"/>
-        <DCCReference Include="..\..\Source\dwsTimeFunctions.pas"/>
-        <DCCReference Include="..\..\Source\dwsTokenizer.pas"/>
-        <DCCReference Include="..\..\Source\dwsUnitSymbols.pas"/>
-        <DCCReference Include="..\..\Source\dwsUtils.pas"/>
-        <DCCReference Include="..\..\Source\dwsVariantFunctions.pas"/>
-        <DCCReference Include="..\..\Source\dwsWebUtils.pas"/>
-        <DCCReference Include="..\..\Source\dwsXPlatform.pas"/>
+        <DCCReference Include="Command-Line\Hope.CommandLine.Arguments.pas"/>
+        <DCCReference Include="Command-Line\Hope.CommandLine.Compiler.pas"/>
+        <DCCReference Include="Project\Hope.Project.Files.pas"/>
+        <DCCReference Include="Project\Hope.Project.Options.pas"/>
+        <DCCReference Include="Project\Hope.Project.pas"/>
+        <DCCReference Include="Compiler\Hope.Compiler.pas"/>
+        <DCCReference Include="Common\Hope.Common.JSON.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -175,7 +135,7 @@
                 </Source>
             </Delphi.Personality>
             <Deployment>
-                <DeployFile LocalName="Win32\Debug\HCC.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\..\Binaries\HCC.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>HCC.exe</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -186,6 +146,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                     <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win32\Debug\HCC.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>HCC.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -14,20 +14,22 @@ type
 
   THopeCommandLineArguments = class(TRefCountedObject)
   private
-    FInputFilename: string;
-    FOutputFilename: string;
+    FFileNames: array of string;
     FOptions: array of TNameValuePair;
+    procedure AddFile(FileName: string);
+    procedure AddOption(Item: string);
     function GetOption(Index: Integer): TNameValuePair;
     function GetOptionCount: Integer;
-    procedure AddOption(Item: string);
+    function GetFileNames(Index: Integer): string;
+    function GetFileNameCount: Integer;
   public
     constructor Create;
 
     function HasOption(Name: string): Boolean;
     function GetOptionValue(Name: string; out Value: string): Boolean;
 
-    property InputFilename: string read FInputFilename;
-    property OutputFilename: string read FOutputFilename;
+    property FileName[Index: Integer]: string read GetFileNames;
+    property FileNameCount: Integer read GetFileNameCount;
 
     property Option[Index: Integer]: TNameValuePair read GetOption;
     property OptionCount: Integer read GetOptionCount;
@@ -56,23 +58,21 @@ begin
       AddOption(Item);
     end
     else
-    begin
-      // specify filenames
-      if InputFilename = '' then
-        FInputFilename := Item
-      else
-      if OutputFilename = '' then
-        FOutputFilename := Item
-    end;
+      AddFile(Item);
   end;
-
-  if FOutputFilename = '' then
-    FOutputFilename := FInputFilename + '.js';
 end;
 
 function StripText(Text: string): string; inline;
 begin
   Result := LowerCase(Trim(Text));
+end;
+
+procedure THopeCommandLineArguments.AddFile(FileName: string);
+var
+  ItemIndex: Integer;
+begin
+  ItemIndex := Length(FFilenames);
+  SetLength(FFilenames, ItemIndex + 1);
 end;
 
 procedure THopeCommandLineArguments.AddOption(Item: string);
@@ -90,6 +90,19 @@ begin
   end
   else
     FOptions[ItemIndex].Name := StripText(Item);
+end;
+
+function THopeCommandLineArguments.GetFileNameCount: Integer;
+begin
+  Result := Length(FFileNames);
+end;
+
+function THopeCommandLineArguments.GetFileNames(Index: Integer): string;
+begin
+  if (Index < Low(FFileNames)) or (Index > High(FFileNames)) then
+    raise EHopeCommandLineArguments.CreateFmt(RStrIndexOutOfBounds, [Index]);
+
+  Result := FFileNames[Index];
 end;
 
 function THopeCommandLineArguments.GetOption(Index: Integer): TNameValuePair;
