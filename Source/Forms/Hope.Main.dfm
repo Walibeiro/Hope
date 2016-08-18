@@ -47,8 +47,9 @@ object FormMain: TFormMain
     Height = 590
     Align = alLeft
     BevelOuter = bvNone
-    Caption = 'LeftDock'
+    Caption = '(LeftDock)'
     DockSite = True
+    ShowCaption = False
     TabOrder = 0
     Visible = False
     OnUnDock = PanelUnDock
@@ -62,6 +63,7 @@ object FormMain: TFormMain
     BevelOuter = bvNone
     Caption = 'BottomDock'
     DockSite = True
+    ShowCaption = False
     TabOrder = 1
     Visible = False
     OnUnDock = PanelUnDock
@@ -75,6 +77,7 @@ object FormMain: TFormMain
     BevelOuter = bvNone
     Caption = 'RightDock'
     DockSite = True
+    ShowCaption = False
     TabOrder = 2
     Visible = False
     OnUnDock = PanelUnDock
@@ -86,7 +89,7 @@ object FormMain: TFormMain
     Height = 590
     Align = alClient
     BevelOuter = bvNone
-    Caption = 'Panel'
+    Caption = '(Main)'
     DockSite = True
     TabOrder = 3
     OnDockDrop = PanelMainDockDrop
@@ -331,6 +334,7 @@ object FormMain: TFormMain
     object ActionFileNewProject: TAction
       Category = 'File'
       Caption = 'New Project'
+      OnExecute = ActionFileNewProjectExecute
     end
     object ActionFileNewUnit: TAction
       Category = 'File'
@@ -346,9 +350,15 @@ object FormMain: TFormMain
       Caption = 'New CSS'
       Visible = False
     end
+    object ActionFileNewMore: TAction
+      Category = 'File'
+      Caption = 'More...'
+    end
     object ActionFileOpen: TFileOpen
       Category = 'File'
       Caption = '&Open...'
+      Dialog.DefaultExt = '.pas'
+      Dialog.Options = [ofHideReadOnly, ofFileMustExist, ofEnableSizing]
       Hint = 'Open|Opens an existing file'
       ImageIndex = 7
     end
@@ -359,9 +369,14 @@ object FormMain: TFormMain
     object ActionFileOpenProject: TFileOpen
       Category = 'File'
       Caption = '&Open Project...'
+      Dialog.DefaultExt = '.hproj'
+      Dialog.Filter = 'HOPE project (*.hproj)|*.hproj'
+      Dialog.Options = [ofHideReadOnly, ofAllowMultiSelect, ofFileMustExist, ofEnableSizing]
+      Dialog.Title = 'Open Project'
       Hint = 'Open Project|Opens an existing project'
       ImageIndex = 7
       ShortCut = 16463
+      OnAccept = ActionFileOpenProjectAccept
     end
     object ActionFileSaveProjectAs: TFileSaveAs
       Category = 'File'
@@ -473,6 +488,7 @@ object FormMain: TFormMain
     object ActionFileCloseProject: TAction
       Category = 'File'
       Caption = '&Close Project'
+      OnExecute = ActionFileCloseProjectExecute
     end
     object ActionFileExit: TFileExit
       Category = 'File'
@@ -567,10 +583,6 @@ object FormMain: TFormMain
       Caption = 'Code Templates...'
       OnExecute = ActionToolsCodeTemplatesExecute
     end
-    object ActionFileNewMore: TAction
-      Category = 'File'
-      Caption = 'More...'
-    end
     object ActionProjectMetrics: TAction
       Category = 'Project'
       Caption = 'Metrics'
@@ -585,6 +597,21 @@ object FormMain: TFormMain
       Category = 'Tools'
       Caption = 'ASCII Chart'
       OnExecute = ActionToolsAsciiChartExecute
+    end
+    object ActionMacroPlay: TAction
+      Category = 'Macro'
+      Caption = '&Play'
+      Hint = 'Play|Play macro'
+    end
+    object ActionMacroRecord: TAction
+      Category = 'Macro'
+      Caption = 'ActionMacroRecord'
+      Hint = 'Record|Record macro'
+    end
+    object ActionMacroStop: TAction
+      Category = 'Macro'
+      Caption = '&Stop'
+      Hint = 'Stop|Stops running macro'
     end
   end
 end

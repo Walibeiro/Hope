@@ -6,11 +6,12 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.Actions,
-  Vcl.ActnList, Vcl.Menus, Vcl.StdActns, Vcl.ExtCtrls, Vcl.ComCtrls,
-  Hope.Common, Hope.WelcomePage, Hope.ProjectManager, Hope.UnitManager,
+  System.Types, System.Actions, Vcl.Graphics, Vcl.Controls, Vcl.Forms,
+  Vcl.Dialogs, Vcl.ActnList, Vcl.Menus, Vcl.StdActns, Vcl.ExtCtrls,
+  Vcl.ComCtrls, Vcl.StdCtrls,
+  Hope.DataModule, Hope.WelcomePage, Hope.ProjectManager, Hope.UnitManager,
   Hope.MessageWindow.Compiler, Hope.MessageWindow.Output, Hope.Docking.Host,
-  Vcl.StdCtrls;
+  Hope.Project, Hope.Project.List;
 
 type
   TFormMain = class(TForm)
@@ -145,11 +146,14 @@ type
     N15: TMenuItem;
     PanelBottom: TPanel;
     PanelLeft: TPanel;
-    PanelMain: TPanel;
     PanelRight: TPanel;
     SplitterBottom: TSplitter;
     SplitterLeft: TSplitter;
     SplitterRight: TSplitter;
+    PanelMain: TPanel;
+    ActionMacroPlay: TAction;
+    ActionMacroRecord: TAction;
+    ActionMacroStop: TAction;
     procedure ActionHelpAboutExecute(Sender: TObject);
     procedure ActionProjectOptionsExecute(Sender: TObject);
     procedure ActionSearchFindInFilesExecute(Sender: TObject);
@@ -167,8 +171,13 @@ type
     procedure PanelMainDockDrop(Sender: TObject; Source: TDragDockObject; X,
       Y: Integer);
     procedure ActionToolsAsciiChartExecute(Sender: TObject);
+    procedure ActionFileOpenProjectAccept(Sender: TObject);
+    procedure ActionFileNewProjectExecute(Sender: TObject);
+    procedure ActionFileCloseProjectExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
+
+    FProjects: THopeProjectList;
 
     FUnitManager: TFormUnitManager;
     FProjectManager: TFormProjectManager;
@@ -180,9 +189,11 @@ type
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
-    procedure LoadProject(ProjectName: string);
+    procedure LoadProject(ProjectFileName: TFileName);
 
     procedure ShowDockPanel(APanel: TPanel; MakeVisible: Boolean; Client: TControl);
+
+    property Projects: THopeProjectList read FProjects;
   end;
 
 var
@@ -203,6 +214,8 @@ procedure TFormMain.AfterConstruction;
 begin
   inherited;
 
+  FProjects := THopeProjectList.Create;
+
   FWelcomePage := TFormWelcomePage.Create(nil);
   FUnitManager := TFormUnitManager.Create(nil);
   FProjectManager := TFormProjectManager.Create(nil);
@@ -212,7 +225,16 @@ end;
 
 procedure TFormMain.BeforeDestruction;
 begin
+(*
+  FOutputMessages.Free;
+  FCompilerMessages.Free;
+*)
+  FProjectManager.Free;
+  FUnitManager.Free;
   FWelcomePage.Free;
+
+  FProjects.Free;
+
   inherited;
 end;
 
@@ -338,15 +360,16 @@ begin
   Host.IsPaged := True;
   Host.ManualDock(PanelBottom);
   ShowDockPanel(PanelBottom, True, Host);
+  Host.TabSet.TabIndex := 0;
 
   FWelcomePage.ManualDock(PanelMain);
   FWelcomePage.Show;
   FWelcomePage.Update;
 end;
 
-procedure TFormMain.LoadProject(ProjectName: string);
+procedure TFormMain.LoadProject(ProjectFileName: TFileName);
 begin
-
+  FProjects.LoadProject(ProjectFileName)
 end;
 
 procedure TFormMain.PanelMainDockDrop(Sender: TObject; Source: TDragDockObject;
@@ -416,6 +439,21 @@ begin
   finally
     Free;
   end;
+end;
+
+procedure TFormMain.ActionFileCloseProjectExecute(Sender: TObject);
+begin
+  FProjects.RemoveProject(FProjects.ActiveProject);
+end;
+
+procedure TFormMain.ActionFileNewProjectExecute(Sender: TObject);
+begin
+  //NewProject;
+end;
+
+procedure TFormMain.ActionFileOpenProjectAccept(Sender: TObject);
+begin
+  LoadProject(ActionFileOpenProject.Dialog.FileName);
 end;
 
 procedure TFormMain.ActionHelpAboutExecute(Sender: TObject);

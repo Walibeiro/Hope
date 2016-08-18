@@ -1,4 +1,4 @@
-unit Hope.Common;
+unit Hope.DataModule;
 
 {$I Hope.inc}
 
@@ -6,7 +6,6 @@ interface
 
 uses
   System.SysUtils, System.Classes,
-  JvComponentBase, JvDockTree, JvDockControlForm, JvDockDelphiStyle,
 
   SynEditPlugins, SynMacroRecorder,
   SynEditRegexSearch, SynEditHighlighter, SynHighlighterMulti,
@@ -17,7 +16,6 @@ uses
 
 type
   TDataModuleCommon = class(TDataModule)
-    DockDelphiStyle: TJvDockDelphiStyle;
     SynEditSearch: TSynEditSearch;
     SynObjectPascal: TSynMultiSyn;
     SynEditRegexSearch: TSynEditRegexSearch;
@@ -28,7 +26,6 @@ type
     SynHTMLSyn: TSynHTMLSyn;
     SynCssSyn: TSynCssSyn;
     ImageList16: TImageList;
-    ImageList1: TImageList;
   private
     FHistory: THopeHistory;
     FPaths: THopePaths;

@@ -5,7 +5,8 @@ interface
 {$I Hope.inc}
 
 uses
-  dwsJson, Hope.Common.JSON, Hope.Project.Files, Hope.Project.Options;
+  System.SysUtils, dwsJson, Hope.Common.JSON, Hope.Project.Files,
+  Hope.Project.Options;
 
 type
   THopeProject = class(THopeJsonBase)
@@ -19,11 +20,18 @@ type
     FKeywords: string;
     FOptions: THopeProjectOptions;
     FUrl: string;
+    FFileName: string;
+    function GetRootPath: string;
   protected
     procedure ReadJson(const JsonValue: TdwsJsonObject); override;
     procedure WriteJson(const JsonValue: TdwsJsonObject); override;
   public
     procedure AfterConstruction; override;
+
+    procedure LoadFromFile(const FileName: TFileName); override;
+    procedure SaveToFile(const FileName: TFileName); override;
+
+    property RootPath: string read GetRootPath;
 
     property Name: string read FName write FName;
     property CreateDateTime: TDateTime read FCreateDateTime write FCreateDateTime;
@@ -38,8 +46,6 @@ type
 
 implementation
 
-uses
-  System.SysUtils;
 
 { THopeProject }
 
@@ -52,6 +58,25 @@ begin
 
   FOptions := THopeProjectOptions.Create;
 //  FFiles := THopeProjectFiles.Create;
+end;
+
+function THopeProject.GetRootPath: string;
+begin
+  Result := '';
+  if FFileName <> '' then
+    Result := ExtractFilePath(FFileName);
+end;
+
+procedure THopeProject.LoadFromFile(const FileName: TFileName);
+begin
+  FFileName := FileName;
+  inherited;
+end;
+
+procedure THopeProject.SaveToFile(const FileName: TFileName);
+begin
+  FFileName := FileName;
+  inherited;
 end;
 
 procedure THopeProject.ReadJson(const JsonValue: TdwsJsonObject);

@@ -16,37 +16,37 @@ inherited FormProjectManager: TFormProjectManager
     AutoSize = True
     Caption = 'ToolBar'
     TabOrder = 0
-    object ToolButton1: TToolButton
+    object ToolButtonActiveProject: TToolButton
       Left = 0
       Top = 0
       Caption = 'ToolButton'
       ImageIndex = 0
       Style = tbsDropDown
     end
-    object ToolButton2: TToolButton
+    object ToolButtonAddNewProject: TToolButton
       Left = 36
       Top = 0
-      Caption = 'ToolButton2'
+      Caption = 'Add new project'
       ImageIndex = 1
     end
-    object ToolButton3: TToolButton
+    object ToolButtonRemoveProject: TToolButton
       Left = 59
       Top = 0
-      Caption = 'ToolButton3'
+      Caption = 'ToolButtonRemove'
       ImageIndex = 2
     end
-    object ToolButton4: TToolButton
+    object ToolButtonView: TToolButton
       Left = 82
       Top = 0
-      Caption = 'ToolButton4'
+      Caption = 'ToolButtonView'
       ImageIndex = 3
       Style = tbsDropDown
     end
-    object ToolButton5: TToolButton
+    object ToolButtonSplitter: TToolButton
       Left = 118
       Top = 0
       Width = 8
-      Caption = 'ToolButton5'
+      Caption = 'ToolButtonSplitter'
       ImageIndex = 4
       Style = tbsSeparator
     end
@@ -65,6 +65,13 @@ inherited FormProjectManager: TFormProjectManager
     Header.Font.Style = []
     Header.MainColumn = -1
     TabOrder = 1
+    OnCompareNodes = TreeProjectCompareNodes
+    OnDblClick = TreeProjectDblClick
+    OnEditing = TreeProjectEditing
+    OnFreeNode = TreeProjectFreeNode
+    OnGetText = TreeProjectGetText
+    OnIncrementalSearch = TreeProjectIncrementalSearch
+    OnNewText = TreeProjectNewText
     Columns = <>
   end
 end

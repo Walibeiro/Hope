@@ -24,7 +24,7 @@ type
 implementation
 
 uses
-  Hope.Common;
+  Hope.DataModule;
 
 {$R *.dfm}
 

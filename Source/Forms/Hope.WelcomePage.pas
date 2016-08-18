@@ -39,7 +39,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Hope.Main, Hope.Common, Hope.DockingUtils;
+  Hope.Main, Hope.DataModule, Hope.DockingUtils;
 
 const
   CWelcomePageURI = 'http://localhost:8092/index.html';
