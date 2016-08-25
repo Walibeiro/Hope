@@ -329,6 +329,7 @@ object FormMain: TFormMain
     end
   end
   object ActionList: TActionList
+    Images = DataModuleCommon.ImageList16
     Left = 176
     Top = 104
     object ActionFileNewProject: TAction
@@ -360,7 +361,7 @@ object FormMain: TFormMain
       Dialog.DefaultExt = '.pas'
       Dialog.Options = [ofHideReadOnly, ofFileMustExist, ofEnableSizing]
       Hint = 'Open|Opens an existing file'
-      ImageIndex = 7
+      ImageIndex = 1
     end
     object ActionFileOpenRecent: TAction
       Category = 'File'
@@ -382,19 +383,19 @@ object FormMain: TFormMain
       Category = 'File'
       Caption = 'Save Project &As...'
       Hint = 'Save As|Saves the active file with a new name'
-      ImageIndex = 30
+      ImageIndex = 4
     end
     object ActionFileSaveAs: TFileSaveAs
       Category = 'File'
       Caption = 'Save &As...'
       Hint = 'Save As|Saves the active file with a new name'
-      ImageIndex = 30
+      ImageIndex = 4
     end
     object ActionSearchFind: TSearchFind
       Category = 'Search'
       Caption = '&Find...'
       Hint = 'Find|Finds the specified text'
-      ImageIndex = 34
+      ImageIndex = 9
       ShortCut = 16454
     end
     object ActionSearchFindInFiles: TAction
@@ -407,14 +408,13 @@ object FormMain: TFormMain
       Category = 'Search'
       Caption = 'Find &Next'
       Hint = 'Find Next|Repeats the last find'
-      ImageIndex = 33
       ShortCut = 114
     end
     object ActionSearchReplace: TSearchReplace
       Category = 'Search'
       Caption = '&Replace...'
       Hint = 'Replace|Replaces specific text with different text'
-      ImageIndex = 32
+      ImageIndex = 10
       ShortCut = 16466
     end
     object ActionSearchFindFirst: TSearchFindFirst
@@ -426,21 +426,21 @@ object FormMain: TFormMain
       Category = 'Edit'
       Caption = 'Cu&t'
       Hint = 'Cut|Cuts the selection and puts it on the Clipboard'
-      ImageIndex = 0
+      ImageIndex = 7
       ShortCut = 16472
     end
     object ActionEditCopy: TEditCopy
       Category = 'Edit'
       Caption = '&Copy'
       Hint = 'Copy|Copies the selection and puts it on the Clipboard'
-      ImageIndex = 1
+      ImageIndex = 6
       ShortCut = 16451
     end
     object ActionEditPaste: TEditPaste
       Category = 'Edit'
       Caption = '&Paste'
       Hint = 'Paste|Inserts Clipboard contents'
-      ImageIndex = 2
+      ImageIndex = 11
       ShortCut = 16470
     end
     object ActionEditSelectAll: TEditSelectAll
@@ -453,14 +453,14 @@ object FormMain: TFormMain
       Category = 'Edit'
       Caption = '&Undo'
       Hint = 'Undo|Reverts the last action'
-      ImageIndex = 3
+      ImageIndex = 14
       ShortCut = 16474
     end
     object ActionEditDelete: TEditDelete
       Category = 'Edit'
       Caption = '&Delete'
       Hint = 'Delete|Erases the selection'
-      ImageIndex = 5
+      ImageIndex = 8
       ShortCut = 46
     end
     object ActionEditRedo: TAction
@@ -471,11 +471,13 @@ object FormMain: TFormMain
     object ActionHelpAbout: TAction
       Category = 'Help'
       Caption = '&About'
+      ImageIndex = 49
       OnExecute = ActionHelpAboutExecute
     end
     object ActionFileSave: TAction
       Category = 'File'
       Caption = '&Save'
+      ImageIndex = 3
     end
     object ActionFileSaveProject: TAction
       Category = 'File'
@@ -494,7 +496,7 @@ object FormMain: TFormMain
       Category = 'File'
       Caption = 'E&xit'
       Hint = 'Exit|Quits the application'
-      ImageIndex = 43
+      ImageIndex = 26
     end
     object ActionSearchFindClass: TAction
       Category = 'Search'
@@ -602,16 +604,19 @@ object FormMain: TFormMain
       Category = 'Macro'
       Caption = '&Play'
       Hint = 'Play|Play macro'
+      ImageIndex = 21
     end
     object ActionMacroRecord: TAction
       Category = 'Macro'
       Caption = 'ActionMacroRecord'
       Hint = 'Record|Record macro'
+      ImageIndex = 23
     end
     object ActionMacroStop: TAction
       Category = 'Macro'
       Caption = '&Stop'
       Hint = 'Stop|Stops running macro'
+      ImageIndex = 22
     end
   end
 end

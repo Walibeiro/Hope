@@ -73,6 +73,7 @@ var
 begin
   ItemIndex := Length(FFilenames);
   SetLength(FFilenames, ItemIndex + 1);
+  FFilenames[ItemIndex] := FileName;
 end;
 
 procedure THopeCommandLineArguments.AddOption(Item: string);

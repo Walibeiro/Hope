@@ -24,7 +24,7 @@ type
 implementation
 
 uses
-  dwsXPlatform;
+  dwsXPlatform, dwsErrors, dwsExprList;
 
 { THopeCompiler }
 
