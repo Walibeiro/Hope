@@ -3,7 +3,7 @@ unit Extension;
 interface
 
 uses
-  ceflib, VCL.Dialogs;
+  ceflib;
 
 type
   TCustomRenderProcessHandler = class(TCefRenderProcessHandlerOwn)
