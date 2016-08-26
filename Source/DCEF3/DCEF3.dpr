@@ -4,6 +4,7 @@ program DCEF3;
 
 {-$WEAKLINKRTTI ON}
 {-$RTTI EXPLICIT METHODS([]) PROPERTIES([]) FIELDS([])}
+{$R *.res}
 
 uses
   Windows,

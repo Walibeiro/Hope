@@ -69,7 +69,7 @@ begin
   else case Column of
     0:
     begin
-      Result := Integer(NodeData[0].ProjectFile.Extension) - Integer(NodeData[1].ProjectFile.Extension);
+      Result := CompareText(NodeData[0].ProjectFile.Extension, NodeData[1].ProjectFile.Extension);
       if Result = 0 then
         Result := CompareText(NodeData[0].Caption, NodeData[1].Caption);
     end;

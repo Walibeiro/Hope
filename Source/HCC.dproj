@@ -7,7 +7,7 @@
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
-        <TargetedPlatforms>1</TargetedPlatforms>
+        <TargetedPlatforms>3</TargetedPlatforms>
         <AppType>Console</AppType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
@@ -50,6 +50,12 @@
         <Cfg_2>true</Cfg_2>
         <Base>true</Base>
     </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win64)'!=''">
+        <Cfg_2_Win64>true</Cfg_2_Win64>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
         <Manifest_File>None</Manifest_File>
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
@@ -69,14 +75,19 @@
         <DCC_ConsoleTarget>true</DCC_ConsoleTarget>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
+        <DCC_DcuOutput>..\DCU\x86</DCC_DcuOutput>
+        <DCC_ExeOutput>..\Binaries\x86</DCC_ExeOutput>
         <Debugger_RunParams>C:\Users\Public\Code\FreeDWScript\Test\Algorithms\bottles_of_beer.pas</Debugger_RunParams>
         <DCC_ConsoleTarget>true</DCC_ConsoleTarget>
         <DCC_UsePackage>JvGlobus;JvMM;JvManagedThreads;DCEF;DBXSqliteDriver;fmx;JvDlgs;IndySystem;JvCrypt;TeeDB;tethering;DBXInterBaseDriver;GLScene_RunTime;JvNet;JvDotNetCtrls;SynEdit_R;DbxCommonDriver;vclimg;dbxcds;MetropolisUILiveTile;JvXPCtrls;vcldb;vcldsnap;dwsLibRuntime;CustomIPTransport;JvCore;DragDropDXE7;vclribbon;dsnap;IndyIPServer;fmxase;vcl;IndyCore;IndyIPCommon;CloudService;CodeSiteExpressPkg;FmxTeeUI;JvAppFrm;GR32_RSXE7;JvRuntimeDesign;hexlicensemgr;soapserver;inetdbxpress;JvDB;dsnapxml;JclDeveloperTools;JvDocking;adortl;IcsCommonDXE7Run;JvWizards;JvHMI;bindcompfmx;BCEditorRXE7;JvBands;GR32_DSGN_RSXE7;CrossFPC_XE7;RESTBackendComponents;rtl;dbrtl;DbxClientDriver;bindcomp;inetdb;JvPluginSystem;Tee;JclContainers;JvCmp;JvSystem;xmlrtl;svnui;JvTimeFramework;JvControls;IndyProtocols;DBXMySQLDriver;vclactnband;bindengine;soaprtl;FMXTee;TeeUI;JvJans;bindcompvcl;JvStdCtrls;JvCustom;Jcl;vclie;JvPageComps;OmniThreadLibraryRuntimeXE7;JvPrintPreview;bindcompdbx;LKSL_Components_XE7R;vcltouch;emsclient;PngComponents;VclSmp;VCLRESTComponents;WebUpdateR;DScintillaRuntime;dsnapcon;inet;fmxobj;JclVcl;JvPascalInterpreter;soapmidas;vclx;AggPasRun;DWScriptExpert;svn;LKSL_XE7R;fmxdae;RESTComponents;VirtualTreesR;dbexpress;IndyIPClient;$(DCC_UsePackage)</DCC_UsePackage>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
+        <DCC_DcuOutput>..\DCU\x64</DCC_DcuOutput>
+        <DCC_ExeOutput>..\Binaries\x64</DCC_ExeOutput>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
         <DCC_UsePackage>DBXSqliteDriver;fmx;IndySystem;TeeDB;tethering;DBXInterBaseDriver;DbxCommonDriver;vclimg;dbxcds;MetropolisUILiveTile;vcldb;vcldsnap;CustomIPTransport;DragDropDXE7;vclribbon;dsnap;IndyIPServer;fmxase;vcl;IndyCore;IndyIPCommon;CloudService;FmxTeeUI;soapserver;inetdbxpress;dsnapxml;adortl;IcsCommonDXE7Run;bindcompfmx;RESTBackendComponents;rtl;dbrtl;DbxClientDriver;bindcomp;inetdb;Tee;xmlrtl;IndyProtocols;DBXMySQLDriver;vclactnband;bindengine;soaprtl;FMXTee;TeeUI;bindcompvcl;vclie;bindcompdbx;vcltouch;emsclient;PngComponents;VclSmp;VCLRESTComponents;dsnapcon;inet;fmxobj;soapmidas;vclx;fmxdae;RESTComponents;dbexpress;IndyIPClient;$(DCC_UsePackage)</DCC_UsePackage>
         <DCC_ConsoleTarget>true</DCC_ConsoleTarget>
     </PropertyGroup>
@@ -102,17 +113,21 @@
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
+        <VerInfo_Locale>1033</VerInfo_Locale>
+    </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="Command-Line\Hope.CommandLine.Arguments.pas"/>
         <DCCReference Include="Command-Line\Hope.CommandLine.Compiler.pas"/>
-        <DCCReference Include="Project\Hope.Project.Files.pas"/>
-        <DCCReference Include="Project\Hope.Project.Options.pas"/>
-        <DCCReference Include="Project\Hope.Project.pas"/>
         <DCCReference Include="Compiler\Hope.Compiler.pas"/>
         <DCCReference Include="Common\Hope.Common.JSON.pas"/>
+        <DCCReference Include="Project\Hope.Project.List.pas"/>
+        <DCCReference Include="Project\Hope.Project.Options.pas"/>
+        <DCCReference Include="Project\Hope.Project.pas"/>
+        <DCCReference Include="Project\Hope.Project.Files.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -135,6 +150,12 @@
                 </Source>
             </Delphi.Personality>
             <Deployment>
+                <DeployFile LocalName="..\..\Binaries\HCC.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>HCC.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
                         <Overwrite>true</Overwrite>
@@ -148,7 +169,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\..\Binaries\HCC.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\Binaries\HCC.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>HCC.exe</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -494,7 +515,7 @@
             <Platforms>
                 <Platform value="OSX32">False</Platform>
                 <Platform value="Win32">True</Platform>
-                <Platform value="Win64">False</Platform>
+                <Platform value="Win64">True</Platform>
             </Platforms>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>

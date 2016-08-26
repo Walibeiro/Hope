@@ -20,8 +20,6 @@ type
 implementation
 
 procedure TCustomRenderProcessHandler.OnWebKitInitialized;
-var
-  ProcessMessage: ICefProcessMessage;
 begin
   TCefRTTIExtension.Register('HostApplication', TApplicationExtension);
 end;

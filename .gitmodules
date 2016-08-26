@@ -19,3 +19,6 @@
 [submodule "Submodules/tango-icon-theme"]
 	path = Submodules/tango-icon-theme
 	url = git@github.com:stephenc/tango-icon-theme.git
+[submodule "Submodules/Graphics32"]
+	path = Submodules/Graphics32
+	url = https://github.com/graphics32/graphics32.git
