@@ -31,7 +31,7 @@ type
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
-    procedure Update;
+    procedure ReloadUrl;
   end;
 
 implementation
@@ -178,7 +178,7 @@ begin
   end;
 end;
 
-procedure TFormWelcomePage.Update;
+procedure TFormWelcomePage.ReloadUrl;
 begin
   if not Chromium.Visible then
     Exit;

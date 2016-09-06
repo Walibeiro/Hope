@@ -8,10 +8,11 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   System.Types, System.Actions, Vcl.Graphics, Vcl.Controls, Vcl.Forms,
   Vcl.Dialogs, Vcl.ActnList, Vcl.Menus, Vcl.StdActns, Vcl.ExtCtrls,
-  Vcl.ComCtrls, Vcl.StdCtrls,
+  Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Tabs,
+  SynEdit,
   Hope.DataModule, Hope.WelcomePage, Hope.ProjectManager, Hope.UnitManager,
   Hope.MessageWindow.Compiler, Hope.MessageWindow.Output, Hope.Docking.Host,
-  Hope.Project, Hope.Project.List;
+  Hope.Project, Hope.Project.List, Hope.Editor, Hope.EditorList;
 
 type
   TFormMain = class(TForm)
@@ -39,6 +40,9 @@ type
     ActionFileSaveProjectAs: TFileSaveAs;
     ActionHelpAbout: TAction;
     ActionList: TActionList;
+    ActionMacroPlay: TAction;
+    ActionMacroRecord: TAction;
+    ActionMacroStop: TAction;
     ActionProjectAdd: TAction;
     ActionProjectBuild: TAction;
     ActionProjectBuildAll: TAction;
@@ -146,14 +150,13 @@ type
     N15: TMenuItem;
     PanelBottom: TPanel;
     PanelLeft: TPanel;
+    PanelMain: TPanel;
     PanelRight: TPanel;
+    PanelTabs: TPanel;
     SplitterBottom: TSplitter;
     SplitterLeft: TSplitter;
     SplitterRight: TSplitter;
-    PanelMain: TPanel;
-    ActionMacroPlay: TAction;
-    ActionMacroRecord: TAction;
-    ActionMacroStop: TAction;
+    TabSet: TTabSet;
     procedure ActionHelpAboutExecute(Sender: TObject);
     procedure ActionProjectOptionsExecute(Sender: TObject);
     procedure ActionSearchFindInFilesExecute(Sender: TObject);
@@ -168,16 +171,24 @@ type
       var InfluenceRect: TRect; MousePos: TPoint; var CanDock: Boolean);
     procedure PanelUnDock(Sender: TObject; Client: TControl;
       NewTarget: TWinControl; var Allow: Boolean);
-    procedure PanelMainDockDrop(Sender: TObject; Source: TDragDockObject; X,
+    procedure PanelTabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
       Y: Integer);
     procedure ActionToolsAsciiChartExecute(Sender: TObject);
     procedure ActionFileOpenProjectAccept(Sender: TObject);
     procedure ActionFileNewProjectExecute(Sender: TObject);
     procedure ActionFileCloseProjectExecute(Sender: TObject);
+    procedure TabSetChange(Sender: TObject; NewTab: Integer;
+      var AllowChange: Boolean);
+    procedure ActionMacroRecordExecute(Sender: TObject);
+    procedure ActionMacroPlayExecute(Sender: TObject);
+    procedure ActionMacroStopExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
     FProjects: THopeProjectList;
+    FEditors: TEditorList;
+    FFocusedEditorForm: TFormEditor;
+    FFocusedEditor: TSynEdit;
 
     FUnitManager: TFormUnitManager;
     FProjectManager: TFormProjectManager;
@@ -185,6 +196,12 @@ type
     FOutputMessages: TFormOutputMessages;
     procedure CMDockClient(var Message: TCMDockClient); message CM_DOCKCLIENT;
     function ComputeDockingRect(var DockRect: TRect; MousePos: TPoint): TAlign;
+
+    procedure TabChanged;
+
+    procedure RegisterNewTab(Form: TForm; Focus: Boolean = True);
+    procedure RegisterNewEditor(FileName: TFileName);
+    procedure FocusTab(Form: TForm);
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
@@ -194,6 +211,7 @@ type
     procedure ShowDockPanel(APanel: TPanel; MakeVisible: Boolean; Client: TControl);
 
     property Projects: THopeProjectList read FProjects;
+    property FocusedEditor: TSynEdit read FFocusedEditor;
   end;
 
 var
@@ -214,6 +232,7 @@ procedure TFormMain.AfterConstruction;
 begin
   inherited;
 
+  FEditors := TEditorList.Create;
   FProjects := THopeProjectList.Create;
 
   FWelcomePage := TFormWelcomePage.Create(nil);
@@ -234,6 +253,7 @@ begin
   FWelcomePage.Free;
 
   FProjects.Free;
+  FEditors.Free;
 
   inherited;
 end;
@@ -362,9 +382,13 @@ begin
   ShowDockPanel(PanelBottom, True, Host);
   Host.TabSet.TabIndex := 0;
 
-  FWelcomePage.ManualDock(PanelMain);
-  FWelcomePage.Show;
-  FWelcomePage.Update;
+  RegisterNewTab(FWelcomePage);
+  FWelcomePage.ReloadUrl;
+
+  FFocusedEditorForm := nil;
+  FFocusedEditor := nil;
+
+  RegisterNewEditor('C:\Users\Public\Code\Hope\Binaries\x86\Projects\Test\Test.hpr');
 end;
 
 procedure TFormMain.LoadProject(ProjectFileName: TFileName);
@@ -372,11 +396,32 @@ begin
   FProjects.LoadProject(ProjectFileName)
 end;
 
-procedure TFormMain.PanelMainDockDrop(Sender: TObject; Source: TDragDockObject;
+procedure TFormMain.PanelTabsDockDrop(Sender: TObject; Source: TDragDockObject;
   X, Y: Integer);
 begin
-  if PanelMain.UseDockManager then
-    PanelMain.DockManager.ResetBounds(True);
+  if PanelTabs.DockSite and PanelTabs.UseDockManager then
+    PanelTabs.DockManager.ResetBounds(True)
+  else
+    Source.Control.Align := alClient;
+end;
+
+procedure TFormMain.RegisterNewEditor(FileName: TFileName);
+var
+  Editor: TFormEditor;
+begin
+  Editor := TFormEditor.Create(nil);
+  Editor.FileName := FileName;
+
+  FEditors.Add(Editor);
+
+  RegisterNewTab(Editor);
+end;
+
+procedure TFormMain.RegisterNewTab(Form: TForm; Focus: Boolean = True);
+begin
+  Form.ManualDock(PanelTabs);
+  TabSet.TabIndex := TabSet.Tabs.Add(Form.Caption);
+  Form.Show;
 end;
 
 procedure TFormMain.PanelUnDock(Sender: TObject; Client: TControl;
@@ -431,6 +476,58 @@ begin
     Client.Show;
 end;
 
+procedure TFormMain.FocusTab(Form: TForm);
+begin
+  // assign editor form
+  if Form is TFormEditor then
+    FFocusedEditorForm := TFormEditor(Form)
+  else
+    FFocusedEditorForm := nil;
+
+  // now assign editor
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditor := FFocusedEditorForm.Editor
+  else
+    FFocusedEditor := nil;
+end;
+
+procedure TFormMain.TabChanged;
+begin
+
+end;
+
+procedure TFormMain.TabSetChange(Sender: TObject; NewTab: Integer;
+  var AllowChange: Boolean);
+var
+  Index: Integer;
+  Control: TControl;
+begin
+  Control := nil;
+
+  // locate active control
+  for Index := 0 to PanelTabs.DockClientCount - 1 do
+    if Index = NewTab then
+    begin
+      Control := PanelTabs.DockClients[Index];
+      Break;
+    end;
+
+  // check if control is assigned at all
+  if not (Control is TForm) then
+    Exit;
+
+  // make control visible
+  Control.Visible := True;
+
+  // focus tab
+  FocusTab(TForm(Control));
+  TabChanged;
+
+  // locate active control
+  for Index := 0 to PanelTabs.DockClientCount - 1 do
+    PanelTabs.DockClients[Index].Visible := Index = NewTab;
+end;
+
 procedure TFormMain.ActionToolsAsciiChartExecute(Sender: TObject);
 begin
   with TFormAsciiChart.Create(Self) do
@@ -464,6 +561,24 @@ begin
   finally
     Free;
   end;
+end;
+
+procedure TFormMain.ActionMacroPlayExecute(Sender: TObject);
+begin
+  DataModuleCommon.SynMacroRecorder.Editor := FFocusedEditor;
+  DataModuleCommon.SynMacroRecorder.PlaybackMacro(FFocusedEditor);
+end;
+
+procedure TFormMain.ActionMacroRecordExecute(Sender: TObject);
+begin
+  DataModuleCommon.SynMacroRecorder.Editor := FFocusedEditor;
+  DataModuleCommon.SynMacroRecorder.RecordMacro(FFocusedEditor);
+end;
+
+procedure TFormMain.ActionMacroStopExecute(Sender: TObject);
+begin
+  DataModuleCommon.SynMacroRecorder.Editor := FFocusedEditor;
+  DataModuleCommon.SynMacroRecorder.Stop;
 end;
 
 procedure TFormMain.ActionProjectOptionsExecute(Sender: TObject);

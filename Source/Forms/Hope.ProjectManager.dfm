@@ -57,6 +57,7 @@ inherited FormProjectManager: TFormProjectManager
     Width = 236
     Height = 522
     Align = alClient
+    BorderStyle = bsNone
     Header.AutoSizeIndex = 0
     Header.Font.Charset = DEFAULT_CHARSET
     Header.Font.Color = clWindowText

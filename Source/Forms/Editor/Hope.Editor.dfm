@@ -20,7 +20,7 @@ object FormEditor: TFormEditor
     Left = 0
     Top = 0
     Width = 783
-    Height = 587
+    Height = 584
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -28,23 +28,25 @@ object FormEditor: TFormEditor
     Font.Name = 'Courier New'
     Font.Style = []
     TabOrder = 0
+    BorderStyle = bsNone
     Gutter.Font.Charset = DEFAULT_CHARSET
     Gutter.Font.Color = clWindowText
     Gutter.Font.Height = -11
     Gutter.Font.Name = 'Courier New'
     Gutter.Font.Style = []
-    Lines.Strings = (
-      'Editor')
+    OnGutterPaint = EditorGutterPaint
+    OnStatusChange = EditorStatusChange
     FontSmoothing = fsmNone
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 587
+    Top = 584
     Width = 783
-    Height = 19
+    Height = 22
+    DoubleBuffered = True
     Panels = <
       item
-        Width = 50
+        Width = 59
       end
       item
         Width = 96
@@ -55,35 +57,34 @@ object FormEditor: TFormEditor
       item
         Width = 50
       end>
+    ParentDoubleBuffered = False
     SizeGrip = False
   end
   object ToolBarMacro: TToolBar
-    Left = 3
-    Top = 590
-    Width = 55
-    Height = 16
+    Left = 1
+    Top = 587
+    Width = 57
+    Height = 19
     Align = alNone
     Anchors = [akLeft, akBottom]
     ButtonHeight = 19
-    ButtonWidth = 18
+    ButtonWidth = 19
+    Images = DataModuleCommon.ImageList12
     TabOrder = 2
     object ToolButtonPlay: TToolButton
       Left = 0
       Top = 0
-      Caption = 'Play'
-      ImageIndex = 0
+      Action = FormMain.ActionMacroPlay
     end
     object ToolButtonRecord: TToolButton
-      Left = 18
+      Left = 19
       Top = 0
-      Caption = 'ToolButtonRecord'
-      ImageIndex = 1
+      Action = FormMain.ActionMacroRecord
     end
     object ToolButtonStop: TToolButton
-      Left = 36
+      Left = 38
       Top = 0
-      Caption = 'ToolButtonStop'
-      ImageIndex = 2
+      Action = FormMain.ActionMacroStop
     end
   end
 end

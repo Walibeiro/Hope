@@ -26,6 +26,7 @@ inherited FormUnitManager: TFormUnitManager
     Width = 227
     Height = 479
     Align = alClient
+    BorderStyle = bsNone
     Header.AutoSizeIndex = 0
     Header.Font.Charset = DEFAULT_CHARSET
     Header.Font.Color = clWindowText

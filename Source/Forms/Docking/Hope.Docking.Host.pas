@@ -12,21 +12,19 @@ type
     PanelDock: TPanel;
     TabSet: TTabSet;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormGetSiteInfo(Sender: TObject; DockClient: TControl;
+      var InfluenceRect: TRect; MousePos: TPoint; var CanDock: Boolean);
     procedure PanelDockDrop(Sender: TObject; Source: TDragDockObject;
       X, Y: Integer);
     procedure PanelUnDock(Sender: TObject; Client: TControl;
       NewTarget: TWinControl; var Allow: Boolean);
     procedure PanelDockOver(Sender: TObject; Source: TDragDockObject;
       X, Y: Integer; State: TDragState; var Accept: Boolean);
-    procedure FormGetSiteInfo(Sender: TObject; DockClient: TControl;
-      var InfluenceRect: TRect; MousePos: TPoint; var CanDock: Boolean);
     procedure TabSetChange(Sender: TObject; NewTab: Integer;
       var AllowChange: Boolean);
     procedure TabSetMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
   private
-    FLastPosition: TPoint;
-    FSqrDistance: Single;
     procedure DoFloat(AControl: TControl);
     procedure SetIsPaged(const Value: Boolean);
     function GetIsPaged: Boolean;

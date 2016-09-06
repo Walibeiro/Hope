@@ -90,9 +90,38 @@ object FormMain: TFormMain
     Align = alClient
     BevelOuter = bvNone
     Caption = '(Main)'
-    DockSite = True
     TabOrder = 3
-    OnDockDrop = PanelMainDockDrop
+    object PanelTabs: TPanel
+      Left = 0
+      Top = 20
+      Width = 735
+      Height = 570
+      Align = alClient
+      BevelOuter = bvNone
+      Caption = '(Tabs)'
+      UseDockManager = False
+      DockSite = True
+      DragKind = dkDock
+      DragMode = dmAutomatic
+      TabOrder = 0
+      OnDockDrop = PanelTabsDockDrop
+    end
+    object TabSet: TTabSet
+      Left = 0
+      Top = 0
+      Width = 735
+      Height = 20
+      Align = alTop
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      SoftTop = True
+      Style = tsSoftTabs
+      TabPosition = tpTop
+      OnChange = TabSetChange
+    end
   end
   object MainMenu: TMainMenu
     Left = 104
@@ -603,20 +632,25 @@ object FormMain: TFormMain
     object ActionMacroPlay: TAction
       Category = 'Macro'
       Caption = '&Play'
+      Enabled = False
       Hint = 'Play|Play macro'
-      ImageIndex = 21
+      ImageIndex = 0
+      OnExecute = ActionMacroPlayExecute
     end
     object ActionMacroRecord: TAction
       Category = 'Macro'
       Caption = 'ActionMacroRecord'
       Hint = 'Record|Record macro'
-      ImageIndex = 23
+      ImageIndex = 1
+      OnExecute = ActionMacroRecordExecute
     end
     object ActionMacroStop: TAction
       Category = 'Macro'
       Caption = '&Stop'
+      Enabled = False
       Hint = 'Stop|Stops running macro'
-      ImageIndex = 22
+      ImageIndex = 2
+      OnExecute = ActionMacroStopExecute
     end
   end
 end

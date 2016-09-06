@@ -11,6 +11,11 @@ uses
   SynEdit, Hope.DataModule;
 
 type
+  TStatusBar = class(Vcl.ComCtrls.TStatusBar)
+  public
+    constructor Create(AOwner: TComponent); override;
+  end;
+
   TFormEditor = class(TForm)
     Editor: TSynEdit;
     StatusBar: TStatusBar;
@@ -18,14 +23,106 @@ type
     ToolButtonPlay: TToolButton;
     ToolButtonRecord: TToolButton;
     ToolButtonStop: TToolButton;
+    procedure EditorGutterPaint(Sender: TObject; aLine, X, Y: Integer);
+    procedure EditorStatusChange(Sender: TObject; Changes: TSynStatusChanges);
   private
-
+    FFileName: TFileName;
+    procedure SetFileName(const Value: TFileName);
   public
-    { Public-Deklarationen }
+    procedure AfterConstruction; override;
+
+    property FileName: TFileName read FFileName write SetFileName;
   end;
 
 implementation
 
+uses
+  Hope.Main;
+
 {$R *.dfm}
+
+{ TStatusBar }
+
+constructor TStatusBar.Create(AOwner: TComponent);
+begin
+  inherited;
+
+  ControlStyle := ControlStyle + [csAcceptsControls];
+end;
+
+
+{ TFormEditor }
+
+procedure TFormEditor.AfterConstruction;
+begin
+  inherited;
+
+  ToolBarMacro.Parent := StatusBar;
+  ToolBarMacro.Height := 16;
+  ToolBarMacro.ButtonWidth := 16;
+  ToolBarMacro.ButtonHeight := 14;
+  ToolBarMacro.Left := 1;
+  ToolBarMacro.Top := 3;
+  ToolBarMacro.Images := DataModuleCommon.ImageList12;
+end;
+
+procedure TFormEditor.EditorGutterPaint(Sender: TObject; aLine, X, Y: Integer);
+var
+  StrLineNumber: string;
+  LineNumberRect: TRect;
+  GutterWidth, Offset: Integer;
+  OldFont: TFont;
+begin
+  with TSynEdit(Sender), Canvas do
+  begin
+    Brush.Style := bsClear;
+    GutterWidth := Gutter.Width - 5;
+    if (ALine = 1) or (ALine = CaretY) or ((ALine mod 10) = 0) then
+    begin
+      StrLineNumber := IntToStr(ALine);
+      LineNumberRect := Rect(x, y, GutterWidth, y + LineHeight);
+      OldFont := TFont.Create;
+      try
+        OldFont.Assign(Canvas.Font);
+        Canvas.Font := Gutter.Font;
+        Canvas.TextRect(LineNumberRect, StrLineNumber, [tfVerticalCenter,
+          tfSingleLine, tfRight]);
+        Canvas.Font := OldFont;
+      finally
+        OldFont.Free;
+      end;
+    end
+    else
+    begin
+      Canvas.Pen.Color := Gutter.Font.Color;
+      if (ALine mod 5) = 0 then
+        Offset := 5
+      else
+        Offset := 2;
+      Inc(y, LineHeight div 2);
+      Canvas.MoveTo(GutterWidth - Offset, y);
+      Canvas.LineTo(GutterWidth, y);
+    end;
+  end;
+end;
+
+procedure TFormEditor.EditorStatusChange(Sender: TObject;
+  Changes: TSynStatusChanges);
+begin
+  if [scCaretX, scCaretY] * Changes <> [] then
+  begin
+    StatusBar.Panels[1].Text := Format('%d : %d', [TSynEdit(Sender).CaretX,
+      TSynEdit(Sender).CaretY]);
+  end;
+end;
+
+procedure TFormEditor.SetFileName(const Value: TFileName);
+begin
+  if FFileName <> Value then
+  begin
+    FFileName := Value;
+    Caption := ChangeFileExt(ExtractFileName(FileName), '');
+  end;
+end;
 
 end.

@@ -26,6 +26,8 @@ type
     SynHTMLSyn: TSynHTMLSyn;
     SynCssSyn: TSynCssSyn;
     ImageList16: TImageList;
+    ImageList12: TImageList;
+    procedure SynMacroRecorderStateChange(Sender: TObject);
   private
     FHistory: THopeHistory;
     FPaths: THopePaths;
@@ -47,7 +49,7 @@ implementation
 {$R *.dfm}
 
 uses
-  ceflib;
+  ceflib, Hope.Main;
 
 { TDataModuleCommon }
 
@@ -66,6 +68,16 @@ begin
   FHistory.Save;
 
   inherited;
+end;
+
+procedure TDataModuleCommon.SynMacroRecorderStateChange(Sender: TObject);
+begin
+  with FormMain do
+  begin
+    ActionMacroStop.Enabled := SynMacroRecorder.State in [msRecording, msPlaying];
+    ActionMacroPlay.Enabled := (SynMacroRecorder.State = msStopped) and not SynMacroRecorder.IsEmpty;
+    ActionMacroRecord.Enabled := (SynMacroRecorder.State = msStopped);
+  end;
 end;
 
 procedure BeforeCommandLineProcessing(const processType: ustring;
