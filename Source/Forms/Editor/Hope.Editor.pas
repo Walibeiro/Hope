@@ -27,7 +27,10 @@ type
     procedure EditorStatusChange(Sender: TObject; Changes: TSynStatusChanges);
   private
     FFileName: TFileName;
+    FShortFileName: TFileName;
+    FExtension: string;
     procedure SetFileName(const Value: TFileName);
+    procedure FileNameChanged;
   public
     procedure AfterConstruction; override;
 
@@ -37,7 +40,7 @@ type
 implementation
 
 uses
-  Hope.Main;
+  dwsUtils, dwsXPlatform, Hope.Main;
 
 {$R *.dfm}
 
@@ -116,12 +119,37 @@ begin
   end;
 end;
 
+procedure TFormEditor.FileNameChanged;
+begin
+  if FileExists(FileName) then
+    Editor.Text := LoadTextFromFile(FileName);
+
+  FShortFileName := ExtractFileName(FileName);
+  if StrEndsWith(LowerCase(FShortFileName), '.pas') then
+  begin
+    FExtension := '.pas';
+    Delete(FShortFileName, Length(FShortFileName) - 4, 4);
+    Editor.Highlighter := DataModuleCommon.SynObjectPascal;
+  end
+  else
+  if StrEndsWith(LowerCase(FShortFileName), '.hpr') then
+  begin
+    FExtension := '.hpr';
+    Delete(FShortFileName, Length(FShortFileName) - 3, 4);
+    Editor.Highlighter := DataModuleCommon.SynObjectPascal;
+  end;
+
+  Caption := FShortFileName;
+end;
+
 procedure TFormEditor.SetFileName(const Value: TFileName);
+var
+  RawFileName: string;
 begin
   if FFileName <> Value then
   begin
     FFileName := Value;
-    Caption := ChangeFileExt(ExtractFileName(FileName), '');
+    FileNameChanged;
   end;
 end;
 

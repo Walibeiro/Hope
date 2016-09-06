@@ -388,7 +388,7 @@ begin
   FFocusedEditorForm := nil;
   FFocusedEditor := nil;
 
-  RegisterNewEditor('C:\Users\Public\Code\Hope\Binaries\x86\Projects\Test\Test.hpr');
+  RegisterNewEditor('.\Projects\Test\Test.hpr');
 end;
 
 procedure TFormMain.LoadProject(ProjectFileName: TFileName);

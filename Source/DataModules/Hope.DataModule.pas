@@ -5,14 +5,14 @@ unit Hope.DataModule;
 interface
 
 uses
-  System.SysUtils, System.Classes,
+  System.SysUtils, System.Classes, Vcl.ImgList, Vcl.Controls,
 
-  SynEditPlugins, SynMacroRecorder,
+  SynEditPlugins, SynMacroRecorder, SynCompletionProposal,
   SynEditRegexSearch, SynEditHighlighter, SynHighlighterMulti,
   SynEditMiscClasses, SynEditSearch, SynHighlighterCSS, SynHighlighterHtml,
   SynHighlighterJSON, SynHighlighterJScript, SynHighlighterDWS,
 
-  Hope.History, Hope.Paths, Vcl.ImgList, Vcl.Controls;
+  Hope.History, Hope.Paths;
 
 type
   TDataModuleCommon = class(TDataModule)
@@ -27,6 +27,10 @@ type
     SynCssSyn: TSynCssSyn;
     ImageList16: TImageList;
     ImageList12: TImageList;
+    SynCodeSuggestions: TSynCompletionProposal;
+    SynParameters: TSynCompletionProposal;
+    SynMultiCSS: TSynMultiSyn;
+    SynMultiHTML: TSynMultiSyn;
     procedure SynMacroRecorderStateChange(Sender: TObject);
   private
     FHistory: THopeHistory;

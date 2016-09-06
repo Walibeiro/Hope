@@ -10,12 +10,15 @@ object DataModuleCommon: TDataModuleCommon
     DefaultFilter = 'DWScript Files (*.dws;*.pas;*.inc)|*.dws;*.pas;*.inc'
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
+    Options.DefaultExtension = '.dws'
+    Options.Title = 'Object Pascal Syntax Highlighter'
     Options.Visible = False
     Schemes = <
       item
         StartExpr = 'asm'
         EndExpr = 'end;'
         Highlighter = SynJScriptSyn
+        SchemeName = 'Assembler'
       end>
     DefaultHighlighter = SynDWSSyn
     DefaultLanguageName = 'DWScript'
@@ -1885,5 +1888,112 @@ object DataModuleCommon: TDataModuleCommon
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000}
+  end
+  object SynCodeSuggestions: TSynCompletionProposal
+    Options = [scoLimitToMatchedText, scoTitleIsCentered, scoUseInsertList, scoEndCharCompletion, scoCompleteWithEnter]
+    EndOfTokenChr = '()[]. '
+    TriggerChars = '.'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clBtnText
+    TitleFont.Height = -11
+    TitleFont.Name = 'MS Sans Serif'
+    TitleFont.Style = [fsBold]
+    Columns = <>
+    ShortCut = 16416
+    Left = 264
+    Top = 72
+  end
+  object SynParameters: TSynCompletionProposal
+    DefaultType = ctParams
+    Options = [scoLimitToMatchedText, scoUsePrettyText, scoUseBuiltInTimer]
+    ClBackground = clInfoBk
+    Width = 262
+    EndOfTokenChr = '()[]. '
+    TriggerChars = '('
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clBtnText
+    TitleFont.Height = -11
+    TitleFont.Name = 'MS Sans Serif'
+    TitleFont.Style = [fsBold]
+    Columns = <>
+    ShortCut = 24608
+    Left = 264
+    Top = 24
+  end
+  object SynMultiCSS: TSynMultiSyn
+    DefaultFilter = 'CSS Files (*.css)|*.css'
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.DefaultExtension = '.css'
+    Options.Title = 'CSS Syntax Highlighter'
+    Options.Visible = False
+    Schemes = <
+      item
+        CaseSensitive = False
+        StartExpr = '</?pas'
+        EndExpr = '/?>'
+        Highlighter = SynObjectPascal
+        SchemeName = 'Object Pascal'
+      end
+      item
+        CaseSensitive = False
+        StartExpr = '</?pas='
+        EndExpr = '/?>'
+        Highlighter = SynObjectPascal
+        SchemeName = 'Object Pascal (direct)'
+      end>
+    DefaultHighlighter = SynCssSyn
+    DefaultLanguageName = 'CSS'
+    Left = 160
+    Top = 312
+  end
+  object SynMultiHTML: TSynMultiSyn
+    DefaultFilter = 'HTML files (*.html;*,htm)|*.html;*.htm'
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.DefaultExtension = '.html'
+    Options.Title = 'HTML Highlighter'
+    Options.Visible = False
+    Schemes = <
+      item
+        CaseSensitive = False
+        StartExpr = '</?pas'
+        EndExpr = '/?>'
+        Highlighter = SynObjectPascal
+        SchemeName = 'Object Pascal'
+      end
+      item
+        CaseSensitive = False
+        StartExpr = '</?pas='
+        EndExpr = '/?>'
+        Highlighter = SynObjectPascal
+        SchemeName = 'Object Pascal (direct)'
+      end
+      item
+        StartExpr = '<script(.*?)>'
+        EndExpr = '</style>'
+        Highlighter = SynMultiCSS
+        SchemeName = 'CSS'
+      end
+      item
+        StartExpr = '<script(.*?)>'
+        EndExpr = '</script>'
+        Highlighter = SynJScriptSyn
+        SchemeName = 'JavaScript'
+      end>
+    DefaultHighlighter = SynHTMLSyn
+    DefaultLanguageName = 'HTML'
+    Left = 160
+    Top = 360
   end
 end
