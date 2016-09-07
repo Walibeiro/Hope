@@ -40,6 +40,7 @@ type
   private
   public
     procedure AfterConstruction; override;
+    procedure UpdateNodes;
   end;
 
 implementation
@@ -54,6 +55,12 @@ uses
 procedure TFormProjectManager.AfterConstruction;
 begin
   inherited;
+
+  // Configure project tree
+  TreeProject.NodeDataSize := SizeOf(TProjectNodeData);
+  TreeProject.RootNodeCount := 0;
+  TreeProject.DefaultNodeHeight := 20;
+  TreeProject.Enabled := False;
 end;
 
 procedure TFormProjectManager.TreeProjectCompareNodes(Sender: TBaseVirtualTree;
@@ -158,6 +165,11 @@ begin
 
   // update caption
   NodeData^.Caption := NewText;
+end;
+
+procedure TFormProjectManager.UpdateNodes;
+begin
+
 end;
 
 end.

@@ -199,7 +199,7 @@ begin
   Root := TdwsJsonObject.Create;
   try
     WriteJson(Root);
-    Text := '"HOPE" : ' + Root.ToBeautifiedString;
+    Text := {'"HOPE" : ' +} Root.ToBeautifiedString;
     StringStream := TStringStream.Create(Text);
     try
       Stream.CopyFrom(StringStream, StringStream.Size);
@@ -267,10 +267,12 @@ procedure THopeJsonBase.LoadFromContainer(Text: string);
 var
   Value: TdwsJsonValue;
 begin
+(*
   if not StrBeginsWith(Text, '"HOPE" : ') then
     raise EHopeJsonException.Create(RStrJsonReadErrorContainer);
 
   Delete(Text, 1, 10);
+*)
 
   Value := TdwsJSONValue.ParseString(Text);
   try
