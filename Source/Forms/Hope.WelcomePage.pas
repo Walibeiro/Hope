@@ -39,7 +39,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Hope.Main, Hope.DataModule, Hope.DockingUtils;
+  SynZip, Hope.Main, Hope.DataModule, Hope.DockingUtils;
 
 const
   CWelcomePageURI = 'http://localhost:8092/index.html';
@@ -56,11 +56,14 @@ begin
 
   // create and configure server
   FServer := THttpApi2Server.Create(False);
-  Info.DomainName := '';
+  Info.DomainName := 'localhost';
   Info.RelativeURI := '';
   Info.HTTPS := False;
   Info.Port := 8092;
   FServer.AddUrl(Info);
+  FServer.RegisterCompress(CompressDeflate);
+  FServer.ServerName := 'Welcome';
+  FServer.LogRolloverSize := 1024 * 1024;
   FServer.OnRequest := RequestHandler;
 end;
 

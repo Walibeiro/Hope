@@ -388,12 +388,12 @@ begin
   FFocusedEditorForm := nil;
   FFocusedEditor := nil;
 
-  RegisterNewEditor('.\Projects\Test\Test.hpr');
+//  RegisterNewEditor('.\Projects\Test\Test.hpr');
 end;
 
 procedure TFormMain.LoadProject(ProjectFileName: TFileName);
 begin
-  FProjects.LoadProject(ProjectFileName)
+  FProjects.LoadProject(ProjectFileName);
 end;
 
 procedure TFormMain.PanelTabsDockDrop(Sender: TObject; Source: TDragDockObject;
@@ -642,4 +642,3 @@ begin
 end;
 
 end.
-

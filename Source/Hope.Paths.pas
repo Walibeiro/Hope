@@ -34,12 +34,12 @@ end;
 
 function THopePaths.GetHistory: string;
 begin
-  Result := FRootPath + 'History.json';
+  Result := FRootPath + '..\Common\History.json';
 end;
 
 function THopePaths.GetWelcomePage: string;
 begin
-  Result := FRootPath + 'Welcome Page\';
+  Result := FRootPath + '..\Common\Welcome Page\';
 end;
 
 end.

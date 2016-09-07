@@ -21,6 +21,7 @@ type
     FOptions: THopeProjectOptions;
     FUrl: string;
     FFileName: string;
+    FFiles: THopeProjectFiles;
     function GetRootPath: string;
   protected
     procedure ReadJson(const JsonValue: TdwsJsonObject); override;
@@ -57,7 +58,7 @@ begin
   FModifiedDateTime := Now;
 
   FOptions := THopeProjectOptions.Create;
-//  FFiles := THopeProjectFiles.Create;
+  FFiles := THopeProjectFiles.Create;
 end;
 
 function THopeProject.GetRootPath: string;

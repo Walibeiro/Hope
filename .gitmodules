@@ -22,3 +22,9 @@
 [submodule "Submodules/Graphics32"]
 	path = Submodules/Graphics32
 	url = https://github.com/graphics32/graphics32.git
+[submodule "Binaries/Common/Projects"]
+	path = Binaries/Common/Projects
+	url = https://github.com/Walibeiro/Hope-Projects
+[submodule "Binaries/Common/Welcome Page"]
+	path = Binaries/Common/Welcome Page
+	url = https://github.com/Walibeiro/Hope-Welcome
