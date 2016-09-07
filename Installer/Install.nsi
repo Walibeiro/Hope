@@ -1,8 +1,8 @@
 ;NSIS Modern User Interface version 1.70
-;Hope
+;HOPE - Object-Pascal Environment
 ;Written by Walison Ribeiro da Silva
 
-SetCompressor lzma
+SetCompressor /SOLID /FINAL lzma
 
 ;--------------------------------
 ;Include Modern UI
@@ -95,9 +95,9 @@ SetCompressor lzma
 ;Installer Sections
 
 Section "Program Files" SecProgramFiles
+  SetShellVarContext all
+
   SetOutPath "$INSTDIR"
-  
-  ;ADD YOUR OWN FILES HERE...
   File "..\Binaries\x86\HOPE.exe"
   File "..\Binaries\x86\cef.pak"
   File "..\Binaries\x86\cef_100_percent.pak"
@@ -118,6 +118,8 @@ Section "Program Files" SecProgramFiles
   File "..\Binaries\x86\snapshot_blob.bin"
   File "..\Binaries\x86\widevinecdmadapter.dll"
   File "..\Binaries\x86\wow_helper.exe"
+
+  SetOutPath "$INSTDIR\locales"
   File "..\Binaries\x86\locales\am.pak"
   File "..\Binaries\x86\locales\ar.pak"
   File "..\Binaries\x86\locales\bg.pak"
@@ -172,6 +174,17 @@ Section "Program Files" SecProgramFiles
   File "..\Binaries\x86\locales\zh-CN.pak"
   File "..\Binaries\x86\locales\zh-TW.pak"
   
+  SetOutPath "$COMMONFILES\Hope\Welcome Page"
+  File "..\Binaries\Common\Welcome Page\index.html"
+  File "..\Binaries\Common\Welcome Page\main.css"
+  File "..\Binaries\Common\Welcome Page\main.js"
+  File "..\Binaries\Common\Welcome Page\Images\Icon.svg"
+  File "..\Binaries\Common\Welcome Page\Images\ProjectNew.png"
+  File "..\Binaries\Common\Welcome Page\Images\ProjectOpen.png"
+  File "..\Binaries\Common\Welcome Page\Images\ProjectClose.png"
+  
+  SetOutPath "$DOCUMENTS\Hope\Test"
+  File "..\Binaries\Common\Projects\Test\Test.hproj"
 
   ;Store installation folder
   WriteRegStr HKCU "Software\HOPE" "" $INSTDIR
@@ -290,6 +303,14 @@ Section "Uninstall"
   Delete "$INSTDIR\locales\zh-CN.pak"
   Delete "$INSTDIR\locales\zh-TW.pak"
   Delete "$INSTDIR\Uninstall.exe"
+  Delete "$COMMONFILES\Hope\Welcome Page\index.html"
+  Delete "$COMMONFILES\Hope\Welcome Page\main.css"
+  Delete "$COMMONFILES\Hope\Welcome Page\main.js"
+  Delete "$COMMONFILES\Hope\Welcome Page\Images\Icon.svg"
+  Delete "$COMMONFILES\Hope\Welcome Page\Images\ProjectNew.png"
+  Delete "$COMMONFILES\Hope\Welcome Page\Images\ProjectOpen.png"
+  Delete "$COMMONFILES\Hope\Welcome Page\Images\ProjectClose.png"
+  Delete "$DOCUMENTS\Hope\Test\Test.hproj"
 
   !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
     

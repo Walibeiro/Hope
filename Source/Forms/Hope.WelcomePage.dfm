@@ -23,5 +23,8 @@ object FormWelcomePage: TFormWelcomePage
     Align = alClient
     DefaultUrl = 'about:blank'
     TabOrder = 0
+    OnProcessMessageReceived = ChromiumProcessMessageReceived
+    OnLoadEnd = ChromiumLoadEnd
+    OnBeforeResourceLoad = ChromiumBeforeResourceLoad
   end
 end
