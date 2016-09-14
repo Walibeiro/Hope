@@ -128,7 +128,7 @@ begin
   if StrEndsWith(LowerCase(FShortFileName), '.pas') then
   begin
     FExtension := '.pas';
-    Delete(FShortFileName, Length(FShortFileName) - 4, 4);
+    Delete(FShortFileName, Length(FShortFileName) - 3, 4);
     Editor.Highlighter := DataModuleCommon.SynObjectPascal;
   end
   else

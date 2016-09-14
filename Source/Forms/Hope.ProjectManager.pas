@@ -89,6 +89,7 @@ procedure TFormProjectManager.TreeProjectDblClick(Sender: TObject);
 var
   Node: PVirtualNode;
   NodeData: PProjectNodeData;
+  FileName: string;
 begin
   // eventually expand or collapse focussed tree
   if Assigned(TreeProject.FocusedNode) then
@@ -101,7 +102,13 @@ begin
       Exit;
     end
     else
-      FormMain.FocusEditor(NodeData.ProjectFile.FileName);
+    begin
+      FileName := NodeData.ProjectFile.FileName;
+      if IsRelativePath(ExtractFilePath(FileName)) then
+        FileName := NodeData.Project.RootPath + FileName;
+
+      FormMain.FocusEditor(FileName);
+    end;
   end;
 end;
 

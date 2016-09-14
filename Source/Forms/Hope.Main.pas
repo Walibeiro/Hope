@@ -222,6 +222,7 @@ var
 implementation
 
 uses
+  dwsUtils,
   Hope.About, Hope.AsciiChart, Hope.ColorPicker, Hope.Dialogs.CodeTemplates,
   Hope.Dialogs.FindInFiles, Hope.Dialogs.Preferences,
   Hope.Dialogs.ProjectOptions, Hope.Docking.Form, Hope.UnicodeExplorer;
@@ -484,7 +485,17 @@ begin
 end;
 
 procedure TFormMain.FocusEditor(FileName: TFileName);
+var
+  Index: Integer;
+  Editor: TFormEditor;
 begin
+  for Index := 0 to FEditors.Count - 1 do
+    if UnicodeSameText(FileName, FEditors[Index].FileName) then
+    begin
+      FocusTab(FEditors[Index]);
+      Exit;
+    end;
+
   RegisterNewEditor(FileName);
 end;
 

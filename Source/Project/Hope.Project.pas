@@ -73,6 +73,9 @@ begin
   Result := '';
   if FFileName <> '' then
     Result := ExtractFilePath(FFileName);
+
+  if IsRelativePath(Result) then
+    Result := ExpandFileName(ExtractFilePath(ParamStr(0)) + Result);
 end;
 
 procedure THopeProject.LoadFromFile(const FileName: TFileName);

@@ -20,7 +20,7 @@ type
     function Add(Editor: TFormEditor): Integer;
     procedure Delete(Index: Integer);
 
-    property Editor[Index: Integer]: TFormEditor read GetEditor;
+    property Editor[Index: Integer]: TFormEditor read GetEditor; default;
     property Count: Integer read GetCount;
   end;
 
