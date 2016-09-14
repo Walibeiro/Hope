@@ -37,7 +37,9 @@ type
       Column: TColumnIndex; NewText: string);
     procedure TreeProjectEditing(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; var Allowed: Boolean);
-  private
+    procedure TreeProjectGetImageIndex(Sender: TBaseVirtualTree;
+      Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
+      var Ghosted: Boolean; var ImageIndex: Integer);
   public
     procedure AfterConstruction; override;
     procedure UpdateNodes;
@@ -124,6 +126,25 @@ begin
   Finalize(NodeData^);
 end;
 
+procedure TFormProjectManager.TreeProjectGetImageIndex(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
+  var Ghosted: Boolean; var ImageIndex: Integer);
+var
+  NodeData: PProjectNodeData;
+begin
+  if Kind in [ikNormal, ikSelected] then
+  begin
+    NodeData := Sender.GetNodeData(Node);
+    if not Assigned(NodeData^.Project) then
+      ImageIndex := 50
+    else
+    if not Assigned(NodeData^.ProjectFile) then
+      ImageIndex := 1
+    else
+      ImageIndex := 44;
+  end;
+end;
+
 procedure TFormProjectManager.TreeProjectGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: string);
@@ -168,8 +189,49 @@ begin
 end;
 
 procedure TFormProjectManager.UpdateNodes;
+var
+  NodeData: PProjectNodeData;
+  ProjectNode, CurrentNode: PVirtualNode;
+  ProjectIndex, FileIndex: Integer;
+  Project: THopeProject;
 begin
+  TreeProject.BeginUpdate;
+  try
+    // clear existing items
+    TreeProject.Clear;
+    TreeProject.RootNodeCount := 1;
 
+    // check for an active project
+    if not Assigned(FormMain.Projects.ActiveProject) then
+      Exit;
+
+    NodeData := TreeProject.GetNodeData(TreeProject.TopNode);
+    NodeData^.Caption := 'ProjectGroup';
+
+    for ProjectIndex := 0 to FormMain.Projects.Count - 1 do
+    begin
+      Project := FormMain.Projects[ProjectIndex];
+
+      ProjectNode := TreeProject.AddChild(TreeProject.TopNode);
+      NodeData := TreeProject.GetNodeData(ProjectNode);
+      NodeData^.Project := Project;
+      NodeData^.Caption := Project.Name;
+
+      for FileIndex := 0 to Project.Files.Count - 1 do
+      begin
+        CurrentNode := TreeProject.AddChild(ProjectNode);
+        NodeData := TreeProject.GetNodeData(CurrentNode);
+        NodeData^.Project := Project;
+        NodeData^.ProjectFile := Project.Files[FileIndex];
+        NodeData^.Caption := ExtractFileName(Project.Files[FileIndex].FileName);
+      end;
+    end;
+
+    // expand tree
+    TreeProject.FullExpand(TreeProject.TopNode);
+  finally
+    TreeProject.EndUpdate;
+  end;
 end;
 
 end.

@@ -32,12 +32,15 @@ type
     procedure LoadProject(ProjectFileName: TFileName);
 
     property Count: Integer read GetProjectCount;
-    property Project[Index: Integer]: THopeProject read GetProject;
+    property Project[Index: Integer]: THopeProject read GetProject; default;
     property ActiveProject: THopeProject read FActiveProject write SetActiveProject;
     property OnActiveProjectChanged: TNotifyEvent read FOnActiveProjectChanged;
   end;
 
 implementation
+
+uses
+  System.Types;
 
 { THopeProjectList }
 
@@ -55,6 +58,9 @@ end;
 
 function THopeProjectList.GetProject(Index: Integer): THopeProject;
 begin
+  if (Index < 0) or (Index >= FProjects.Count) then
+    raise Exception.CreateFmt('Index out of bounds (%d)', [Index]);
+
   Result := THopeProject(FProjects[Index]);
 end;
 

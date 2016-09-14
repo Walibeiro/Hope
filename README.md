@@ -19,7 +19,12 @@ Feel free to fork this repository and alter what ever you want. However, in orde
 
 * The code should not use the latest edge language feature
 * The code must be clean and commented
-* The code must be formated according to the Object Pascal Style Guide (see http://edn.embarcadero.com/article/10280) 
+* The code must be formated according to the Object Pascal Style Guide (see http://edn.embarcadero.com/article/10280)
+* The code should be written with portability in mind (Lazarus / Linux, OSX)
+
+# Downloads
+
+So far no prebuilt binaries are available. However, as soon as the project will reach an alpha state, prebuilt binaries will be made available.
 
 # License
 This project is licensed under GPL. It is mainly because I think development tools should be open to everyone. 

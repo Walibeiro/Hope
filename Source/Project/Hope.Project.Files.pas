@@ -5,7 +5,8 @@ interface
 {$I Hope.inc}
 
 uses
-  System.SysUtils, System.Contnrs;
+  System.SysUtils, System.Contnrs, Hope.Common.JSON,
+  dwsJSON;
 
 type
   THopeProjectFile = class
@@ -24,9 +25,19 @@ type
   private
     FList: TObjectList;
     function GetCount: Integer;
+    function GetItem(Index: Integer): THopeProjectFile;
+    procedure ReadJson(const JsonValue: TdwsJsonObject);
+    procedure WriteJson(const JsonValue: TdwsJsonObject);
   public
     procedure AfterConstruction; override;
 
+    procedure AddProjectFile(FileName: TFileName);
+    procedure Clear;
+
+    procedure LoadFromJson(const RootNode: TdwsJsonObject);
+    procedure SaveToJson(const Root: TdwsJsonObject);
+
+    property Items[Index: Integer]: THopeProjectFile read GetItem; default;
     property Count: Integer read GetCount;
   end;
 
@@ -52,15 +63,67 @@ end;
 
 { THopeProjectFiles }
 
+procedure THopeProjectFiles.AddProjectFile(FileName: TFileName);
+var
+  ProjectFile: THopeProjectFile;
+begin
+  ProjectFile := THopeProjectFile.Create;
+  ProjectFile.FileName := FileName;
+  FList.Add(ProjectFile);
+end;
+
 procedure THopeProjectFiles.AfterConstruction;
 begin
   inherited;
   FList := TObjectList.Create(True);
 end;
 
+procedure THopeProjectFiles.Clear;
+begin
+  FList.Clear;
+end;
+
 function THopeProjectFiles.GetCount: Integer;
 begin
   Result := FList.Count;
+end;
+
+function THopeProjectFiles.GetItem(Index: Integer): THopeProjectFile;
+begin
+  if (Index < 0) or (Index >= FList.Count) then
+    raise Exception.CreateFmt('Index out of bounds (%d)', [Index]);
+
+  Result := THopeProjectFile(FList[Index]);
+end;
+
+procedure THopeProjectFiles.LoadFromJson(const RootNode: TdwsJsonObject);
+var
+  JsonArray: TdwsJsonArray;
+  Item: TdwsJsonValue;
+begin
+  // ensure the root node is not nil
+  if not Assigned(RootNode) then
+    raise EHopeJsonException.Create(RStrJsonReadErrorJsonValueNil);
+
+  RootNode.GetArray('Files', JsonArray);
+
+  for Item in JsonArray do
+    AddProjectFile(Item.AsString);
+end;
+
+procedure THopeProjectFiles.ReadJson(const JsonValue: TdwsJsonObject);
+begin
+  // do nothing so far, files are just strings.
+end;
+
+procedure THopeProjectFiles.SaveToJson(const Root: TdwsJsonObject);
+begin
+
+end;
+
+procedure THopeProjectFiles.WriteJson(const JsonValue: TdwsJsonObject);
+begin
+  // do nothing so far, files are just strings.
 end;
 
 end.

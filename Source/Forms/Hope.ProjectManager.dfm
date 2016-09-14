@@ -65,12 +65,14 @@ inherited FormProjectManager: TFormProjectManager
     Header.Font.Name = 'Tahoma'
     Header.Font.Style = []
     Header.MainColumn = -1
+    Images = DataModuleCommon.ImageList16
     TabOrder = 1
     OnCompareNodes = TreeProjectCompareNodes
     OnDblClick = TreeProjectDblClick
     OnEditing = TreeProjectEditing
     OnFreeNode = TreeProjectFreeNode
     OnGetText = TreeProjectGetText
+    OnGetImageIndex = TreeProjectGetImageIndex
     OnIncrementalSearch = TreeProjectIncrementalSearch
     OnNewText = TreeProjectNewText
     Columns = <>

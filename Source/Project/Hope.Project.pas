@@ -32,6 +32,8 @@ type
     procedure LoadFromFile(const FileName: TFileName); override;
     procedure SaveToFile(const FileName: TFileName); override;
 
+    procedure Clear;
+
     property RootPath: string read GetRootPath;
 
     property Name: string read FName write FName;
@@ -43,6 +45,7 @@ type
     property Keywords: string read FKeywords write FKeywords;
     property Url: string read FUrl write FUrl;
     property Options: THopeProjectOptions read FOptions;
+    property Files: THopeProjectFiles read FFiles;
   end;
 
 implementation
@@ -54,11 +57,15 @@ procedure THopeProject.AfterConstruction;
 begin
   inherited;
 
-  FCreateDateTime := Now;
-  FModifiedDateTime := Now;
-
   FOptions := THopeProjectOptions.Create;
   FFiles := THopeProjectFiles.Create;
+end;
+
+procedure THopeProject.Clear;
+begin
+  FCreateDateTime := Now;
+  FModifiedDateTime := Now;
+  FFiles.Clear;
 end;
 
 function THopeProject.GetRootPath: string;
@@ -83,12 +90,17 @@ end;
 procedure THopeProject.ReadJson(const JsonValue: TdwsJsonObject);
 var
   FormatSetting: TFormatSettings;
+  Files: TdwsJSONArray;
 begin
+  Clear;
+
   FormatSetting := TFormatSettings.Create('en-US');
 
   FName := JsonValue.GetValue('Name', FName);
+(*
   FCreateDateTime := StrToDateTime(JsonValue.GetValue('Create', DateTimeToStr(FCreateDateTime, FormatSetting)), FormatSetting);
   FModifiedDateTime := StrToDateTime(JsonValue.GetValue('Modified', DateTimeToStr(FModifiedDateTime, FormatSetting)), FormatSetting);
+*)
   FAuthor := JsonValue.GetValue('Author', FAuthor);
   FCompany := JsonValue.GetValue('Company', FCompany);
   FDescription := JsonValue.GetValue('Description', FDescription);
@@ -96,6 +108,7 @@ begin
   FUrl := JsonValue.GetValue('Url', FUrl);
 
   FOptions.LoadFromJson(JsonValue);
+  FFiles.LoadFromJson(JsonValue);
 end;
 
 procedure THopeProject.WriteJson(const JsonValue: TdwsJsonObject);
@@ -114,6 +127,7 @@ begin
   JsonValue.AddValue('Url', FUrl);
 
   FOptions.SaveToJson(JsonValue);
+  FFiles.SaveToJson(JsonValue);
 end;
 
 end.

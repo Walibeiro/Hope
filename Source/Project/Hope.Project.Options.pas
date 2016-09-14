@@ -17,6 +17,9 @@ type
   protected
     procedure ReadJson(const JsonValue: TdwsJsonObject); override;
     procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
 
     property Assertions: Boolean read FAssertions write FAssertions;
     property ConditionalDefines: string read FConditionalDefines write FConditionalDefines;
@@ -27,10 +30,10 @@ type
   THopeCodeGenJavaScriptOptions = class(THopeJsonBase)
   private
     FObfuscation: Boolean;
-    FRangeChecking: Boolean;
-    FInstanceChecking: Boolean;
-    FConditionChecking: Boolean;
-    FLoopChecking: Boolean;
+    FRangeChecks: Boolean;
+    FInstanceChecks: Boolean;
+    FConditionChecks: Boolean;
+    FLoopChecks: Boolean;
     FInlineMagics: Boolean;
     FIgnorePublishedInImplementation: Boolean;
     FEmitSourceLocation: Boolean;
@@ -43,12 +46,15 @@ type
   protected
     procedure ReadJson(const JsonValue: TdwsJsonObject); override;
     procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
   public
+    procedure AfterConstruction; override;
+
     property Obfuscation: Boolean read FObfuscation write FObfuscation;
-    property RangeChecking: Boolean read FRangeChecking write FRangeChecking;
-    property InstanceChecking: Boolean read FInstanceChecking write FInstanceChecking;
-    property ConditionChecking: Boolean read FConditionChecking write FConditionChecking;
-    property LoopChecking: Boolean read FLoopChecking write FLoopChecking;
+    property RangeChecks: Boolean read FRangeChecks write FRangeChecks;
+    property InstanceChecks: Boolean read FInstanceChecks write FInstanceChecks;
+    property ConditionChecks: Boolean read FConditionChecks write FConditionChecks;
+    property LoopChecks: Boolean read FLoopChecks write FLoopChecks;
     property InlineMagics: Boolean read FInlineMagics write FInlineMagics;
     property IgnorePublishedInImplementation: Boolean read FIgnorePublishedInImplementation write FIgnorePublishedInImplementation;
     property EmitSourceLocation: Boolean read FEmitSourceLocation write FEmitSourceLocation;
@@ -67,8 +73,10 @@ type
   protected
     procedure ReadJson(const JsonValue: TdwsJsonObject); override;
     procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
   public
     procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
 
     property CompilerOptions: THopeCompilerOptions read FCompilerOptions;
     property CodeGenOptions: THopeCodeGenJavaScriptOptions read FCodeGenOptions;
@@ -78,10 +86,25 @@ implementation
 
 { THopeCompilerOptions }
 
+procedure THopeCompilerOptions.AfterConstruction;
+begin
+  inherited;
+
+  FAssertions := True;
+  FOptimizations := True;
+  FConditionalDefines := '';
+  FHintsLevel := 0;
+end;
+
+class function THopeCompilerOptions.GetPreferredName: string;
+begin
+  Result := 'CompilerOptions';
+end;
+
 procedure THopeCompilerOptions.ReadJson(const JsonValue: TdwsJsonObject);
 begin
   FAssertions := JsonValue.GetValue('Assertions', FAssertions);
-  FConditionalDefines := JsonValue.GetValue('Optimizations', FConditionalDefines);
+  FConditionalDefines := JsonValue.GetValue('ConditionalDefines', FConditionalDefines);
   FOptimizations := JsonValue.GetValue('Optimizations', FOptimizations);
   FHintsLevel := JsonValue.GetValue('HintsLevel', FHintsLevel);
 end;
@@ -89,7 +112,7 @@ end;
 procedure THopeCompilerOptions.WriteJson(const JsonValue: TdwsJsonObject);
 begin
   JsonValue.AddValue('Assertions', FAssertions);
-  JsonValue.AddValue('Optimizations', FConditionalDefines);
+  JsonValue.AddValue('ConditionalDefines', FConditionalDefines);
   JsonValue.AddValue('Optimizations', FOptimizations);
   JsonValue.AddValue('HintsLevel', FHintsLevel);
 end;
@@ -97,13 +120,38 @@ end;
 
 { THopeCodeGenJavaScriptOptions }
 
+procedure THopeCodeGenJavaScriptOptions.AfterConstruction;
+begin
+  inherited;
+
+  FObfuscation := False;
+  FRangeChecks := False;
+  FInstanceChecks := False;
+  FConditionChecks := False;
+  FLoopChecks := False;
+  FInlineMagics := True;
+  FIgnorePublishedInImplementation := True;
+  FEmitSourceLocation := False;
+  FEmitRTTI := False;
+  FDevirtualize := True;
+  FMainBody := '';
+  FCodePacking := False;
+  FSmartLinking := True;
+  FVerbosity := 1;
+end;
+
+class function THopeCodeGenJavaScriptOptions.GetPreferredName: string;
+begin
+  Result := 'CodeGenOptions';
+end;
+
 procedure THopeCodeGenJavaScriptOptions.ReadJson(const JsonValue: TdwsJsonObject);
 begin
   FObfuscation := JsonValue.GetValue('Obfuscation', FObfuscation);
-  FRangeChecking := JsonValue.GetValue('RangeChecking', FRangeChecking);
-  FInstanceChecking := JsonValue.GetValue('InstanceChecking', FInstanceChecking);
-  FConditionChecking := JsonValue.GetValue('ConditionChecking', FConditionChecking);
-  FLoopChecking := JsonValue.GetValue('LoopChecking', FLoopChecking);
+  FRangeChecks := JsonValue.GetValue('RangeChecks', FRangeChecks);
+  FInstanceChecks := JsonValue.GetValue('InstanceChecks', FInstanceChecks);
+  FConditionChecks := JsonValue.GetValue('ConditionChecks', FConditionChecks);
+  FLoopChecks := JsonValue.GetValue('LoopChecks', FLoopChecks);
   FInlineMagics := JsonValue.GetValue('InlineMagics', FInlineMagics);
   FIgnorePublishedInImplementation := JsonValue.GetValue('IgnorePublishedInImplementation', FIgnorePublishedInImplementation);
   FEmitSourceLocation := JsonValue.GetValue('EmitSourceLocation', FEmitSourceLocation);
@@ -118,10 +166,10 @@ end;
 procedure THopeCodeGenJavaScriptOptions.WriteJson(const JsonValue: TdwsJsonObject);
 begin
   JsonValue.AddValue('Obfuscation', FObfuscation);
-  JsonValue.AddValue('RangeChecking', FRangeChecking);
-  JsonValue.AddValue('InstanceChecking', FInstanceChecking);
-  JsonValue.AddValue('ConditionChecking', FConditionChecking);
-  JsonValue.AddValue('LoopChecking', FLoopChecking);
+  JsonValue.AddValue('RangeChecks', FRangeChecks);
+  JsonValue.AddValue('InstanceChecks', FInstanceChecks);
+  JsonValue.AddValue('ConditionChecks', FConditionChecks);
+  JsonValue.AddValue('LoopChecks', FLoopChecks);
   JsonValue.AddValue('InlineMagics', FInlineMagics);
   JsonValue.AddValue('IgnorePublishedInImplementation', FIgnorePublishedInImplementation);
   JsonValue.AddValue('EmitSourceLocation', FEmitSourceLocation);
@@ -139,14 +187,30 @@ end;
 procedure THopeProjectOptions.AfterConstruction;
 begin
   inherited;
+
   FCompilerOptions := THopeCompilerOptions.Create;
+  FCodeGenOptions := THopeCodeGenJavaScriptOptions.Create;
+end;
+
+procedure THopeProjectOptions.BeforeDestruction;
+begin
+  FCompilerOptions.Free;
+  FCodeGenOptions.Free;
+
+  inherited;
+end;
+
+class function THopeProjectOptions.GetPreferredName: string;
+begin
+  Result := 'Options';
 end;
 
 procedure THopeProjectOptions.ReadJson(const JsonValue: TdwsJsonObject);
 begin
   inherited;
 
-  FCompilerOptions.LoadFromJson(JsonValue);
+  FCompilerOptions.LoadFromJson(JsonValue, True);
+  FCodeGenOptions.LoadFromJson(JsonValue, True);
 end;
 
 procedure THopeProjectOptions.WriteJson(const JsonValue: TdwsJsonObject);
@@ -154,6 +218,7 @@ begin
   inherited;
 
   FCompilerOptions.SaveToJson(JsonValue);
+  FCodeGenOptions.SaveToJson(JsonValue);
 end;
 
 end.

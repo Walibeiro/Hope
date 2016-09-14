@@ -49,11 +49,6 @@ type
     function GetObject(Name: string; out JsonObject: TdwsJSONObject): Boolean; overload;
   end;
 
-implementation
-
-uses
-  System.AnsiStrings, dwsUtils, dwsXPlatform;
-
 resourcestring
   RStrJsonWriteErrorJsonValueNil = 'Failed to write Json element, item node was nil.';
   RStrJsonReadErrorJsonValueNil = 'Failed to read Json element, item node was nil.';
@@ -61,6 +56,10 @@ resourcestring
   RStrJsonReadErrorTag = 'Failed to read Json element, expected tag %s';
   RStrFailedToWriteJson = 'Failed to write Json element: %s';
 
+implementation
+
+uses
+  System.AnsiStrings, dwsUtils, dwsXPlatform;
 
 { TdwsJSONObjectHelper }
 
@@ -241,6 +240,8 @@ procedure THopeJsonBase.LoadFromJson(const Name: string;
 var
   JsonValue: TdwsJsonValue;
 begin
+  Assert(Name <> '');
+
   // ensure the root node is not nil
   if not Assigned(RootNode) then
     raise EHopeJsonException.Create(RStrJsonReadErrorJsonValueNil);

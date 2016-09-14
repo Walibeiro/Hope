@@ -385,6 +385,8 @@ begin
   RegisterNewTab(FWelcomePage);
   FWelcomePage.ReloadUrl;
 
+  // FWelcomePage.Chromium.ShowDevTools;
+
   FFocusedEditorForm := nil;
   FFocusedEditor := nil;
 
@@ -394,6 +396,9 @@ end;
 procedure TFormMain.LoadProject(ProjectFileName: TFileName);
 begin
   FProjects.LoadProject(ProjectFileName);
+
+  FProjectManager.UpdateNodes;
+  FProjectManager.TreeProject.Enabled := True;
 end;
 
 procedure TFormMain.PanelTabsDockDrop(Sender: TObject; Source: TDragDockObject;

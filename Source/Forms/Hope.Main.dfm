@@ -2,8 +2,8 @@ object FormMain: TFormMain
   Left = 0
   Top = 0
   Caption = 'HOPE - Integrated Object Pascal Development Envirionment'
-  ClientHeight = 699
-  ClientWidth = 999
+  ClientHeight = 855
+  ClientWidth = 1153
   Color = clBtnFace
   DockSite = True
   Font.Charset = DEFAULT_CHARSET
@@ -21,20 +21,20 @@ object FormMain: TFormMain
   object SplitterLeft: TSplitter
     Left = 129
     Top = 0
-    Height = 590
+    Height = 746
     Visible = False
   end
   object SplitterRight: TSplitter
-    Left = 867
+    Left = 1021
     Top = 0
-    Height = 590
+    Height = 746
     Align = alRight
     Visible = False
   end
   object SplitterBottom: TSplitter
     Left = 0
-    Top = 590
-    Width = 999
+    Top = 746
+    Width = 1153
     Height = 3
     Cursor = crVSplit
     Align = alBottom
@@ -44,7 +44,7 @@ object FormMain: TFormMain
     Left = 0
     Top = 0
     Width = 129
-    Height = 590
+    Height = 746
     Align = alLeft
     BevelOuter = bvNone
     Caption = '(LeftDock)'
@@ -56,8 +56,8 @@ object FormMain: TFormMain
   end
   object PanelBottom: TPanel
     Left = 0
-    Top = 593
-    Width = 999
+    Top = 749
+    Width = 1153
     Height = 106
     Align = alBottom
     BevelOuter = bvNone
@@ -69,10 +69,10 @@ object FormMain: TFormMain
     OnUnDock = PanelUnDock
   end
   object PanelRight: TPanel
-    Left = 870
+    Left = 1024
     Top = 0
     Width = 129
-    Height = 590
+    Height = 746
     Align = alRight
     BevelOuter = bvNone
     Caption = 'RightDock'
@@ -85,8 +85,8 @@ object FormMain: TFormMain
   object PanelMain: TPanel
     Left = 132
     Top = 0
-    Width = 735
-    Height = 590
+    Width = 889
+    Height = 746
     Align = alClient
     BevelOuter = bvNone
     Caption = '(Main)'
@@ -94,8 +94,8 @@ object FormMain: TFormMain
     object PanelTabs: TPanel
       Left = 0
       Top = 20
-      Width = 735
-      Height = 570
+      Width = 889
+      Height = 726
       Align = alClient
       BevelOuter = bvNone
       Caption = '(Tabs)'
@@ -109,7 +109,7 @@ object FormMain: TFormMain
     object TabSet: TTabSet
       Left = 0
       Top = 0
-      Width = 735
+      Width = 889
       Height = 20
       Align = alTop
       Font.Charset = DEFAULT_CHARSET
