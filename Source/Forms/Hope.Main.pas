@@ -210,6 +210,8 @@ type
 
     procedure ShowDockPanel(APanel: TPanel; MakeVisible: Boolean; Client: TControl);
 
+    procedure FocusEditor(FileName: TFileName);
+
     property Projects: THopeProjectList read FProjects;
     property FocusedEditor: TSynEdit read FFocusedEditor;
   end;
@@ -479,6 +481,11 @@ begin
 
   if MakeVisible and (Client <> nil) then
     Client.Show;
+end;
+
+procedure TFormMain.FocusEditor(FileName: TFileName);
+begin
+  RegisterNewEditor(FileName);
 end;
 
 procedure TFormMain.FocusTab(Form: TForm);

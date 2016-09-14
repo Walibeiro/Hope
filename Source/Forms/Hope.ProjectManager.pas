@@ -99,7 +99,9 @@ begin
     begin
       TreeProject.Expanded[Node] := not TreeProject.Expanded[Node];
       Exit;
-    end;
+    end
+    else
+      FormMain.FocusEditor(NodeData.ProjectFile.FileName);
   end;
 end;
 
