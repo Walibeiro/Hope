@@ -93,7 +93,6 @@ end;
 procedure THopeProject.ReadJson(const JsonValue: TdwsJsonObject);
 var
   FormatSetting: TFormatSettings;
-  Files: TdwsJSONArray;
 begin
   Clear;
 

@@ -37,7 +37,9 @@ uses
   Hope.UnicodeExplorer in 'Forms\Hope.UnicodeExplorer.pas' {FormUnicodeExplorer},
   Hope.UnitManager in 'Forms\Hope.UnitManager.pas' {FormUnitManager},
   Hope.WelcomePage in 'Forms\Hope.WelcomePage.pas' {FormWelcomePage},
-  Hope.EditorList in 'Utils\Hope.EditorList.pas';
+  Hope.EditorList in 'Utils\Hope.EditorList.pas',
+  Hope.Buffer in 'Buffer\Hope.Buffer.pas',
+  Hope.Common.FileUtilities in 'Common\Hope.Common.FileUtilities.pas';
 
 {$R *.res}
 
