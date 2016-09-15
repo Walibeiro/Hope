@@ -122,7 +122,7 @@ end;
 procedure TFormEditor.FileNameChanged;
 begin
   if FileExists(FileName) then
-    Editor.Text := LoadTextFromFile(FileName);
+    Editor.Text := DataModuleCommon.GetText(FileName);
 
   FShortFileName := ExtractFileName(FileName);
   if StrEndsWith(LowerCase(FShortFileName), '.pas') then

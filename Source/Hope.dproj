@@ -194,6 +194,10 @@
         <DCCReference Include="Utils\Hope.EditorList.pas"/>
         <DCCReference Include="Buffer\Hope.Buffer.pas"/>
         <DCCReference Include="Common\Hope.Common.FileUtilities.pas"/>
+        <DCCReference Include="Buffer\Hope.Buffer.List.pas"/>
+        <DCCReference Include="Common\Hope.Common.DirectoryMonitor.pas"/>
+        <DCCReference Include="Common\Hope.Common.Constants.pas"/>
+        <DCCReference Include="Common\Hope.Common.MonitoredBuffer.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -206,7 +210,7 @@
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>
-    <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
+    <Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
     <ProjectExtensions>
         <Borland.Personality>Delphi.Personality.12</Borland.Personality>
         <Borland.ProjectType>Application</Borland.ProjectType>
@@ -249,7 +253,7 @@
                 </Parameters>
             </Delphi.Personality>
             <Deployment>
-                <DeployFile LocalName="..\DCU\Hope.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\Binaries\x86\Hope.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Hope.exe</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -261,7 +265,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\Binaries\x86\Hope.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="Win32\Debug\Hope.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Hope.exe</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -273,7 +277,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\Hope.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\DCU\Hope.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Hope.exe</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -617,6 +621,6 @@
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>
-    <Import Project="$(MSBuildProjectName).deployproj" Condition="Exists('$(MSBuildProjectName).deployproj')"/>
-    <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
+    <Import Condition="Exists('$(MSBuildProjectName).deployproj')" Project="$(MSBuildProjectName).deployproj"/>
+    <Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
 </Project>

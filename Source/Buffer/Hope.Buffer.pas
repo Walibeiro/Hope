@@ -2,6 +2,8 @@ unit Hope.Buffer;
 
 interface
 
+{$I Hope.inc}
+
 uses
   System.SysUtils;
 
@@ -16,6 +18,8 @@ type
   protected
     procedure FileNameChanged;
   public
+    procedure Reload;
+
     property Text: string read FText write SetText;
     property FileName: TFileName read FFileName write SetFileName;
     property UnitNameHash: Cardinal read FUnitNameHash;
@@ -24,7 +28,7 @@ type
 implementation
 
 uses
-  dwsUtils, Hope.Common.FileUtilities;
+  dwsUtils, dwsXPlatform, Hope.Common.FileUtilities;
 
 { THopeBuffer }
 
@@ -46,8 +50,16 @@ procedure THopeBuffer.FileNameChanged;
 var
   FileUnitName: string;
 begin
-  FileUnitName := ExtractUnitName(FFileName);
-  FUnitNameHash := SimpleLowerCaseStringHash(FileUnitName);
+  // calculate a hash of the unit name (for faster indexing)
+  FUnitNameHash := CalculateUnitHash(FFileName);
+
+  // reload file content
+  Reload;
+end;
+
+procedure THopeBuffer.Reload;
+begin
+  FText := LoadTextFromFile(FFileName);
 end;
 
 end.

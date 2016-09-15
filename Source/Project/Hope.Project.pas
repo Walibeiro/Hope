@@ -20,7 +20,7 @@ type
     FKeywords: string;
     FOptions: THopeProjectOptions;
     FUrl: string;
-    FFileName: string;
+    FFileName: TFileName;
     FFiles: THopeProjectFiles;
     function GetRootPath: string;
   protected
@@ -35,6 +35,7 @@ type
     procedure Clear;
 
     property RootPath: string read GetRootPath;
+    property FileName: TFileName read FFileName;
 
     property Name: string read FName write FName;
     property CreateDateTime: TDateTime read FCreateDateTime write FCreateDateTime;

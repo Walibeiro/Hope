@@ -12,7 +12,7 @@ uses
   SynEditMiscClasses, SynEditSearch, SynHighlighterCSS, SynHighlighterHtml,
   SynHighlighterJSON, SynHighlighterJScript, SynHighlighterDWS,
 
-  Hope.History, Hope.Paths;
+  Hope.History, Hope.Paths, Hope.Common.MonitoredBuffer;
 
 type
   TDataModuleCommon = class(TDataModule)
@@ -35,12 +35,16 @@ type
   private
     FHistory: THopeHistory;
     FPaths: THopePaths;
+    FMonitoredBuffer: TMonitoredBuffer;
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
+    function GetText(FileName: TFileName): string;
+
     property History: THopeHistory read FHistory;
     property Paths: THopePaths read FPaths;
+    property MonitoredBuffer: TMonitoredBuffer read FMonitoredBuffer;
   end;
 
 var
@@ -65,13 +69,24 @@ begin
 
   FHistory := THopeHistory.Create;
   FHistory.Load;
+
+  FMonitoredBuffer := TMonitoredBuffer.Create;
+  FMonitoredBuffer.AddPath(ExpandFileName(Paths.Root + '..\Common\APIs\'));
 end;
 
 procedure TDataModuleCommon.BeforeDestruction;
 begin
   FHistory.Save;
 
+  FMonitoredBuffer.Free;
+  FHistory.Free;
+
   inherited;
+end;
+
+function TDataModuleCommon.GetText(FileName: TFileName): string;
+begin
+  Result := FMonitoredBuffer.GetText(FileName);
 end;
 
 procedure TDataModuleCommon.SynMacroRecorderStateChange(Sender: TObject);

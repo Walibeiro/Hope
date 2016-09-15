@@ -29,7 +29,8 @@ type
     procedure AddProject(Project: THopeProject);
     procedure RemoveProject(Project: THopeProject);
 
-    procedure LoadProject(ProjectFileName: TFileName);
+    function IsProjectLoaded(ProjectFileName: TFileName): Boolean;
+    function LoadProject(ProjectFileName: TFileName): Boolean;
 
     property Count: Integer read GetProjectCount;
     property Project[Index: Integer]: THopeProject read GetProject; default;
@@ -40,7 +41,7 @@ type
 implementation
 
 uses
-  System.Types;
+  System.Types, dwsUtils;
 
 { THopeProjectList }
 
@@ -69,18 +70,36 @@ begin
   Result := FProjects.Count;
 end;
 
-procedure THopeProjectList.LoadProject(ProjectFileName: TFileName);
+function THopeProjectList.IsProjectLoaded(ProjectFileName: TFileName): Boolean;
+var
+  Index: Integer;
+begin
+  // scan all projects in this list
+  for Index := 0 to FProjects.Count - 1 do
+    if UnicodeSameText(ProjectFileName, THopeProject(FProjects[Index]).FileName) then
+      Exit(True);
+end;
+
+function THopeProjectList.LoadProject(ProjectFileName: TFileName): Boolean;
 var
   Project: THopeProject;
 begin
+  // check if project is already present
+  if IsProjectLoaded(ProjectFileName) then
+    Exit(False);
+
+  // create and load project
   Project := THopeProject.Create;
   Project.LoadFromFile(ProjectFileName);
 
+  // add project to the project list
   AddProject(Project);
+  Result := True;
 end;
 
 procedure THopeProjectList.AddProject(Project: THopeProject);
 begin
+  // add project to the project list
   FProjects.Add(Project);
 
   // eventually make active project
@@ -123,4 +142,3 @@ begin
 end;
 
 end.
-

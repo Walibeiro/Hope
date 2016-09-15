@@ -157,31 +157,31 @@ type
     SplitterLeft: TSplitter;
     SplitterRight: TSplitter;
     TabSet: TTabSet;
-    procedure ActionHelpAboutExecute(Sender: TObject);
-    procedure ActionProjectOptionsExecute(Sender: TObject);
-    procedure ActionSearchFindInFilesExecute(Sender: TObject);
-    procedure ActionToolsCodeTemplatesExecute(Sender: TObject);
-    procedure ActionToolsColorPickerExecute(Sender: TObject);
-    procedure ActionToolsPreferencesExecute(Sender: TObject);
-    procedure ActionToolsUnicodeExplorerExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormDockOver(Sender: TObject; Source: TDragDockObject; X,
       Y: Integer; State: TDragState; var Accept: Boolean);
     procedure FormGetSiteInfo(Sender: TObject; DockClient: TControl;
       var InfluenceRect: TRect; MousePos: TPoint; var CanDock: Boolean);
+    procedure ActionFileCloseProjectExecute(Sender: TObject);
+    procedure ActionFileNewProjectExecute(Sender: TObject);
+    procedure ActionFileOpenProjectAccept(Sender: TObject);
+    procedure ActionHelpAboutExecute(Sender: TObject);
+    procedure ActionMacroPlayExecute(Sender: TObject);
+    procedure ActionMacroRecordExecute(Sender: TObject);
+    procedure ActionMacroStopExecute(Sender: TObject);
+    procedure ActionProjectOptionsExecute(Sender: TObject);
+    procedure ActionSearchFindInFilesExecute(Sender: TObject);
+    procedure ActionToolsAsciiChartExecute(Sender: TObject);
+    procedure ActionToolsCodeTemplatesExecute(Sender: TObject);
+    procedure ActionToolsColorPickerExecute(Sender: TObject);
+    procedure ActionToolsPreferencesExecute(Sender: TObject);
+    procedure ActionToolsUnicodeExplorerExecute(Sender: TObject);
     procedure PanelUnDock(Sender: TObject; Client: TControl;
       NewTarget: TWinControl; var Allow: Boolean);
     procedure PanelTabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
       Y: Integer);
-    procedure ActionToolsAsciiChartExecute(Sender: TObject);
-    procedure ActionFileOpenProjectAccept(Sender: TObject);
-    procedure ActionFileNewProjectExecute(Sender: TObject);
-    procedure ActionFileCloseProjectExecute(Sender: TObject);
     procedure TabSetChange(Sender: TObject; NewTab: Integer;
       var AllowChange: Boolean);
-    procedure ActionMacroRecordExecute(Sender: TObject);
-    procedure ActionMacroPlayExecute(Sender: TObject);
-    procedure ActionMacroStopExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -194,6 +194,7 @@ type
     FProjectManager: TFormProjectManager;
     FCompilerMessages: TFormCompilerMessages;
     FOutputMessages: TFormOutputMessages;
+
     procedure CMDockClient(var Message: TCMDockClient); message CM_DOCKCLIENT;
     function ComputeDockingRect(var DockRect: TRect; MousePos: TPoint): TAlign;
 
@@ -367,12 +368,15 @@ procedure TFormMain.FormShow(Sender: TObject);
 var
   Host: TFormDockHost;
 begin
+  // dock unit manager on the left
   FUnitManager.ManualDock(PanelLeft);
   ShowDockPanel(PanelLeft, True, FUnitManager);
 
+  // dock unit manager on the right
   FProjectManager.ManualDock(PanelRight);
   ShowDockPanel(PanelRight, True, FProjectManager);
 
+  // create docking host for messages (and dock on the bottom)
   Host := TFormDockHost.Create(Application);
   Host.IsPaged := True;
   Host.BoundsRect := Self.BoundsRect;
@@ -387,21 +391,23 @@ begin
 
   RegisterNewTab(FWelcomePage);
   FWelcomePage.ReloadUrl;
-
   // FWelcomePage.Chromium.ShowDevTools;
 
   FFocusedEditorForm := nil;
   FFocusedEditor := nil;
-
-//  RegisterNewEditor('.\Projects\Test\Test.hpr');
 end;
 
 procedure TFormMain.LoadProject(ProjectFileName: TFileName);
 begin
-  FProjects.LoadProject(ProjectFileName);
+  // load project (if possible)
+  if FProjects.LoadProject(ProjectFileName) then
+  begin
+    // update project manager
+    FProjectManager.UpdateNodes;
+    FProjectManager.TreeProject.Enabled := True;
 
-  FProjectManager.UpdateNodes;
-  FProjectManager.TreeProject.Enabled := True;
+    DataModuleCommon.MonitoredBuffer.AddPath(FProjects.ActiveProject.RootPath);
+  end;
 end;
 
 procedure TFormMain.PanelTabsDockDrop(Sender: TObject; Source: TDragDockObject;
@@ -500,6 +506,8 @@ begin
 end;
 
 procedure TFormMain.FocusTab(Form: TForm);
+var
+  Index: Integer;
 begin
   // assign editor form
   if Form is TFormEditor then
@@ -512,6 +520,22 @@ begin
     FFocusedEditor := FFocusedEditorForm.Editor
   else
     FFocusedEditor := nil;
+
+  TabSet.OnChange := nil;
+  try
+    for Index := 0 to FEditors.Count - 1 do
+    begin
+      FEditors[Index].Visible := FEditors[Index] = FFocusedEditorForm;
+
+      if FEditors[Index] = FFocusedEditorForm then
+        TabSet.TabIndex := Index + 1;
+    end;
+  finally
+    TabSet.OnChange := TabSetChange;
+  end;
+
+  if Assigned(FFocusedEditor) then
+    FFocusedEditor.SetFocus;
 end;
 
 procedure TFormMain.TabChanged;

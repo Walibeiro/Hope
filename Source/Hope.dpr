@@ -39,7 +39,11 @@ uses
   Hope.WelcomePage in 'Forms\Hope.WelcomePage.pas' {FormWelcomePage},
   Hope.EditorList in 'Utils\Hope.EditorList.pas',
   Hope.Buffer in 'Buffer\Hope.Buffer.pas',
-  Hope.Common.FileUtilities in 'Common\Hope.Common.FileUtilities.pas';
+  Hope.Common.FileUtilities in 'Common\Hope.Common.FileUtilities.pas',
+  Hope.Buffer.List in 'Buffer\Hope.Buffer.List.pas',
+  Hope.Common.DirectoryMonitor in 'Common\Hope.Common.DirectoryMonitor.pas',
+  Hope.Common.Constants in 'Common\Hope.Common.Constants.pas',
+  Hope.Common.MonitoredBuffer in 'Common\Hope.Common.MonitoredBuffer.pas';
 
 {$R *.res}
 

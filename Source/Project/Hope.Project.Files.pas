@@ -30,6 +30,7 @@ type
     procedure WriteJson(const JsonValue: TdwsJsonObject);
   public
     procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
 
     procedure AddProjectFile(FileName: TFileName);
     procedure Clear;
@@ -63,6 +64,20 @@ end;
 
 { THopeProjectFiles }
 
+procedure THopeProjectFiles.AfterConstruction;
+begin
+  inherited;
+
+  FList := TObjectList.Create(True);
+end;
+
+procedure THopeProjectFiles.BeforeDestruction;
+begin
+  FList.Free;
+
+  inherited;
+end;
+
 procedure THopeProjectFiles.AddProjectFile(FileName: TFileName);
 var
   ProjectFile: THopeProjectFile;
@@ -70,12 +85,6 @@ begin
   ProjectFile := THopeProjectFile.Create;
   ProjectFile.FileName := FileName;
   FList.Add(ProjectFile);
-end;
-
-procedure THopeProjectFiles.AfterConstruction;
-begin
-  inherited;
-  FList := TObjectList.Create(True);
 end;
 
 procedure THopeProjectFiles.Clear;
