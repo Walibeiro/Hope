@@ -12,7 +12,8 @@ uses
   SynEditMiscClasses, SynEditSearch, SynHighlighterCSS, SynHighlighterHtml,
   SynHighlighterJSON, SynHighlighterJScript, SynHighlighterDWS,
 
-  Hope.History, Hope.Paths, Hope.Common.MonitoredBuffer;
+  Hope.History, Hope.Paths, Hope.Common.MonitoredBuffer,
+  Hope.Common.Preferences;
 
 type
   TDataModuleCommon = class(TDataModule)
@@ -35,6 +36,7 @@ type
   private
     FHistory: THopeHistory;
     FPaths: THopePaths;
+    FPreferences: THopePreferences;
     FMonitoredBuffer: TMonitoredBuffer;
   public
     procedure AfterConstruction; override;
