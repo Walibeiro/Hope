@@ -182,6 +182,9 @@ type
       Y: Integer);
     procedure TabSetChange(Sender: TObject; NewTab: Integer;
       var AllowChange: Boolean);
+    procedure ActionProjectSyntaxCheckExecute(Sender: TObject);
+    procedure ActionProjectCompileExecute(Sender: TObject);
+    procedure ActionProjectBuildExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -628,6 +631,16 @@ begin
   DataModuleCommon.SynMacroRecorder.Stop;
 end;
 
+procedure TFormMain.ActionProjectBuildExecute(Sender: TObject);
+begin
+  DataModuleCommon.Compiler.BuildProject(Projects.ActiveProject);
+end;
+
+procedure TFormMain.ActionProjectCompileExecute(Sender: TObject);
+begin
+  DataModuleCommon.Compiler.CompileProject(Projects.ActiveProject);
+end;
+
 procedure TFormMain.ActionProjectOptionsExecute(Sender: TObject);
 begin
   with TFormProjectOptions.Create(Self) do
@@ -636,6 +649,11 @@ begin
   finally
     Free;
   end;
+end;
+
+procedure TFormMain.ActionProjectSyntaxCheckExecute(Sender: TObject);
+begin
+  DataModuleCommon.Compiler.SyntaxCheck(Projects.ActiveProject);
 end;
 
 procedure TFormMain.ActionSearchFindInFilesExecute(Sender: TObject);

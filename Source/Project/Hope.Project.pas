@@ -9,6 +9,8 @@ uses
   Hope.Project.Options;
 
 type
+  EHopeProject = class(Exception);
+
   THopeProject = class(THopeJsonBase)
   private
     FName: string;
@@ -22,6 +24,7 @@ type
     FUrl: string;
     FFileName: TFileName;
     FFiles: THopeProjectFiles;
+    FMainScript: THopeProjectFile;
     function GetRootPath: string;
   protected
     procedure ReadJson(const JsonValue: TdwsJsonObject); override;
@@ -46,6 +49,7 @@ type
     property Keywords: string read FKeywords write FKeywords;
     property Url: string read FUrl write FUrl;
     property Options: THopeProjectOptions read FOptions;
+    property MainScript: THopeProjectFile read FMainScript;
     property Files: THopeProjectFiles read FFiles;
   end;
 
@@ -60,6 +64,7 @@ begin
 
   FOptions := THopeProjectOptions.Create;
   FFiles := THopeProjectFiles.Create;
+  FMainScript := THopeProjectFile.Create;
 end;
 
 procedure THopeProject.Clear;
@@ -111,6 +116,11 @@ begin
   FUrl := JsonValue.GetValue('Url', FUrl);
 
   FOptions.LoadFromJson(JsonValue);
+
+  // project files
+  if not Assigned(JsonValue.Items['MainScript']) then
+    raise EHopeProject.Create('MainScript is not specified');
+  FMainScript.FileName := JsonValue.GetValue('MainScript', '');
   FFiles.LoadFromJson(JsonValue);
 end;
 
@@ -130,6 +140,9 @@ begin
   JsonValue.AddValue('Url', FUrl);
 
   FOptions.SaveToJson(JsonValue);
+
+  // project files
+  JsonValue.AddValue('MainScript', FMainScript.FileName);
   FFiles.SaveToJson(JsonValue);
 end;
 

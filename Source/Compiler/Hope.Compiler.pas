@@ -6,25 +6,41 @@ interface
 
 uses
   dwsUtils, dwsComp, dwsCompiler, dwsExprs, dwsJSCodeGen, dwsJSLibModule,
-  dwsCodeGen, Hope.Project;
+  dwsCodeGen, dwsErrors, Hope.Project;
 
 type
+  THopeCompileErrorEvent = procedure(Sender: TObject; Messages: TdwsMessageList) of object;
+  THopeCompilationEvent = procedure(Sender: TObject; Prog: IdwsProgram) of object;
+  THopeGetMainScriptEvent = procedure(Sender: TObject; out Script: string) of object;
+
   THopeCompiler = class
   private
     FDelphiWebScript: TDelphiWebScript;
     FCodeGen: TdwsJSCodeGen;
     FJSLib: TdwsJSLibModule;
+
+    FOnError: THopeCompileErrorEvent;
+    FOnCompilation: THopeCompilationEvent;
+    FOnGetMainScript: THopeGetMainScriptEvent;
+
+    function GetMainScript(Project: THopeProject): string;
   public
     constructor Create;
     destructor Destroy; override;
 
-    function CompileScript(Script: string): IdwsProgram;
+    function SyntaxCheck(Project: THopeProject): Boolean;
+    function CompileProject(Project: THopeProject): IdwsProgram;
+    procedure BuildProject(Project: THopeProject);
+
+    property OnError: THopeCompileErrorEvent read FOnError write FOnError;
+    property OnCompilation: THopeCompilationEvent read FOnCompilation write FOnCompilation;
+    property OnGetMainScript: THopeGetMainScriptEvent read FOnGetMainScript write FOnGetMainScript;
   end;
 
 implementation
 
 uses
-  dwsXPlatform, dwsErrors, dwsExprList;
+  dwsXPlatform, dwsExprList;
 
 { THopeCompiler }
 
@@ -55,23 +71,75 @@ begin
   inherited;
 end;
 
-function THopeCompiler.CompileScript(Script: string): IdwsProgram;
+function THopeCompiler.GetMainScript(Project: THopeProject): string;
+begin
+  // get main script
+  if Assigned(FOnGetMainScript) then
+    FOnGetMainScript(Self, Result)
+  else
+    Result := LoadTextFromFile(Project.MainScript.FileName);
+end;
+
+function THopeCompiler.SyntaxCheck(Project: THopeProject): Boolean;
 var
   Prog: IdwsProgram;
-  CodePas, CodeJS: string;
 begin
-  Prog := FDelphiWebScript.Compile(CodePas);
+  Prog := FDelphiWebScript.Compile(GetMainScript(Project));
 
   if Prog.Msgs.HasErrors then
   begin
-    Writeln(Prog.Msgs.AsInfo);
+    if Assigned(FOnError) then
+      FOnError(Self, Prog.Msgs);
     Exit;
   end;
 
+  // fire compilation event
+  if Assigned(FOnCompilation) then
+    FOnCompilation(Self, Prog);
+end;
+
+function THopeCompiler.CompileProject(Project: THopeProject): IdwsProgram;
+var
+  Prog: IdwsProgram;
+  CodeJS: string;
+begin
+  Prog := FDelphiWebScript.Compile(GetMainScript(Project));
+
+  if Prog.Msgs.HasErrors then
+  begin
+    if Assigned(FOnError) then
+      FOnError(Self, Prog.Msgs);
+    Exit;
+  end;
+
+  // fire compilation event
+  if Assigned(FOnCompilation) then
+    FOnCompilation(Self, Prog);
+
+
+(*
   FCodeGen.Clear;
   FCodeGen.CompileProgram(Prog);
   CodeJS := FCodeGen.CompiledOutput(Prog);
+*)
+end;
+
+procedure THopeCompiler.BuildProject(Project: THopeProject);
+var
+  Prog: IdwsProgram;
+begin
+  Prog := FDelphiWebScript.Compile(GetMainScript(Project));
+
+  if Prog.Msgs.HasErrors then
+  begin
+    if Assigned(FOnError) then
+      FOnError(Self, Prog.Msgs);
+    Exit;
+  end;
+
+  // fire compilation event
+  if Assigned(FOnCompilation) then
+    FOnCompilation(Self, Prog);
 end;
 
 end.
-

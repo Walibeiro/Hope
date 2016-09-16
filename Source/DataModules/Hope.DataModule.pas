@@ -13,7 +13,7 @@ uses
   SynHighlighterJSON, SynHighlighterJScript, SynHighlighterDWS,
 
   Hope.Common.History, Hope.Common.Paths, Hope.Common.MonitoredBuffer,
-  Hope.Common.Preferences;
+  Hope.Common.Preferences, Hope.Compiler;
 
 type
   TDataModuleCommon = class(TDataModule)
@@ -38,12 +38,14 @@ type
     FPaths: THopePaths;
     FPreferences: THopePreferences;
     FMonitoredBuffer: TMonitoredBuffer;
+    FCompiler: THopeCompiler;
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
     function GetText(FileName: TFileName): string;
 
+    property Compiler: THopeCompiler read FCompiler;
     property History: THopeHistory read FHistory;
     property Paths: THopePaths read FPaths;
     property Preferences: THopePreferences read FPreferences;
@@ -80,13 +82,17 @@ begin
 
   FMonitoredBuffer := TMonitoredBuffer.Create;
   FMonitoredBuffer.AddPath(ExpandFileName(Paths.Root + '..\Common\APIs\'));
+
+  FCompiler := THopeCompiler.Create;
 end;
 
 procedure TDataModuleCommon.BeforeDestruction;
 begin
+
   FHistory.SaveToFile(FPaths.HistoryFileName);
   FPreferences.SaveToFile(FPaths.PreferenceFileName);
 
+  FCompiler.Free;
   FMonitoredBuffer.Free;
   FHistory.Free;
   FPreferences.Free;

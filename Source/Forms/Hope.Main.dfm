@@ -374,6 +374,7 @@ object FormMain: TFormMain
       Category = 'Project'
       Caption = 'Build'
       ShortCut = 8312
+      OnExecute = ActionProjectBuildExecute
     end
     object ActionFileNewCSS: TAction
       Category = 'File'
@@ -557,10 +558,12 @@ object FormMain: TFormMain
       Category = 'Project'
       Caption = 'Compile'
       ShortCut = 16504
+      OnExecute = ActionProjectCompileExecute
     end
     object ActionProjectSyntaxCheck: TAction
       Category = 'Project'
       Caption = 'Syntax Check'
+      OnExecute = ActionProjectSyntaxCheckExecute
     end
     object ActionProjectStatistics: TAction
       Category = 'Project'
