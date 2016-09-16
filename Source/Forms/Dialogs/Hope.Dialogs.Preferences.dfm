@@ -1,36 +1,39 @@
 inherited FormPreferences: TFormPreferences
   Caption = 'Preferences'
-  ClientHeight = 520
-  ClientWidth = 791
+  ClientHeight = 493
+  ClientWidth = 742
+  Constraints.MinHeight = 520
+  Constraints.MinWidth = 750
+  OnClose = FormClose
   DesignSize = (
-    791
-    520)
+    742
+    493)
   PixelsPerInch = 96
   TextHeight = 15
   object Bevel: TBevel [0]
     Left = 251
-    Top = 479
-    Width = 532
+    Top = 452
+    Width = 483
     Height = 2
     Anchors = [akLeft, akRight, akBottom]
   end
   inherited ButtonOK: TButton
-    Left = 546
-    Top = 487
+    Left = 497
+    Top = 460
   end
   inherited ButtonCancel: TButton
-    Left = 627
-    Top = 487
+    Left = 578
+    Top = 460
   end
   inherited ButtonHelp: TButton
-    Left = 708
-    Top = 487
+    Left = 659
+    Top = 460
   end
   object TreeCategory: TVirtualStringTree
     Left = 8
     Top = 8
     Width = 233
-    Height = 473
+    Height = 446
     Anchors = [akLeft, akTop, akBottom]
     Header.AutoSizeIndex = 0
     Header.Font.Charset = DEFAULT_CHARSET
@@ -51,9 +54,9 @@ inherited FormPreferences: TFormPreferences
   object PageControl: TPageControl
     Left = 247
     Top = 8
-    Width = 536
-    Height = 471
-    ActivePage = TabSheetEnvironment
+    Width = 487
+    Height = 444
+    ActivePage = TabSheetEditorOptions
     Anchors = [akLeft, akTop, akRight, akBottom]
     Images = DataModuleCommon.ImageList16
     MultiLine = True
@@ -66,13 +69,13 @@ inherited FormPreferences: TFormPreferences
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 522
+        Width = 473
         Height = 118
         Align = alTop
         Caption = 'Paths'
         TabOrder = 0
         DesignSize = (
-          522
+          473
           118)
         object LabelProjectPath: TLabel
           Left = 16
@@ -84,13 +87,13 @@ inherited FormPreferences: TFormPreferences
         object ComboBoxProjectPath: TComboBox
           Left = 160
           Top = 24
-          Width = 322
+          Width = 273
           Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
         object ButtonProjectPath: TButton
-          Left = 488
+          Left = 439
           Top = 24
           Width = 23
           Height = 23
@@ -116,26 +119,26 @@ inherited FormPreferences: TFormPreferences
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 522
-        Height = 380
+        Width = 473
+        Height = 353
         Align = alClient
         Caption = 'Library Paths'
         TabOrder = 0
         DesignSize = (
-          522
-          380)
+          473
+          353)
         object ListBoxLibraryPaths: TListBox
           Left = 16
           Top = 24
-          Width = 460
-          Height = 286
+          Width = 411
+          Height = 259
           Anchors = [akLeft, akTop, akRight, akBottom]
           ItemHeight = 15
           TabOrder = 0
         end
         object ButtonReplace: TButton
           Left = 16
-          Top = 346
+          Top = 319
           Width = 65
           Height = 25
           Action = ActionLibraryPathReplace
@@ -144,7 +147,7 @@ inherited FormPreferences: TFormPreferences
         end
         object ButtonAdd: TButton
           Left = 87
-          Top = 346
+          Top = 319
           Width = 65
           Height = 25
           Action = ActionLibraryPathAdd
@@ -154,7 +157,7 @@ inherited FormPreferences: TFormPreferences
         end
         object ButtonDelete: TButton
           Left = 158
-          Top = 346
+          Top = 319
           Width = 65
           Height = 25
           Action = ActionLibraryPathDelete
@@ -163,16 +166,16 @@ inherited FormPreferences: TFormPreferences
         end
         object ButtonCleanUp: TButton
           Left = 232
-          Top = 346
-          Width = 275
+          Top = 319
+          Width = 226
           Height = 25
           Action = ActionLibraryPathCleanUp
           Anchors = [akLeft, akRight, akBottom]
           TabOrder = 4
         end
         object ButtonPick: TButton
-          Left = 482
-          Top = 315
+          Left = 433
+          Top = 288
           Width = 25
           Height = 25
           Action = ActionLibraryPathPick
@@ -181,15 +184,15 @@ inherited FormPreferences: TFormPreferences
         end
         object Edit: TEdit
           Left = 16
-          Top = 316
-          Width = 460
+          Top = 289
+          Width = 411
           Height = 23
           Anchors = [akLeft, akRight, akBottom]
           TabOrder = 6
         end
         object ButtonUp: TButton
-          Left = 481
-          Top = 139
+          Left = 432
+          Top = 128
           Width = 25
           Height = 25
           Action = ActionLibraryPathUp
@@ -198,8 +201,8 @@ inherited FormPreferences: TFormPreferences
           TabOrder = 7
         end
         object ButtonDown: TButton
-          Left = 481
-          Top = 176
+          Left = 432
+          Top = 163
           Width = 25
           Height = 25
           Action = ActionLibraryPathDown
@@ -212,10 +215,387 @@ inherited FormPreferences: TFormPreferences
     object TabSheetEditorOptions: TTabSheet
       Caption = 'Editor Options'
       ImageIndex = 35
+      object GroupBoxOptions: TGroupBox
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
+        Width = 473
+        Height = 254
+        Align = alTop
+        Caption = 'Options'
+        TabOrder = 0
+        DesignSize = (
+          473
+          254)
+        object CheckBoxAutoIndent: TCheckBox
+          Left = 9
+          Top = 19
+          Width = 191
+          Height = 17
+          Hint = 
+            'Will indent the caret on new lines with the same amount of leadi' +
+            'ng white space as the preceding line'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Auto indent'
+          Checked = True
+          State = cbChecked
+          TabOrder = 0
+        end
+        object CheckBoxDragAndDropEditing: TCheckBox
+          Left = 9
+          Top = 57
+          Width = 191
+          Height = 17
+          Hint = 
+            'Allows you to select a block of text and drag it within the docu' +
+            'ment to another location'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Drag and drop editing'
+          Checked = True
+          State = cbChecked
+          TabOrder = 2
+        end
+        object CheckBoxAutoSizeMaxWidth: TCheckBox
+          Left = 9
+          Top = 38
+          Width = 191
+          Height = 17
+          Hint = 'Allows the editor accept OLE file drops'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Auto size scroll width'
+          TabOrder = 1
+        end
+        object CheckBoxHalfPageScroll: TCheckBox
+          Left = 256
+          Top = 19
+          Width = 191
+          Height = 17
+          Hint = 
+            'When scrolling with page-up and page-down commands, only scroll ' +
+            'a half page at a time'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Half page scroll'
+          TabOrder = 12
+        end
+        object CheckBoxEnhanceEndKey: TCheckBox
+          Left = 9
+          Top = 190
+          Width = 191
+          Height = 17
+          Hint = 'Makes it so the caret is never visible'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Enhance End Key'
+          Checked = True
+          State = cbChecked
+          TabOrder = 9
+        end
+        object CheckBoxScrollByOneLess: TCheckBox
+          Left = 256
+          Top = 38
+          Width = 191
+          Height = 17
+          Hint = 'Forces scrolling to be one less'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Scroll by one less'
+          TabOrder = 13
+        end
+        object CheckBoxScrollPastEOF: TCheckBox
+          Left = 256
+          Top = 57
+          Width = 191
+          Height = 17
+          Hint = 'Allows the cursor to go past the end of file marker'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Scroll past end of file'
+          Checked = True
+          State = cbChecked
+          TabOrder = 14
+        end
+        object CheckBoxScrollPastEOL: TCheckBox
+          Left = 256
+          Top = 76
+          Width = 191
+          Height = 17
+          Hint = 
+            'Allows the cursor to go past the last character into the white s' +
+            'pace at the end of a line'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Scroll past end of line'
+          TabOrder = 15
+        end
+        object CheckBoxShowScrollHint: TCheckBox
+          Left = 256
+          Top = 95
+          Width = 191
+          Height = 17
+          Hint = 
+            'Shows a hint of the visible line numbers when scrolling vertical' +
+            'ly'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Show scroll hint'
+          Checked = True
+          State = cbChecked
+          TabOrder = 16
+        end
+        object CheckBoxSmartTabs: TCheckBox
+          Left = 9
+          Top = 133
+          Width = 191
+          Height = 17
+          Hint = 
+            'When tabbing, the cursor will go to the next non-white space cha' +
+            'racter of the previous line'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Smart tabs'
+          Checked = True
+          State = cbChecked
+          TabOrder = 6
+        end
+        object CheckBoxTabsToSpaces: TCheckBox
+          Left = 256
+          Top = 133
+          Width = 191
+          Height = 17
+          Hint = 'Converts a tab character to the number of spaces in Tab Width'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Tabs to spaces'
+          Checked = True
+          State = cbChecked
+          TabOrder = 18
+        end
+        object CheckBoxTrimTrailingSpaces: TCheckBox
+          Left = 256
+          Top = 152
+          Width = 191
+          Height = 17
+          Hint = 'Spaces at the end of lines will be trimmed and not saved'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Trim trailing spaces'
+          TabOrder = 19
+        end
+        object CheckBoxWantTabs: TCheckBox
+          Left = 9
+          Top = 114
+          Width = 191
+          Height = 17
+          Hint = 
+            'Let the editor accept tab characters instead of going to the nex' +
+            't control'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Want tabs'
+          TabOrder = 5
+        end
+        object CheckBoxAltSetsColumnMode: TCheckBox
+          Left = 9
+          Top = 76
+          Width = 191
+          Height = 17
+          Hint = 
+            'Holding down the Alt Key will put the selection mode into column' +
+            'ar format'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Alt sets column mode'
+          TabOrder = 3
+        end
+        object CheckBoxKeepCaretX: TCheckBox
+          Left = 9
+          Top = 95
+          Width = 191
+          Height = 17
+          Hint = 
+            'When moving through lines the X position will always stay the sa' +
+            'me'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Maintain caret column'
+          TabOrder = 4
+        end
+        object CheckBoxScrollHintFollows: TCheckBox
+          Left = 256
+          Top = 114
+          Width = 191
+          Height = 17
+          Hint = 'The scroll hint follows the mouse when scrolling vertically'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Scroll hint follows mouse'
+          TabOrder = 17
+        end
+        object CheckBoxGroupUndo: TCheckBox
+          Left = 257
+          Top = 171
+          Width = 191
+          Height = 17
+          Hint = 
+            'When undoing/redoing actions, handle all continous changes of th' +
+            'e same kind in one call instead undoing/redoing each command sep' +
+            'arately'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Group undo'
+          Checked = True
+          State = cbChecked
+          TabOrder = 20
+        end
+        object CheckBoxSmartTabDelete: TCheckBox
+          Left = 9
+          Top = 152
+          Width = 191
+          Height = 17
+          Hint = 'similar to Smart Tabs, but when you delete characters'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Smart tab delete'
+          Checked = True
+          State = cbChecked
+          TabOrder = 7
+        end
+        object CheckBoxRightMouseMoves: TCheckBox
+          Left = 257
+          Top = 190
+          Width = 191
+          Height = 17
+          Hint = 
+            'When clicking with the right mouse for a popup menu, move the cu' +
+            'rsor to that location'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Right mouse moves cursor'
+          TabOrder = 21
+        end
+        object CheckBoxEnhanceHomeKey: TCheckBox
+          Left = 9
+          Top = 171
+          Width = 191
+          Height = 17
+          Hint = 'enhances home key positioning, similar to visual studio'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Enhance Home Key'
+          TabOrder = 8
+        end
+        object CheckBoxHideShowScrollbars: TCheckBox
+          Left = 9
+          Top = 209
+          Width = 191
+          Height = 17
+          Hint = 
+            'if enabled, then the scrollbars will only show when necessary.  ' +
+            'If you have ScrollPastEOL, then it the horizontal bar will alway' +
+            's be there (it uses MaxLength instead)'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Hide scrollbars as necessary'
+          TabOrder = 10
+        end
+        object CheckBoxDisableScrollArrows: TCheckBox
+          Left = 9
+          Top = 228
+          Width = 191
+          Height = 17
+          Hint = 
+            'Disables the scroll bar arrow buttons when you can'#39't scroll in t' +
+            'hat direction any more'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Disable scroll arrows'
+          TabOrder = 11
+        end
+        object CheckBoxShowSpecialChars: TCheckBox
+          Left = 257
+          Top = 209
+          Width = 192
+          Height = 17
+          Hint = 'Shows linebreaks, spaces and tabs using special symbols'
+          Anchors = [akLeft, akTop, akRight]
+          Caption = 'Show special chars'
+          TabOrder = 22
+        end
+      end
+      object GroupBoxCaret: TGroupBox
+        AlignWithMargins = True
+        Left = 3
+        Top = 263
+        Width = 473
+        Height = 81
+        Align = alTop
+        Caption = 'Caret'
+        TabOrder = 1
+        object LabelInsertCaret: TLabel
+          Left = 16
+          Top = 21
+          Width = 61
+          Height = 13
+          Caption = 'Insert caret:'
+        end
+        object LabelOverwriteCaret: TLabel
+          Left = 16
+          Top = 49
+          Width = 83
+          Height = 13
+          Caption = 'Overwrite caret:'
+        end
+        object ComboBoxInsertCaret: TComboBox
+          Left = 120
+          Top = 18
+          Width = 186
+          Height = 23
+          Style = csDropDownList
+          ItemIndex = 0
+          TabOrder = 0
+          Text = 'Vertical Line'
+          Items.Strings = (
+            'Vertical Line'
+            'Vertical Line 2'
+            'Horizontal Line'
+            'Half Block'
+            'Block')
+        end
+        object ComboBoxOverwriteCaret: TComboBox
+          Left = 120
+          Top = 46
+          Width = 186
+          Height = 23
+          Style = csDropDownList
+          ItemIndex = 4
+          TabOrder = 1
+          Text = 'Block'
+          Items.Strings = (
+            'Vertical Line'
+            'Vertical Line 2'
+            'Horizontal Line'
+            'Half Block'
+            'Block')
+        end
+      end
     end
     object TabSheetHighlighterOptions: TTabSheet
       Caption = 'Highlighter Options'
       ImageIndex = 35
+      object GroupBoxPreview: TGroupBox
+        AlignWithMargins = True
+        Left = 3
+        Top = 189
+        Width = 473
+        Height = 167
+        Align = alBottom
+        Caption = 'Preview'
+        TabOrder = 0
+        object SynEditPreview: TSynEdit
+          Left = 2
+          Top = 17
+          Width = 469
+          Height = 148
+          Align = alClient
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Courier New'
+          Font.Style = []
+          TabOrder = 0
+          BorderStyle = bsNone
+          Gutter.Font.Charset = DEFAULT_CHARSET
+          Gutter.Font.Color = clWindowText
+          Gutter.Font.Height = -11
+          Gutter.Font.Name = 'Courier New'
+          Gutter.Font.Style = []
+          Lines.Strings = (
+            'SynEditPreview')
+          FontSmoothing = fsmNone
+        end
+      end
     end
     object TabSheetDeployment: TTabSheet
       Caption = 'Deployment'

@@ -8,7 +8,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
   Vcl.ComCtrls, Vcl.ExtCtrls, VirtualTrees, Hope.Dialog, Hope.DataModule,
-  System.Actions, Vcl.ActnList;
+  System.Actions, Vcl.ActnList, SynEdit;
 
 type
   TTabSheetItem = record
@@ -52,6 +52,37 @@ type
     TabSheetRecentFiles: TTabSheet;
     TabSheetVersionControl: TTabSheet;
     TreeCategory: TVirtualStringTree;
+    GroupBoxPreview: TGroupBox;
+    SynEditPreview: TSynEdit;
+    GroupBoxOptions: TGroupBox;
+    CheckBoxAutoIndent: TCheckBox;
+    CheckBoxDragAndDropEditing: TCheckBox;
+    CheckBoxAutoSizeMaxWidth: TCheckBox;
+    CheckBoxHalfPageScroll: TCheckBox;
+    CheckBoxEnhanceEndKey: TCheckBox;
+    CheckBoxScrollByOneLess: TCheckBox;
+    CheckBoxScrollPastEOF: TCheckBox;
+    CheckBoxScrollPastEOL: TCheckBox;
+    CheckBoxShowScrollHint: TCheckBox;
+    CheckBoxSmartTabs: TCheckBox;
+    CheckBoxTabsToSpaces: TCheckBox;
+    CheckBoxTrimTrailingSpaces: TCheckBox;
+    CheckBoxWantTabs: TCheckBox;
+    CheckBoxAltSetsColumnMode: TCheckBox;
+    CheckBoxKeepCaretX: TCheckBox;
+    CheckBoxScrollHintFollows: TCheckBox;
+    CheckBoxGroupUndo: TCheckBox;
+    CheckBoxSmartTabDelete: TCheckBox;
+    CheckBoxRightMouseMoves: TCheckBox;
+    CheckBoxEnhanceHomeKey: TCheckBox;
+    CheckBoxHideShowScrollbars: TCheckBox;
+    CheckBoxDisableScrollArrows: TCheckBox;
+    CheckBoxShowSpecialChars: TCheckBox;
+    GroupBoxCaret: TGroupBox;
+    LabelInsertCaret: TLabel;
+    LabelOverwriteCaret: TLabel;
+    ComboBoxInsertCaret: TComboBox;
+    ComboBoxOverwriteCaret: TComboBox;
     procedure TreeCategoryChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure TreeCategoryGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
@@ -61,6 +92,7 @@ type
     procedure TreeCategoryIncrementalSearch(Sender: TBaseVirtualTree;
       Node: PVirtualNode; const SearchText: string; var Result: Integer);
     procedure ButtonProjectPathClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     procedure UpdateTree;
   public
@@ -100,6 +132,12 @@ begin
   // show select directory dialog
   if SelectDirectory('Default Project Path', '', Directory) then
     ComboBoxProjectPath.Text := Directory;
+end;
+
+procedure TFormPreferences.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  if ModalResult = mrOk then
+    Store;
 end;
 
 procedure TFormPreferences.TreeCategoryChange(Sender: TBaseVirtualTree;
@@ -193,6 +231,7 @@ var
 begin
   Preferences := DataModuleCommon.Preferences;
 
+  ComboBoxProjectPath.Text := Preferences.Environment.DefaultProjectPath;
 end;
 
 procedure TFormPreferences.Store;
@@ -201,6 +240,7 @@ var
 begin
   Preferences := DataModuleCommon.Preferences;
 
+  Preferences.Environment.DefaultProjectPath := ComboBoxProjectPath.Text;
 end;
 
 end.
