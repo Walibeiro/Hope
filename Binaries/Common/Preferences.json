@@ -1,5 +1,34 @@
 "HOPE" : {
 	"Environment" : {
 		"Default Project Path" : ""
+	},
+	"Editor" : {
+		"AltSetsColumnMode" : false,
+		"AutoIndent" : false,
+		"AutoSizeMaxScrollWidth" : false,
+		"DisableScrollArrows" : false,
+		"DragDropEditing" : false,
+		"DropFiles" : false,
+		"EnhanceHomeKey" : false,
+		"EnhanceEndKey" : false,
+		"GroupUndo" : false,
+		"HalfPageScroll" : false,
+		"HideShowScrollbars" : false,
+		"KeepCaretX" : false,
+		"NoCaret" : false,
+		"NoSelection" : false,
+		"RightMouseMovesCursor" : false,
+		"ScrollByOneLess" : false,
+		"ScrollHintFollows" : false,
+		"ScrollPastEof" : false,
+		"ScrollPastEol" : false,
+		"ShowScrollHint" : false,
+		"ShowSpecialChars" : false,
+		"SmartTabDelete" : false,
+		"SmartTabs" : false,
+		"SpecialLineDefaultFg" : false,
+		"TabIndent" : false,
+		"TabsToSpaces" : false,
+		"TrimTrailingSpace" : false
 	}
 }

@@ -83,6 +83,26 @@ type
     LabelOverwriteCaret: TLabel;
     ComboBoxInsertCaret: TComboBox;
     ComboBoxOverwriteCaret: TComboBox;
+    ActionLoad: TAction;
+    ActionSave: TAction;
+    PanelTop: TPanel;
+    LabelLanguage: TLabel;
+    ComboBoxLanguage: TComboBox;
+    ButtonLoad: TButton;
+    ButtonSave: TButton;
+    PanelElementSettings: TPanel;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
+    ComboBoxElement: TComboBox;
+    ColorBox1: TColorBox;
+    ColorBox2: TColorBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    CheckBoxBold: TCheckBox;
+    CheckBox1: TCheckBox;
+    CheckBox2: TCheckBox;
+    LabelElement: TLabel;
+    CheckBoxTabIndent: TCheckBox;
     procedure TreeCategoryChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure TreeCategoryGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
@@ -190,31 +210,35 @@ begin
 end;
 
 procedure TFormPreferences.UpdateTree;
+
+  function Add(TabSheet: TTabSheet; Parent: PVirtualNode = nil): PVirtualNode;
+  var
+    NodeData: PTabSheetItem;
+  begin
+    if Parent = nil then
+      Parent := TreeCategory.RootNode;
+    Result := TreeCategory.AddChild(Parent);
+    NodeData := TreeCategory.GetNodeData(Result);
+    NodeData^.TabSheet := TabSheet;
+  end;
+
 var
-  ParentNode, Node: PVirtualNode;
-  NodeData: PTabSheetItem;
+  ParentNode: PVirtualNode;
   Index: Integer;
 begin
   TreeCategory.BeginUpdate;
   try
     TreeCategory.Clear;
 
-    ParentNode := TreeCategory.AddChild(TreeCategory.RootNode);
-    NodeData := TreeCategory.GetNodeData(ParentNode);
-    NodeData^.TabSheet := TabSheetEnvironment;
-
-    Node := TreeCategory.AddChild(ParentNode);
-    NodeData := TreeCategory.GetNodeData(Node);
-    NodeData^.TabSheet := TabSheetLibraryPaths;
+    ParentNode := Add(TabSheetEnvironment);
+    Add(TabSheetRecentFiles, ParentNode);
+    Add(TabSheetLibraryPaths, ParentNode);
+    Add(TabSheetDeployment, ParentNode);
+    Add(TabSheetDesigner, ParentNode);
     TreeCategory.Expanded[ParentNode] := True;
 
-    ParentNode := TreeCategory.AddChild(TreeCategory.RootNode);
-    NodeData := TreeCategory.GetNodeData(ParentNode);
-    NodeData^.TabSheet := TabSheetEditorOptions;
-
-    Node := TreeCategory.AddChild(ParentNode);
-    NodeData := TreeCategory.GetNodeData(Node);
-    NodeData^.TabSheet := TabSheetHighlighterOptions;
+    ParentNode := Add(TabSheetEditorOptions);
+    Add(TabSheetHighlighterOptions, ParentNode);
     TreeCategory.Expanded[ParentNode] := True;
   finally
     TreeCategory.EndUpdate;
@@ -241,6 +265,34 @@ begin
   Preferences := DataModuleCommon.Preferences;
 
   Preferences.Environment.DefaultProjectPath := ComboBoxProjectPath.Text;
+
+  Preferences.Editor.AltSetsColumnMode := CheckBoxAltSetsColumnMode.Checked;
+  Preferences.Editor.AutoIndent := CheckBoxAutoIndent.Checked;
+  Preferences.Editor.AutoSizeMaxScrollWidth := CheckBoxAutoSizeMaxWidth.Checked;
+  Preferences.Editor.DisableScrollArrows := CheckBoxDisableScrollArrows.Checked;
+  Preferences.Editor.DragDropEditing := CheckBoxDragAndDropEditing.Checked;
+//  Preferences.Editor.DropFiles := CheckBoxDropFiles.Checked;
+  Preferences.Editor.EnhanceHomeKey := CheckBoxEnhanceHomeKey.Checked;
+  Preferences.Editor.EnhanceEndKey := CheckBoxEnhanceEndKey.Checked;
+  Preferences.Editor.GroupUndo := CheckBoxGroupUndo.Checked;
+  Preferences.Editor.HalfPageScroll := CheckBoxHalfPageScroll.Checked;
+  Preferences.Editor.HideShowScrollbars := CheckBoxHideShowScrollbars.Checked;
+  Preferences.Editor.KeepCaretX := CheckBoxKeepCaretX.Checked;
+//  Preferences.Editor.NoCaret := CheckBoxNoCaret.Checked;
+//  Preferences.Editor.NoSelection := CheckBoxNoSelection.Checked;
+  Preferences.Editor.RightMouseMovesCursor := CheckBoxRightMouseMoves.Checked;
+  Preferences.Editor.ScrollByOneLess := CheckBoxScrollByOneLess.Checked;
+  Preferences.Editor.ScrollHintFollows := CheckBoxScrollHintFollows.Checked;
+  Preferences.Editor.ScrollPastEof := CheckBoxScrollPastEof.Checked;
+  Preferences.Editor.ScrollPastEol := CheckBoxScrollPastEol.Checked;
+  Preferences.Editor.ShowScrollHint := CheckBoxShowScrollHint.Checked;
+  Preferences.Editor.ShowSpecialChars := CheckBoxShowSpecialChars.Checked;
+  Preferences.Editor.SmartTabDelete := CheckBoxSmartTabDelete.Checked;
+  Preferences.Editor.SmartTabs := CheckBoxSmartTabs.Checked;
+//  Preferences.Editor.SpecialLineDefaultFg := CheckBoxSpecialLineDefaultFg.Checked;
+  Preferences.Editor.TabIndent := CheckBoxTabIndent.Checked;
+  Preferences.Editor.TabsToSpaces := CheckBoxTabsToSpaces.Checked;
+  Preferences.Editor.TrimTrailingSpace := CheckBoxTrimTrailingSpaces.Checked;
 end;
 
 end.
