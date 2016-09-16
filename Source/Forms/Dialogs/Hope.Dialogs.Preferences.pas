@@ -66,8 +66,8 @@ type
   public
     procedure AfterConstruction; override;
 
-    procedure Save;
     procedure Load;
+    procedure Store;
   end;
 
 implementation
@@ -188,12 +188,18 @@ begin
 end;
 
 procedure TFormPreferences.Load;
+var
+  Preferences: THopePreferences;
 begin
+  Preferences := DataModuleCommon.Preferences;
 
 end;
 
-procedure TFormPreferences.Save;
+procedure TFormPreferences.Store;
+var
+  Preferences: THopePreferences;
 begin
+  Preferences := DataModuleCommon.Preferences;
 
 end;
 

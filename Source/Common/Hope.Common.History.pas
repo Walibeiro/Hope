@@ -1,24 +1,22 @@
-unit Hope.History;
+unit Hope.Common.History;
 
 {$I Hope.inc}
 
 interface
 
 uses
-  System.Classes,
-
-  dwsJson;
+  System.Classes, dwsJson, Hope.Common.JSON;
 
 type
-  THopeHistory = class
+  THopeHistory = class(THopeJsonBase)
   private
     FProjectsHistory: TStringList;
     FUnitsHistory: TStringList;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJSONObject); override;
+    procedure WriteJson(const JsonValue: TdwsJSONObject); override;
   public
     procedure AfterConstruction; override;
-
-    procedure Load;
-    procedure Save;
 
     property ProjectsHistory: TStringList read FProjectsHistory;
     property UnitsHistory: TStringList read FUnitsHistory;
@@ -43,24 +41,13 @@ begin
   FUnitsHistory := TStringList.Create;
 end;
 
-procedure THopeHistory.Load;
+procedure THopeHistory.ReadJson(const JsonValue: TdwsJSONObject);
 var
-  Container: TdwsJsonObject;
   Value: TdwsJsonValue;
   Index: Integer;
 begin
-  // check if history exists
-  if not FileExists(CHistoryFileName) then
-    Exit;
-
-  // read container object from file
-  Value := TdwsJSONValue.ParseFile(CHistoryFileName);
-  if not (Value is TdwsJSONObject) then
-    Exit;
-  Container := TdwsJSONObject(Value);
-
   // load projects
-  Value := Container.Items['Projects'];
+  Value := JsonValue.Items['Projects'];
   if Value is TdwsJSONArray then
   begin
     FProjectsHistory.Clear;
@@ -70,7 +57,7 @@ begin
   end;
 
   // load units
-  Value := Container.Items['Units'];
+  Value := JsonValue.Items['Units'];
   if Value is TdwsJSONArray then
   begin
     FUnitsHistory.Clear;
@@ -80,27 +67,20 @@ begin
   end;
 end;
 
-procedure THopeHistory.Save;
+procedure THopeHistory.WriteJson(const JsonValue: TdwsJSONObject);
 var
-  Container: TdwsJsonObject;
   ProjectsArray, UnitsArray: TdwsJsonArray;
-  Value: TdwsJsonValue;
   Index: Integer;
 begin
-  // create container
-  Container := TdwsJsonObject.Create;
-
   // create projects array
-  ProjectsArray := Container.AddArray('Projects');
+  ProjectsArray := JsonValue.AddArray('Projects');
   for Index := 0 to FProjectsHistory.Count - 1 do
     ProjectsArray.Add(FProjectsHistory[Index]);
 
   // create units array
-  UnitsArray := Container.AddArray('Units');
+  UnitsArray := JsonValue.AddArray('Units');
   for Index := 0 to FUnitsHistory.Count - 1 do
     UnitsArray.Add(FUnitsHistory[Index]);
-
-  SaveTextToUTF8File(CHistoryFileName, Container.ToBeautifiedString);
 end;
 
 end.

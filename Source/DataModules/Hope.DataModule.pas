@@ -12,26 +12,26 @@ uses
   SynEditMiscClasses, SynEditSearch, SynHighlighterCSS, SynHighlighterHtml,
   SynHighlighterJSON, SynHighlighterJScript, SynHighlighterDWS,
 
-  Hope.History, Hope.Paths, Hope.Common.MonitoredBuffer,
+  Hope.Common.History, Hope.Common.Paths, Hope.Common.MonitoredBuffer,
   Hope.Common.Preferences;
 
 type
   TDataModuleCommon = class(TDataModule)
-    SynEditSearch: TSynEditSearch;
-    SynObjectPascal: TSynMultiSyn;
-    SynEditRegexSearch: TSynEditRegexSearch;
-    SynMacroRecorder: TSynMacroRecorder;
+    ImageList12: TImageList;
+    ImageList16: TImageList;
+    SynCodeSuggestions: TSynCompletionProposal;
+    SynCssSyn: TSynCssSyn;
     SynDWSSyn: TSynDWSSyn;
+    SynEditRegexSearch: TSynEditRegexSearch;
+    SynEditSearch: TSynEditSearch;
+    SynHTMLSyn: TSynHTMLSyn;
     SynJScriptSyn: TSynJScriptSyn;
     SynJSONSyn: TSynJSONSyn;
-    SynHTMLSyn: TSynHTMLSyn;
-    SynCssSyn: TSynCssSyn;
-    ImageList16: TImageList;
-    ImageList12: TImageList;
-    SynCodeSuggestions: TSynCompletionProposal;
-    SynParameters: TSynCompletionProposal;
+    SynMacroRecorder: TSynMacroRecorder;
     SynMultiCSS: TSynMultiSyn;
     SynMultiHTML: TSynMultiSyn;
+    SynObjectPascal: TSynMultiSyn;
+    SynParameters: TSynCompletionProposal;
     procedure SynMacroRecorderStateChange(Sender: TObject);
   private
     FHistory: THopeHistory;
@@ -46,6 +46,7 @@ type
 
     property History: THopeHistory read FHistory;
     property Paths: THopePaths read FPaths;
+    property Preferences: THopePreferences read FPreferences;
     property MonitoredBuffer: TMonitoredBuffer read FMonitoredBuffer;
   end;
 
@@ -69,8 +70,13 @@ begin
 
   FPaths := THopePaths.Create;
 
+  FPreferences := THopePreferences.Create;
+  if FileExists(FPaths.PreferenceFileName) then
+    FPreferences.LoadFromFile(FPaths.PreferenceFileName);
+
   FHistory := THopeHistory.Create;
-  FHistory.Load;
+  if FileExists(FPaths.HistoryFileName) then
+    FHistory.LoadFromFile(FPaths.HistoryFileName);
 
   FMonitoredBuffer := TMonitoredBuffer.Create;
   FMonitoredBuffer.AddPath(ExpandFileName(Paths.Root + '..\Common\APIs\'));
@@ -78,10 +84,12 @@ end;
 
 procedure TDataModuleCommon.BeforeDestruction;
 begin
-  FHistory.Save;
+  FHistory.SaveToFile(FPaths.HistoryFileName);
+  FPreferences.SaveToFile(FPaths.PreferenceFileName);
 
   FMonitoredBuffer.Free;
   FHistory.Free;
+  FPreferences.Free;
 
   inherited;
 end;

@@ -1,27 +1,29 @@
-unit Hope.Paths;
+unit Hope.Common.Paths;
 
 {$I Hope.inc}
 
 interface
 
+uses
+  System.SysUtils;
+
 type
   THopePaths = class
   private
     FRootPath: string;
-    function GetHistory: string;
+    function GetHistoryFileName: TFileName;
+    function GetPreferenceFileName: TFileName;
     function GetWelcomePage: string;
   public
     procedure AfterConstruction; override;
 
     property Root: string read FRootPath;
     property WelcomePage: string read GetWelcomePage;
-    property History: string read GetHistory;
+    property HistoryFileName: TFileName read GetHistoryFileName;
+    property PreferenceFileName: TFileName read GetPreferenceFileName;
   end;
 
 implementation
-
-uses
-  System.SysUtils;
 
 { THopePaths }
 
@@ -32,9 +34,14 @@ begin
   FRootPath := ExtractFilePath(ParamStr(0));
 end;
 
-function THopePaths.GetHistory: string;
+function THopePaths.GetHistoryFileName: TFileName;
 begin
   Result := FRootPath + '..\Common\History.json';
+end;
+
+function THopePaths.GetPreferenceFileName: TFileName;
+begin
+  Result := FRootPath + '..\Common\Preferences.json';
 end;
 
 function THopePaths.GetWelcomePage: string;

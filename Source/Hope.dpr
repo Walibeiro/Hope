@@ -22,13 +22,13 @@ uses
   Hope.Docking.Host in 'Forms\Docking\Hope.Docking.Host.pas' {FormDockHost},
   Hope.DockingUtils in 'Utils\Hope.DockingUtils.pas',
   Hope.Editor in 'Forms\Editor\Hope.Editor.pas' {FormEditor},
-  Hope.History in 'History\Hope.History.pas',
+  Hope.Common.History in 'Common\Hope.Common.History.pas',
   Hope.Main in 'Forms\Hope.Main.pas' {FormMain},
   Hope.MessageWindow in 'Forms\MessageWindow\Hope.MessageWindow.pas' {FormMessageWindow},
   Hope.MessageWindow.Compiler in 'Forms\MessageWindow\Hope.MessageWindow.Compiler.pas' {FormCompilerMessages},
   Hope.MessageWindow.FindInFiles in 'Forms\MessageWindow\Hope.MessageWindow.FindInFiles.pas' {FormMessagesFindInFiles},
   Hope.MessageWindow.Output in 'Forms\MessageWindow\Hope.MessageWindow.Output.pas' {FormOutputMessages},
-  Hope.Paths in 'Hope.Paths.pas',
+  Hope.Common.Paths in 'Common\Hope.Common.Paths.pas',
   Hope.Project in 'Project\Hope.Project.pas',
   Hope.Project.Files in 'Project\Hope.Project.Files.pas',
   Hope.Project.List in 'Project\Hope.Project.List.pas',
@@ -43,7 +43,8 @@ uses
   Hope.Buffer.List in 'Buffer\Hope.Buffer.List.pas',
   Hope.Common.DirectoryMonitor in 'Common\Hope.Common.DirectoryMonitor.pas',
   Hope.Common.Constants in 'Common\Hope.Common.Constants.pas',
-  Hope.Common.MonitoredBuffer in 'Common\Hope.Common.MonitoredBuffer.pas';
+  Hope.Common.MonitoredBuffer in 'Common\Hope.Common.MonitoredBuffer.pas',
+  Hope.Common.Preferences in 'Common\Hope.Common.Preferences.pas';
 
 {$R *.res}
 
