@@ -20,6 +20,7 @@ type
     procedure AddPath(Path: TFileName);
 
     function GetText(FileName: TFileName): string;
+    function GetUnitName(UnitName: string): string;
 
     property BuffferList: THopeBufferList read FBuffferList;
     property DirectoryMonitor: TDirectoryMonitor read FDirectoryMonitor;
@@ -54,12 +55,29 @@ function TMonitoredBuffer.GetText(FileName: TFileName): string;
 var
   Index: Integer;
 begin
+  // get index of file name (if buffered)
   Index := FBuffferList.IndexOf(FileName);
 
+  // eventually return buffered text
   if Index >= 0 then
     Exit(FBuffferList[Index].Text);
 
-  FBuffferList[Index].Text := LoadTextFromFile(FileName);
+  // load text from the hard disk in case it is not buffered;
+  Result := LoadTextFromFile(FileName);
+end;
+
+function TMonitoredBuffer.GetUnitName(UnitName: string): string;
+var
+  Index: Integer;
+begin
+  Result := '';
+
+  // get index of unit name (if buffered)
+  Index := FBuffferList.IndexOfUnit(UnitName);
+
+  // eventually return buffered text
+  if Index >= 0 then
+    Exit(FBuffferList[Index].Text);
 end;
 
 procedure TMonitoredBuffer.AddPath(Path: TFileName);

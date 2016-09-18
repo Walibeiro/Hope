@@ -1,4 +1,4 @@
-unit Hope.Compiler;
+unit Hope.Compiler.Internal;
 
 {$I Hope.inc}
 
@@ -10,19 +10,11 @@ uses
   Hope.Compiler.Base;
 
 type
-  THopeCompileErrorEvent = procedure(Sender: TObject; Messages: TdwsMessageList) of object;
   THopeCompilationEvent = procedure(Sender: TObject; Prog: IdwsProgram) of object;
-  THopeGetMainScriptEvent = procedure(Sender: TObject; out Script: string) of object;
-  THopeGetSourceCodeEvent = function(Sender: TObject; const UnitName: string; out SourceCode: string): Boolean of object;
-  THopeGetTextEvent = function(Sender: TObject; const FileName: string; out Text: string): Boolean of object;
 
   THopeCompiler = class(THopeBaseCompiler)
   private
-    FOnError: THopeCompileErrorEvent;
     FOnCompilation: THopeCompilationEvent;
-    FOnGetSourceCode: THopeGetSourceCodeEvent;
-    FOnGetMainScript: THopeGetMainScriptEvent;
-    FOnGetText: THopeGetTextEvent;
 
     function GetMainScript(Project: THopeProject): string;
     procedure OnIncludeEventHandler(const ScriptName: string;
@@ -37,17 +29,13 @@ type
     function CompileProject(Project: THopeProject): IdwsProgram;
     procedure BuildProject(Project: THopeProject);
 
-    property OnError: THopeCompileErrorEvent read FOnError write FOnError;
     property OnCompilation: THopeCompilationEvent read FOnCompilation write FOnCompilation;
-    property OnGetSourceCode: THopeGetSourceCodeEvent read FOnGetSourceCode write FOnGetSourceCode;
-    property OnGetText: THopeGetTextEvent read FOnGetText write FOnGetText;
-    property OnGetMainScript: THopeGetMainScriptEvent read FOnGetMainScript write FOnGetMainScript;
   end;
 
 implementation
 
 uses
-  dwsXPlatform, dwsExprList, Hope.Common.Constants;
+  dwsXPlatform, dwsExprList, Hope.Common.Constants, Hope.Main, Hope.DataModule;
 
 { THopeCompiler }
 
@@ -65,37 +53,19 @@ end;
 
 function THopeCompiler.GetMainScript(Project: THopeProject): string;
 begin
-  // get main script
-  if Assigned(FOnGetMainScript) then
-    FOnGetMainScript(Self, Result)
-  else
-    Result := LoadTextFromFile(Project.MainScript.FileName);
+  DataModuleCommon.GetText(Project.MainScript.FileName);
 end;
 
 procedure THopeCompiler.OnIncludeEventHandler(const ScriptName: string;
   var ScriptSource: string);
 begin
-  if Assigned(FOnGetText) then
-    if FOnGetText(Self, ScriptName, ScriptSource) then
-      Exit;
-
-  if FileExists(scriptName) then
-    ScriptSource := LoadTextFromFile(ScriptName);
+  ScriptSource := DataModuleCommon.GetText(ScriptName);
 end;
 
 function THopeCompiler.OnNeedUnitEventHandler(const UnitName: string;
   var UnitSource: string): IdwsUnit;
-var
-  FileName: TFileName;
 begin
-  if Assigned(FOnGetSourceCode) then
-    if FOnGetSourceCode(Self, FileName, UnitSource) then
-      Exit;
-
-  FileName := UnitName + CExtensionPascal;
-
-  if FileExists(FileName) then
-    UnitSource := LoadTextFromFile(FileName);
+  UnitSource := DataModuleCommon.GetUnit(UnitName);
 end;
 
 function THopeCompiler.SyntaxCheck(Project: THopeProject): Boolean;
@@ -104,16 +74,8 @@ var
 begin
   Prog := DelphiWebScript.Compile(GetMainScript(Project));
 
-  if Prog.Msgs.HasErrors then
-  begin
-    if Assigned(FOnError) then
-      FOnError(Self, Prog.Msgs);
-    Exit;
-  end;
-
-  // fire compilation event
-  if Assigned(FOnCompilation) then
-    FOnCompilation(Self, Prog);
+  // log compiler messages
+  FormMain.LogCompilerMessages(Prog.Msgs);
 end;
 
 function THopeCompiler.CompileProject(Project: THopeProject): IdwsProgram;
@@ -123,12 +85,12 @@ var
 begin
   Prog := DelphiWebScript.Compile(GetMainScript(Project));
 
+  // log compiler messages
+  FormMain.LogCompilerMessages(Prog.Msgs);
+
+  // exit in case of errors
   if Prog.Msgs.HasErrors then
-  begin
-    if Assigned(FOnError) then
-      FOnError(Self, Prog.Msgs);
     Exit;
-  end;
 
   // fire compilation event
   if Assigned(FOnCompilation) then
@@ -148,12 +110,12 @@ var
 begin
   Prog := DelphiWebScript.Compile(GetMainScript(Project));
 
+  // log compiler messages
+  FormMain.LogCompilerMessages(Prog.Msgs);
+
+  // exit in case of errors
   if Prog.Msgs.HasErrors then
-  begin
-    if Assigned(FOnError) then
-      FOnError(Self, Prog.Msgs);
     Exit;
-  end;
 
   // fire compilation event
   if Assigned(FOnCompilation) then

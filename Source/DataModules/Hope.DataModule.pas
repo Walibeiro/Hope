@@ -43,7 +43,8 @@ type
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
-    function GetText(FileName: TFileName): string;
+    function GetText(FileName: TFileName): string; inline;
+    function GetUnit(UnitName: string): string; inline;
 
     property Compiler: THopeCompiler read FCompiler;
     property History: THopeHistory read FHistory;
@@ -103,6 +104,11 @@ end;
 function TDataModuleCommon.GetText(FileName: TFileName): string;
 begin
   Result := FMonitoredBuffer.GetText(FileName);
+end;
+
+function TDataModuleCommon.GetUnit(UnitName: string): string;
+begin
+  Result := FMonitoredBuffer.GetUnitName(UnitName);
 end;
 
 procedure TDataModuleCommon.SynMacroRecorderStateChange(Sender: TObject);

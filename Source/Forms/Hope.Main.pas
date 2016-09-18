@@ -8,8 +8,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   System.Types, System.Actions, Vcl.Graphics, Vcl.Controls, Vcl.Forms,
   Vcl.Dialogs, Vcl.ActnList, Vcl.Menus, Vcl.StdActns, Vcl.ExtCtrls,
-  Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Tabs,
-  SynEdit,
+  Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Tabs, SynEdit, dwsErrors,
   Hope.DataModule, Hope.WelcomePage, Hope.ProjectManager, Hope.UnitManager,
   Hope.MessageWindow.Compiler, Hope.MessageWindow.Output, Hope.Docking.Host,
   Hope.Project, Hope.Project.List, Hope.Editor, Hope.EditorList;
@@ -216,6 +215,8 @@ type
 
     procedure FocusEditor(FileName: TFileName);
 
+    procedure LogCompilerMessages(Messages: TdwsMessageList);
+
     property Projects: THopeProjectList read FProjects;
     property FocusedEditor: TSynEdit read FFocusedEditor;
   end;
@@ -411,6 +412,11 @@ begin
 
     DataModuleCommon.MonitoredBuffer.AddPath(FProjects.ActiveProject.RootPath);
   end;
+end;
+
+procedure TFormMain.LogCompilerMessages(Messages: TdwsMessageList);
+begin
+//  FCompilerMessages.
 end;
 
 procedure TFormMain.PanelTabsDockDrop(Sender: TObject; Source: TDragDockObject;

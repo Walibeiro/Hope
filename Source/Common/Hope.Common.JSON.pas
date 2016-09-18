@@ -4,6 +4,8 @@ interface
 
 {$I Hope.inc}
 
+{$DEFINE UsePreamble}
+
 uses
   System.SysUtils, System.StrUtils, System.Classes, System.Contnrs,
   System.Generics.Collections, dwsJson;
@@ -60,6 +62,12 @@ implementation
 
 uses
   System.AnsiStrings, dwsUtils, dwsXPlatform;
+
+{$IFDEF UsePreamble}
+const
+  CPreamble: string = '"HOPE" : ';
+{$ENDIF}
+
 
 { TdwsJSONObjectHelper }
 
@@ -174,7 +182,7 @@ begin
   Root := TdwsJsonObject.Create;
   try
     WriteJson(Root);
-    Text := '"HOPE" : ' + Root.ToBeautifiedString;
+    Text := {$IFDEF UsePreamble}CPreamble + {$ENDIF} Root.ToBeautifiedString;
     SaveTextToUTF8File(FileName, Text);
   finally
     FreeAndNil(Root);
@@ -198,7 +206,7 @@ begin
   Root := TdwsJsonObject.Create;
   try
     WriteJson(Root);
-    Text := {'"HOPE" : ' +} Root.ToBeautifiedString;
+    Text := {$IFDEF UsePreamble}CPreamble + {$ENDIF} Root.ToBeautifiedString;
     StringStream := TStringStream.Create(Text);
     try
       Stream.CopyFrom(StringStream, StringStream.Size);
@@ -268,12 +276,12 @@ procedure THopeJsonBase.LoadFromContainer(Text: string);
 var
   Value: TdwsJsonValue;
 begin
-(*
-  if not StrBeginsWith(Text, '"HOPE" : ') then
+{$IFDEF UsePreamble}
+  if not StrBeginsWith(Text, CPreamble) then
     raise EHopeJsonException.Create(RStrJsonReadErrorContainer);
 
   Delete(Text, 1, 10);
-*)
+{$ENDIF}
 
   Value := TdwsJSONValue.ParseString(Text);
   try
