@@ -25,14 +25,20 @@ type
     ToolButtonStop: TToolButton;
     procedure EditorGutterPaint(Sender: TObject; aLine, X, Y: Integer);
     procedure EditorStatusChange(Sender: TObject; Changes: TSynStatusChanges);
+    procedure EditorChange(Sender: TObject);
   private
     FFileName: TFileName;
     FShortFileName: TFileName;
     FExtension: string;
+    FNeedsSync: Boolean;
     procedure SetFileName(const Value: TFileName);
     procedure FileNameChanged;
   public
     procedure AfterConstruction; override;
+
+    procedure EditorToBuffer;
+    procedure BufferToEditor; overload;
+    procedure BufferToEditor(Text: string); overload;
 
     property FileName: TFileName read FFileName write SetFileName;
   end;
@@ -67,6 +73,11 @@ begin
   ToolBarMacro.Left := 1;
   ToolBarMacro.Top := 3;
   ToolBarMacro.Images := DataModuleCommon.ImageList12;
+end;
+
+procedure TFormEditor.EditorChange(Sender: TObject);
+begin
+  DataModuleCommon.BackgroundCompiler.Invalidate;
 end;
 
 procedure TFormEditor.EditorGutterPaint(Sender: TObject; aLine, X, Y: Integer);
@@ -140,6 +151,27 @@ begin
   end;
 
   Caption := FShortFileName;
+end;
+
+procedure TFormEditor.BufferToEditor(Text: string);
+begin
+  Editor.Text := Text;
+  FNeedsSync := False;
+end;
+
+procedure TFormEditor.BufferToEditor;
+begin
+  Editor.Text := DataModuleCommon.MonitoredBuffer[FileName];
+  FNeedsSync := False;
+end;
+
+procedure TFormEditor.EditorToBuffer;
+begin
+  if FNeedsSync then
+  begin
+    FNeedsSync := False;
+    DataModuleCommon.MonitoredBuffer[FileName] := Editor.Text;;
+  end;
 end;
 
 procedure TFormEditor.SetFileName(const Value: TFileName);

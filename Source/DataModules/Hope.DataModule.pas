@@ -111,12 +111,12 @@ end;
 
 function TDataModuleCommon.GetText(FileName: TFileName): string;
 begin
-  Result := FMonitoredBuffer.GetText(FileName);
+  Result := FMonitoredBuffer.Text[FileName];
 end;
 
 function TDataModuleCommon.GetUnit(UnitName: string): string;
 begin
-  Result := FMonitoredBuffer.GetUnitName(UnitName);
+  Result := FMonitoredBuffer.GetSourceCode(UnitName);
 end;
 
 procedure TDataModuleCommon.PerformMacro(Editor: TSynEdit;

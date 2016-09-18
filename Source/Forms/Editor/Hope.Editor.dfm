@@ -34,6 +34,7 @@ object FormEditor: TFormEditor
     Gutter.Font.Height = -11
     Gutter.Font.Name = 'Courier New'
     Gutter.Font.Style = []
+    OnChange = EditorChange
     OnGutterPaint = EditorGutterPaint
     OnStatusChange = EditorStatusChange
     FontSmoothing = fsmNone

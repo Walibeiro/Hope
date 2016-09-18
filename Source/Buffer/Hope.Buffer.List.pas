@@ -80,7 +80,7 @@ begin
     if UnitNameHash = THopeBuffer(FList[Index]).UnitNameHash then
     begin
       FileUnitName := ExtractUnitName(THopeBuffer(FList[Index]).FileName);
-      if UnicodeSameText(UnitName, THopeBuffer(FList[Index]).FileName) then
+      if UnicodeSameText(UnitName, FileUnitName) then
         Exit(Index);
     end;
 end;

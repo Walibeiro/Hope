@@ -9,5 +9,11 @@ inherited FormCompilerMessages: TFormCompilerMessages
   inherited TreeMessages: TVirtualStringTree
     Width = 687
     Height = 140
+    OnCompareNodes = TreeMessagesCompareNodes
+    OnDblClick = TreeMessagesDblClick
+    OnFreeNode = TreeMessagesFreeNode
+    OnGetText = TreeMessagesGetText
+    OnPaintText = TreeMessagesPaintText
+    OnGetImageIndex = TreeMessagesGetImageIndex
   end
 end

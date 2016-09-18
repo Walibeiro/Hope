@@ -11,7 +11,8 @@ uses
   Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Tabs, SynEdit, dwsErrors, dwsExprs,
   Hope.DataModule, Hope.WelcomePage, Hope.ProjectManager, Hope.UnitManager,
   Hope.MessageWindow.Compiler, Hope.MessageWindow.Output, Hope.Docking.Host,
-  Hope.Project, Hope.Project.List, Hope.Editor, Hope.EditorList;
+  Hope.Project, Hope.Project.List, Hope.Editor, Hope.EditorList,
+  Hope.Compiler.Internal;
 
 type
   TFormMain = class(TForm)
@@ -430,7 +431,7 @@ end;
 
 procedure TFormMain.LogCompilerMessages(Messages: TdwsMessageList);
 begin
-//  FCompilerMessages.
+  FCompilerMessages.LogMessages(Messages);
 end;
 
 procedure TFormMain.PanelTabsDockDrop(Sender: TObject; Source: TDragDockObject;
@@ -666,6 +667,10 @@ end;
 
 procedure TFormMain.ActionProjectCompileExecute(Sender: TObject);
 begin
+  // eventually sync focused editor
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditorForm.EditorToBuffer;
+
   // compile project
   Compiler.CompileProject(Projects.ActiveProject);
 end;

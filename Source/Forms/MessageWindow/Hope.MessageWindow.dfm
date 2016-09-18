@@ -17,6 +17,7 @@ inherited FormMessageWindow: TFormMessageWindow
     Header.Font.Name = 'Tahoma'
     Header.Font.Style = []
     Header.MainColumn = -1
+    Images = DataModuleCommon.ImageList16
     TabOrder = 0
     Columns = <>
   end
@@ -25,15 +26,24 @@ inherited FormMessageWindow: TFormMessageWindow
     Top = 32
     object MenuItemClearMessages: TMenuItem
       Caption = 'Clear Messages'
-    end
-    object MenuItemCopyMessageToClipboard: TMenuItem
-      Caption = 'Copy Message To Clipboard'
-    end
-    object MenuItemCopyMessagesToClipboard: TMenuItem
-      Caption = 'Copy Messages To Clipboard'
+      OnClick = MenuItemClearMessagesClick
     end
     object MenuItemSaveMessagesToFile: TMenuItem
       Caption = 'Save Messages To File...'
+      OnClick = MenuItemSaveMessagesToFileClick
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object MenuItemCopy: TMenuItem
+      Caption = '&Copy'
+      ShortCut = 16451
+      OnClick = MenuItemCopyClick
+    end
+    object MenuItemSelectAll: TMenuItem
+      Caption = '&Select all'
+      ShortCut = 16449
+      OnClick = MenuItemSelectAllClick
     end
   end
 end

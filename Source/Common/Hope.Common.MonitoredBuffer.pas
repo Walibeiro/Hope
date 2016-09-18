@@ -13,17 +13,20 @@ type
   private
     FBuffferList: THopeBufferList;
     FDirectoryMonitor: TDirectoryMonitor;
+
+    function GetText(FileName: TFileName): string;
+    procedure SetText(FileName: TFileName; const Text: string);
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
     procedure AddPath(Path: TFileName);
 
-    function GetText(FileName: TFileName): string;
-    function GetUnitName(UnitName: string): string;
+    function GetSourceCode(UnitName: string): string;
 
     property BuffferList: THopeBufferList read FBuffferList;
     property DirectoryMonitor: TDirectoryMonitor read FDirectoryMonitor;
+    property Text[FileName: TFileName]: string read GetText write SetText; default;
   end;
 
 implementation
@@ -66,7 +69,20 @@ begin
   Result := LoadTextFromFile(FileName);
 end;
 
-function TMonitoredBuffer.GetUnitName(UnitName: string): string;
+procedure TMonitoredBuffer.SetText(FileName: TFileName;
+  const Text: string);
+var
+  Index: Integer;
+begin
+  // get index of file name (if buffered)
+  Index := FBuffferList.IndexOf(FileName);
+
+  // eventually return buffered text
+  if Index >= 0 then
+    FBuffferList[Index].Text := Text;
+end;
+
+function TMonitoredBuffer.GetSourceCode(UnitName: string): string;
 var
   Index: Integer;
 begin
