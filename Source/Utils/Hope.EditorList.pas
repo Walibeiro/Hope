@@ -45,7 +45,7 @@ end;
 function TEditorList.Add(Editor: TFormEditor): Integer;
 begin
   Assert(Editor is TFormEditor);
-  FList.Add(Editor);
+  Result := FList.Add(Editor);
 end;
 
 procedure TEditorList.Delete(Index: Integer);

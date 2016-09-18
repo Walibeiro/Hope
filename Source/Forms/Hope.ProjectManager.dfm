@@ -67,6 +67,7 @@ inherited FormProjectManager: TFormProjectManager
     Header.MainColumn = -1
     Images = DataModuleCommon.ImageList16
     TabOrder = 1
+    TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toInitOnSave, toWheelPanning, toEditOnClick]
     OnCompareNodes = TreeProjectCompareNodes
     OnDblClick = TreeProjectDblClick
     OnEditing = TreeProjectEditing

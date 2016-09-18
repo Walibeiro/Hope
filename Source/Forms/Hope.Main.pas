@@ -6,9 +6,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
-  System.Types, System.Actions, Vcl.Graphics, Vcl.Controls, Vcl.Forms,
-  Vcl.Dialogs, Vcl.ActnList, Vcl.Menus, Vcl.StdActns, Vcl.ExtCtrls,
-  Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Tabs, SynEdit, dwsErrors,
+  System.Types, System.Actions, System.SyncObjs, Vcl.Graphics, Vcl.Controls,
+  Vcl.Forms, Vcl.Dialogs, Vcl.ActnList, Vcl.Menus, Vcl.StdActns, Vcl.ExtCtrls,
+  Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Tabs, SynEdit, dwsErrors, dwsExprs,
   Hope.DataModule, Hope.WelcomePage, Hope.ProjectManager, Hope.UnitManager,
   Hope.MessageWindow.Compiler, Hope.MessageWindow.Output, Hope.Docking.Host,
   Hope.Project, Hope.Project.List, Hope.Editor, Hope.EditorList;
@@ -205,6 +205,7 @@ type
     procedure RegisterNewTab(Form: TForm; Focus: Boolean = True);
     procedure RegisterNewEditor(FileName: TFileName);
     procedure FocusTab(Form: TForm);
+    function GetCompiler: THopeInternalCompiler; inline;
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
@@ -215,10 +216,13 @@ type
 
     procedure FocusEditor(FileName: TFileName);
 
+    procedure UpdateUnitMap(CompiledProgran: IdwsProgram);
+
     procedure LogCompilerMessages(Messages: TdwsMessageList);
 
     property Projects: THopeProjectList read FProjects;
     property FocusedEditor: TSynEdit read FFocusedEditor;
+    property Compiler: THopeInternalCompiler read GetCompiler;
   end;
 
 var
@@ -401,8 +405,16 @@ begin
   FFocusedEditor := nil;
 end;
 
+function TFormMain.GetCompiler: THopeInternalCompiler;
+begin
+  Result := DataModuleCommon.InternalCompiler;
+end;
+
 procedure TFormMain.LoadProject(ProjectFileName: TFileName);
 begin
+  // abort any scheduled background compilation
+  DataModuleCommon.BackgroundCompiler.Abort;
+
   // load project (if possible)
   if FProjects.LoadProject(ProjectFileName) then
   begin
@@ -411,6 +423,8 @@ begin
     FProjectManager.TreeProject.Enabled := True;
 
     DataModuleCommon.MonitoredBuffer.AddPath(FProjects.ActiveProject.RootPath);
+
+    DataModuleCommon.BackgroundCompiler.Invalidate;
   end;
 end;
 
@@ -502,7 +516,6 @@ end;
 procedure TFormMain.FocusEditor(FileName: TFileName);
 var
   Index: Integer;
-  Editor: TFormEditor;
 begin
   for Index := 0 to FEditors.Count - 1 do
     if UnicodeSameText(FileName, FEditors[Index].FileName) then
@@ -584,6 +597,11 @@ begin
     PanelTabs.DockClients[Index].Visible := Index = NewTab;
 end;
 
+procedure TFormMain.UpdateUnitMap(CompiledProgran: IdwsProgram);
+begin
+  // yet todo
+end;
+
 procedure TFormMain.ActionToolsAsciiChartExecute(Sender: TObject);
 begin
   with TFormAsciiChart.Create(Self) do
@@ -596,6 +614,10 @@ end;
 
 procedure TFormMain.ActionFileCloseProjectExecute(Sender: TObject);
 begin
+  // abort any scheduled background compilation
+  DataModuleCommon.BackgroundCompiler.Abort;
+
+  // now remove project from projects list
   FProjects.RemoveProject(FProjects.ActiveProject);
 end;
 
@@ -621,34 +643,42 @@ end;
 
 procedure TFormMain.ActionMacroPlayExecute(Sender: TObject);
 begin
-  DataModuleCommon.SynMacroRecorder.Editor := FFocusedEditor;
-  DataModuleCommon.SynMacroRecorder.PlaybackMacro(FFocusedEditor);
+  // play editor macro
+  DataModuleCommon.PerformMacro(FFocusedEditor, maPlay);
 end;
 
 procedure TFormMain.ActionMacroRecordExecute(Sender: TObject);
 begin
-  DataModuleCommon.SynMacroRecorder.Editor := FFocusedEditor;
-  DataModuleCommon.SynMacroRecorder.RecordMacro(FFocusedEditor);
+  // record editor macro
+  DataModuleCommon.PerformMacro(FFocusedEditor, maRecord);
 end;
 
 procedure TFormMain.ActionMacroStopExecute(Sender: TObject);
 begin
-  DataModuleCommon.SynMacroRecorder.Editor := FFocusedEditor;
-  DataModuleCommon.SynMacroRecorder.Stop;
+  // stop editor macro
+  DataModuleCommon.PerformMacro(FFocusedEditor, maStop);
 end;
 
-procedure TFormMain.ActionProjectBuildExecute(Sender: TObject);
+procedure TFormMain.ActionProjectSyntaxCheckExecute(Sender: TObject);
 begin
-  DataModuleCommon.Compiler.BuildProject(Projects.ActiveProject);
+  Compiler.SyntaxCheck(Projects.ActiveProject);
 end;
 
 procedure TFormMain.ActionProjectCompileExecute(Sender: TObject);
 begin
-  DataModuleCommon.Compiler.CompileProject(Projects.ActiveProject);
+  // compile project
+  Compiler.CompileProject(Projects.ActiveProject);
+end;
+
+procedure TFormMain.ActionProjectBuildExecute(Sender: TObject);
+begin
+  // build project
+  Compiler.BuildProject(Projects.ActiveProject);
 end;
 
 procedure TFormMain.ActionProjectOptionsExecute(Sender: TObject);
 begin
+  // show project options dialog
   with TFormProjectOptions.Create(Self) do
   try
     ShowModal;
@@ -657,13 +687,9 @@ begin
   end;
 end;
 
-procedure TFormMain.ActionProjectSyntaxCheckExecute(Sender: TObject);
-begin
-  DataModuleCommon.Compiler.SyntaxCheck(Projects.ActiveProject);
-end;
-
 procedure TFormMain.ActionSearchFindInFilesExecute(Sender: TObject);
 begin
+  // show 'find in files' dialog
   with TFormFindInFiles.Create(Self) do
   try
     ShowModal;
@@ -674,6 +700,7 @@ end;
 
 procedure TFormMain.ActionToolsCodeTemplatesExecute(Sender: TObject);
 begin
+  // show 'code templates' dialog
   with TFormCodeTemplates.Create(Self) do
   try
     ShowModal;
@@ -684,6 +711,7 @@ end;
 
 procedure TFormMain.ActionToolsColorPickerExecute(Sender: TObject);
 begin
+  // show 'color picker' dialog
   with TFormColorPicker.Create(Self) do
   try
     ShowModal;
@@ -694,6 +722,7 @@ end;
 
 procedure TFormMain.ActionToolsPreferencesExecute(Sender: TObject);
 begin
+  // show preferences dialog
   with TFormPreferences.Create(Self) do
   try
     ShowModal;
@@ -704,6 +733,7 @@ end;
 
 procedure TFormMain.ActionToolsUnicodeExplorerExecute(Sender: TObject);
 begin
+  // show unicode explorer dialog
   with TFormUnicodeExplorer.Create(Self) do
   try
     ShowModal;

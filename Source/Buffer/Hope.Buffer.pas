@@ -47,8 +47,6 @@ begin
 end;
 
 procedure THopeBuffer.FileNameChanged;
-var
-  FileUnitName: string;
 begin
   // calculate a hash of the unit name (for faster indexing)
   FUnitNameHash := CalculateUnitHash(FFileName);

@@ -162,7 +162,7 @@ begin
   RootPath := DataModuleCommon.Paths.WelcomePage;
 
   // load content
-  if Pos('text', Response.ContentType) > 0 then
+  if Pos('text', string(Response.ContentType)) > 0 then
     Response.ContentData := ScriptStringToRawByteString(LoadTextFromFile(RootPath + FileName))
   else
   begin

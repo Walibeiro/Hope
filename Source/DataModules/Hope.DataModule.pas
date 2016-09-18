@@ -7,15 +7,17 @@ interface
 uses
   System.SysUtils, System.Classes, Vcl.ImgList, Vcl.Controls,
 
-  SynEditPlugins, SynMacroRecorder, SynCompletionProposal,
+  SynEdit, SynEditPlugins, SynMacroRecorder, SynCompletionProposal,
   SynEditRegexSearch, SynEditHighlighter, SynHighlighterMulti,
   SynEditMiscClasses, SynEditSearch, SynHighlighterCSS, SynHighlighterHtml,
   SynHighlighterJSON, SynHighlighterJScript, SynHighlighterDWS,
 
   Hope.Common.History, Hope.Common.Paths, Hope.Common.MonitoredBuffer,
-  Hope.Common.Preferences, Hope.Compiler;
+  Hope.Common.Preferences, Hope.Compiler.Internal, Hope.Compiler.Background;
 
 type
+  TMacroAction = (maRecord, maStop, maPlay);
+
   TDataModuleCommon = class(TDataModule)
     ImageList12: TImageList;
     ImageList16: TImageList;
@@ -38,7 +40,8 @@ type
     FPaths: THopePaths;
     FPreferences: THopePreferences;
     FMonitoredBuffer: TMonitoredBuffer;
-    FCompiler: THopeCompiler;
+    FInternalCompiler: THopeInternalCompiler;
+    FBackgroundCompiler: THopeBackgroundCompilerThread;
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
@@ -46,7 +49,10 @@ type
     function GetText(FileName: TFileName): string; inline;
     function GetUnit(UnitName: string): string; inline;
 
-    property Compiler: THopeCompiler read FCompiler;
+    procedure PerformMacro(Editor: TSynEdit; Action: TMacroAction);
+
+    property InternalCompiler: THopeInternalCompiler read FInternalCompiler;
+    property BackgroundCompiler: THopeBackgroundCompilerThread read FBackgroundCompiler;
     property History: THopeHistory read FHistory;
     property Paths: THopePaths read FPaths;
     property Preferences: THopePreferences read FPreferences;
@@ -84,7 +90,8 @@ begin
   FMonitoredBuffer := TMonitoredBuffer.Create;
   FMonitoredBuffer.AddPath(ExpandFileName(Paths.Root + '..\Common\APIs\'));
 
-  FCompiler := THopeCompiler.Create;
+  FInternalCompiler := THopeInternalCompiler.Create;
+  FBackgroundCompiler := THopeBackgroundCompilerThread.Create;
 end;
 
 procedure TDataModuleCommon.BeforeDestruction;
@@ -93,7 +100,8 @@ begin
   FHistory.SaveToFile(FPaths.HistoryFileName);
   FPreferences.SaveToFile(FPaths.PreferenceFileName);
 
-  FCompiler.Free;
+  FBackgroundCompiler.Free;
+  FInternalCompiler.Free;
   FMonitoredBuffer.Free;
   FHistory.Free;
   FPreferences.Free;
@@ -109,6 +117,20 @@ end;
 function TDataModuleCommon.GetUnit(UnitName: string): string;
 begin
   Result := FMonitoredBuffer.GetUnitName(UnitName);
+end;
+
+procedure TDataModuleCommon.PerformMacro(Editor: TSynEdit;
+  Action: TMacroAction);
+begin
+  SynMacroRecorder.Editor := Editor;
+  case Action of
+    maRecord:
+      SynMacroRecorder.RecordMacro(Editor);
+    maStop:
+      SynMacroRecorder.Stop;
+    maPlay:
+      SynMacroRecorder.PlaybackMacro(Editor);
+  end;
 end;
 
 procedure TDataModuleCommon.SynMacroRecorderStateChange(Sender: TObject);

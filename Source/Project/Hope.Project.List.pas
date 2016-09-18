@@ -74,6 +74,8 @@ function THopeProjectList.IsProjectLoaded(ProjectFileName: TFileName): Boolean;
 var
   Index: Integer;
 begin
+  Result := False;
+
   // scan all projects in this list
   for Index := 0 to FProjects.Count - 1 do
     if UnicodeSameText(ProjectFileName, THopeProject(FProjects[Index]).FileName) then

@@ -15,6 +15,7 @@ type
     Caption: string;
     Project: THopeProject;
     ProjectFile: THopeProjectFile;
+    IsProject: Boolean;
   end;
 
   TFormProjectManager = class(TFormDockable)
@@ -96,12 +97,7 @@ begin
   begin
     Node := TreeProject.FocusedNode;
     NodeData := PProjectNodeData(TreeProject.GetNodeData(Node));
-    if not Assigned(NodeData.ProjectFile) then
-    begin
-      TreeProject.Expanded[Node] := not TreeProject.Expanded[Node];
-      Exit;
-    end
-    else
+    if Assigned(NodeData.ProjectFile) then
     begin
       FileName := NodeData.ProjectFile.FileName;
       if IsRelativePath(ExtractFilePath(FileName)) then
@@ -147,7 +143,7 @@ begin
     if not Assigned(NodeData^.Project) then
       ImageIndex := 50
     else
-    if not Assigned(NodeData^.ProjectFile) then
+    if NodeData^.IsProject then
       ImageIndex := 1
     else
       ImageIndex := 44;
@@ -224,7 +220,9 @@ begin
       ProjectNode := TreeProject.AddChild(TreeProject.TopNode);
       NodeData := TreeProject.GetNodeData(ProjectNode);
       NodeData^.Project := Project;
+      NodeData^.ProjectFile := Project.MainScript;
       NodeData^.Caption := Project.Name;
+      NodeData^.IsProject := True;
 
       for FileIndex := 0 to Project.Files.Count - 1 do
       begin
@@ -233,6 +231,7 @@ begin
         NodeData^.Project := Project;
         NodeData^.ProjectFile := Project.Files[FileIndex];
         NodeData^.Caption := ExtractFileName(Project.Files[FileIndex].FileName);
+        NodeData^.IsProject := False;
       end;
     end;
 

@@ -4,7 +4,7 @@ interface
 
 {$I Hope.inc}
 
-{$DEFINE UsePreamble}
+{-$DEFINE UsePreamble}
 
 uses
   System.SysUtils, System.StrUtils, System.Classes, System.Contnrs,

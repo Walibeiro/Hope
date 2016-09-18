@@ -44,7 +44,6 @@ var
   SearchRec: TFindDataRec;
   InfoLevel: TFindexInfoLevels;
   FileName: String;
-  SkipScan: Boolean;
 begin
   if ((Win32MajorVersion shl 8) or Win32MinorVersion) >= $601 then
     InfoLevel := TFindexInfoLevels(1)

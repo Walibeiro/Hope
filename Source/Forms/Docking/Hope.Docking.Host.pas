@@ -67,7 +67,6 @@ procedure TFormDockHost.PanelDockDrop(Sender: TObject;
   Source: TDragDockObject; X, Y: Integer);
 var
   Index: Integer;
-  R: TRect;
 begin
   TabSet.Tabs.Clear;
   for Index := 0 to PanelDock.DockClientCount - 1 do

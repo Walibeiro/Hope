@@ -7,7 +7,7 @@ uses
   Hope.ColorPicker in 'Forms\Hope.ColorPicker.pas' {FormColorPicker},
   Hope.Common.JSON in 'Common\Hope.Common.JSON.pas',
   Hope.Common.MimeTypes in 'Common\Hope.Common.MimeTypes.pas',
-  Hope.Compiler in 'Compiler\Hope.Compiler.pas',
+  Hope.Compiler.Background in 'Compiler\Hope.Compiler.Background.pas',
   Hope.DataModule in 'DataModules\Hope.DataModule.pas' {DataModuleCommon: TDataModule},
   Hope.Dialog in 'Forms\Dialogs\Hope.Dialog.pas' {FormDialog},
   Hope.Dialog.FindClass in 'Forms\Dialogs\Hope.Dialog.FindClass.pas' {FormFindClass},
@@ -44,7 +44,9 @@ uses
   Hope.Common.DirectoryMonitor in 'Common\Hope.Common.DirectoryMonitor.pas',
   Hope.Common.Constants in 'Common\Hope.Common.Constants.pas',
   Hope.Common.MonitoredBuffer in 'Common\Hope.Common.MonitoredBuffer.pas',
-  Hope.Common.Preferences in 'Common\Hope.Common.Preferences.pas';
+  Hope.Common.Preferences in 'Common\Hope.Common.Preferences.pas',
+  Hope.Compiler.Base in 'Compiler\Hope.Compiler.Base.pas',
+  Hope.Compiler.Internal in 'Compiler\Hope.Compiler.Internal.pas';
 
 {$R *.res}
 

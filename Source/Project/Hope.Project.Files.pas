@@ -5,7 +5,7 @@ interface
 {$I Hope.inc}
 
 uses
-  System.SysUtils, System.Contnrs, Hope.Common.JSON,
+  System.SysUtils, System.Contnrs, System.Classes, Hope.Common.JSON,
   dwsJSON;
 
 type

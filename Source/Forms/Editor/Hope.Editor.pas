@@ -143,8 +143,6 @@ begin
 end;
 
 procedure TFormEditor.SetFileName(const Value: TFileName);
-var
-  RawFileName: string;
 begin
   if FFileName <> Value then
   begin

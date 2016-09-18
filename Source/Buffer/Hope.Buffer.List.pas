@@ -7,7 +7,7 @@ interface
 // TODO: change implementation to something like used in TNameObjectHash
 
 uses
-  System.Contnrs, System.SysUtils, dwsUtils, Hope.Buffer;
+  System.Contnrs, System.Classes, System.SysUtils, dwsUtils, Hope.Buffer;
 
 type
   THopeBufferList = class

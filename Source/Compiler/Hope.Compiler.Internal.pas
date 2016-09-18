@@ -10,21 +10,19 @@ uses
   Hope.Compiler.Base;
 
 type
-  THopeCompilationEvent = procedure(Sender: TObject; Prog: IdwsProgram) of object;
+  THopeCompilationEvent = procedure(Sender: TObject; CompiledProgram: IdwsProgram) of object;
 
-  THopeCompiler = class(THopeBaseCompiler)
+  THopeInternalCompiler = class(THopeBaseCompiler)
   private
     FOnCompilation: THopeCompilationEvent;
 
     function GetMainScript(Project: THopeProject): string;
+  protected
     procedure OnIncludeEventHandler(const ScriptName: string;
-      var ScriptSource: string);
+      var ScriptSource: string); override;
     function OnNeedUnitEventHandler(const UnitName: string;
-      var UnitSource: string) : IdwsUnit;
+      var UnitSource: string) : IdwsUnit; override;
   public
-    constructor Create;
-    destructor Destroy; override;
-
     function SyntaxCheck(Project: THopeProject): Boolean;
     function CompileProject(Project: THopeProject): IdwsProgram;
     procedure BuildProject(Project: THopeProject);
@@ -35,91 +33,80 @@ type
 implementation
 
 uses
-  dwsXPlatform, dwsExprList, Hope.Common.Constants, Hope.Main, Hope.DataModule;
+  dwsXPlatform, dwsExprList, Hope.Common.Constants, Hope.Main, Hope.DataModule,
+  Hope.Common.MonitoredBuffer;
 
-{ THopeCompiler }
+{ THopeInternalCompiler }
 
-constructor THopeCompiler.Create;
+function THopeInternalCompiler.GetMainScript(Project: THopeProject): string;
 begin
-  // create DWS compiler
-  DelphiWebScript.OnNeedUnit := OnNeedUnitEventHandler;
-  DelphiWebScript.OnInclude := OnIncludeEventHandler;
+  Result := DataModuleCommon.GetText(Project.RootPath + Project.MainScript.FileName);
 end;
 
-destructor THopeCompiler.Destroy;
-begin
-  inherited;
-end;
-
-function THopeCompiler.GetMainScript(Project: THopeProject): string;
-begin
-  DataModuleCommon.GetText(Project.MainScript.FileName);
-end;
-
-procedure THopeCompiler.OnIncludeEventHandler(const ScriptName: string;
+procedure THopeInternalCompiler.OnIncludeEventHandler(const ScriptName: string;
   var ScriptSource: string);
 begin
   ScriptSource := DataModuleCommon.GetText(ScriptName);
 end;
 
-function THopeCompiler.OnNeedUnitEventHandler(const UnitName: string;
+function THopeInternalCompiler.OnNeedUnitEventHandler(const UnitName: string;
   var UnitSource: string): IdwsUnit;
 begin
   UnitSource := DataModuleCommon.GetUnit(UnitName);
 end;
 
-function THopeCompiler.SyntaxCheck(Project: THopeProject): Boolean;
+function THopeInternalCompiler.SyntaxCheck(Project: THopeProject): Boolean;
 var
-  Prog: IdwsProgram;
+  CompiledProgram: IdwsProgram;
 begin
-  Prog := DelphiWebScript.Compile(GetMainScript(Project));
+  CompiledProgram := DelphiWebScript.Compile(GetMainScript(Project));
 
   // log compiler messages
-  FormMain.LogCompilerMessages(Prog.Msgs);
+  FormMain.LogCompilerMessages(CompiledProgram.Msgs);
+
+  Result := not CompiledProgram.Msgs.HasErrors;
 end;
 
-function THopeCompiler.CompileProject(Project: THopeProject): IdwsProgram;
+function THopeInternalCompiler.CompileProject(Project: THopeProject): IdwsProgram;
 var
-  Prog: IdwsProgram;
-  CodeJS: string;
+  CompiledProgram: IdwsProgram;
 begin
-  Prog := DelphiWebScript.Compile(GetMainScript(Project));
+  CompiledProgram := DelphiWebScript.Compile(GetMainScript(Project));
 
   // log compiler messages
-  FormMain.LogCompilerMessages(Prog.Msgs);
+  FormMain.LogCompilerMessages(CompiledProgram.Msgs);
 
   // exit in case of errors
-  if Prog.Msgs.HasErrors then
+  if CompiledProgram.Msgs.HasErrors then
     Exit;
 
   // fire compilation event
   if Assigned(FOnCompilation) then
-    FOnCompilation(Self, Prog);
-
+    FOnCompilation(Self, CompiledProgram);
 
 (*
   FCodeGen.Clear;
-  FCodeGen.CompileProgram(Prog);
-  CodeJS := FCodeGen.CompiledOutput(Prog);
+  FCodeGen.CompileProgram(CompiledProgram);
+  CodeJS := FCodeGen.CompiledOutput(CompiledProgram);
 *)
 end;
 
-procedure THopeCompiler.BuildProject(Project: THopeProject);
+procedure THopeInternalCompiler.BuildProject(Project: THopeProject);
 var
-  Prog: IdwsProgram;
+  CompiledProgram: IdwsProgram;
 begin
-  Prog := DelphiWebScript.Compile(GetMainScript(Project));
+  CompiledProgram := DelphiWebScript.Compile(GetMainScript(Project));
 
   // log compiler messages
-  FormMain.LogCompilerMessages(Prog.Msgs);
+  FormMain.LogCompilerMessages(CompiledProgram.Msgs);
 
   // exit in case of errors
-  if Prog.Msgs.HasErrors then
+  if CompiledProgram.Msgs.HasErrors then
     Exit;
 
   // fire compilation event
   if Assigned(FOnCompilation) then
-    FOnCompilation(Self, Prog);
+    FOnCompilation(Self, CompiledProgram);
 end;
 
 end.
