@@ -5,17 +5,20 @@ interface
 {$I Hope.inc}
 
 uses
-  System.Classes, System.SysUtils, Hope.Buffer, Hope.Buffer.List,
-  Hope.Common.DirectoryMonitor;
+  System.Classes, System.SysUtils, dwsDirectoryNotifier, Hope.Buffer,
+  Hope.Buffer.List, Hope.Common.DirectoryMonitor;
 
 type
   TMonitoredBuffer = class
   private
     FBuffferList: THopeBufferList;
     FDirectoryMonitor: TDirectoryMonitor;
+    FLastFileName: TFileName;
 
     function GetText(FileName: TFileName): string;
     procedure SetText(FileName: TFileName; const Text: string);
+    procedure FileChangedEventHandler(Sender: TdwsFileNotifier; const FileName: string;
+      ChangeAction : TFileNotificationAction);
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
@@ -43,6 +46,8 @@ begin
   // create buffer list and directory monitor
   FBuffferList := THopeBufferList.Create;
   FDirectoryMonitor := TDirectoryMonitor.Create;
+
+  FDirectoryMonitor.OnFileChanged := FileChangedEventHandler;
 end;
 
 procedure TMonitoredBuffer.BeforeDestruction;
@@ -67,6 +72,27 @@ begin
 
   // load text from the hard disk in case it is not buffered;
   Result := LoadTextFromFile(FileName);
+end;
+
+procedure TMonitoredBuffer.FileChangedEventHandler(Sender: TdwsFileNotifier;
+  const FileName: string; ChangeAction: TFileNotificationAction);
+begin
+  case ChangeAction of
+    FILE_ACTION_ADDED:
+      FBuffferList.Add(FileName);
+    FILE_ACTION_REMOVED:
+      FBuffferList.Remove(FileName);
+    FILE_ACTION_MODIFIED:
+      SetText(FileName, LoadTextFromFile(FileName));
+    FILE_ACTION_RENAMED_OLD_NAME:
+      FLastFileName := FileName;
+    FILE_ACTION_RENAMED_NEW_NAME:
+      begin
+        Assert(FLastFileName <> '');
+        FBuffferList.Rename(FLastFileName, FileName);
+        FLastFileName := '';
+      end;
+  end;
 end;
 
 procedure TMonitoredBuffer.SetText(FileName: TFileName;

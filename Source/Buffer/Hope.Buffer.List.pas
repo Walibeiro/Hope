@@ -21,6 +21,8 @@ type
 
     procedure Add(FileName: TFileName);
     procedure Remove(FileName: TFileName);
+    procedure Rename(LastFileName, NewFileName: TFileName);
+
     function Contains(FileName: TFileName): Boolean;
     function IndexOf(FileName: TFileName): Integer;
     function IndexOfUnit(UnitName: string): Integer;
@@ -101,6 +103,20 @@ var
 begin
   Index := IndexOf(FileName);
   FList.Delete(Index);
+end;
+
+procedure THopeBufferList.Rename(LastFileName, NewFileName: TFileName);
+var
+  Index: Integer;
+begin
+  Index := IndexOf(LastFileName);
+  if Index < 0 then
+  begin
+    Add(NewFileName);
+    Exit;
+  end;
+
+  THopeBuffer(FList[Index]).FileName := NewFileName;
 end;
 
 function THopeBufferList.GetCount: Integer;

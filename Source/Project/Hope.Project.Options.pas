@@ -8,6 +8,75 @@ uses
   dwsJson, Hope.Common.JSON;
 
 type
+  THopeProjectAuthor = class(THopeJsonBase)
+  private
+    FName: string;
+    FEmail: string;
+    FWebsite: string;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJsonObject); override;
+    procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+
+    property Name: string read FName write FName;
+    property Email: string read FEmail write FEmail;
+    property Website: string read FWebsite write FWebsite;
+  end;
+
+  THopeProjectInformation = class(THopeJsonBase)
+  private
+    FName: string;
+    FDescription: string;
+    FAuthor: THopeProjectAuthor;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJsonObject); override;
+    procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
+
+    property Name: string read FName write FName;
+    property Description: string read FDescription write FDescription;
+    property Author: THopeProjectAuthor read FAuthor write FAuthor;
+  end;
+
+  THopeProjectVersion = class(THopeJsonBase)
+  private
+    FMajor: Integer;
+    FMinor: Integer;
+    FRelease: Integer;
+    FBuild: Integer;
+    FAutoIncrement: Boolean;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJsonObject); override;
+    procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+
+    property Major: Integer read FMajor write FMajor;
+    property Minor: Integer read FMinor write FMinor;
+    property Release: Integer read FRelease write FRelease;
+    property Build: Integer read FBuild write FBuild;
+    property AutoIncrement: Boolean read FAutoIncrement write FAutoIncrement;
+  end;
+
+  THopeProjectIcon = class(THopeJsonBase)
+  private
+    FFileName: string;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJsonObject); override;
+    procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+
+    property FileName: string read FFileName write FFileName;
+  end;
+
   THopeCompilerOptions = class(THopeJsonBase)
   private
     FAssertions: Boolean;
@@ -66,10 +135,24 @@ type
     property Verbosity: Integer read FVerbosity write FVerbosity;
   end;
 
+  THopeProjectExecution = class(THopeJsonBase)
+  private
+  protected
+    procedure ReadJson(const JsonValue: TdwsJsonObject); override;
+    procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+  end;
+
   THopeProjectOptions = class(THopeJsonBase)
   private
+    FInformation: THopeProjectInformation;
+    FVersion: THopeProjectVersion;
+    FIcon: THopeProjectIcon;
     FCompilerOptions: THopeCompilerOptions;
     FCodeGenOptions: THopeCodeGenJavaScriptOptions;
+    FExecution: THopeProjectExecution;
   protected
     procedure ReadJson(const JsonValue: TdwsJsonObject); override;
     procedure WriteJson(const JsonValue: TdwsJsonObject); override;
@@ -78,11 +161,155 @@ type
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
+    property Information: THopeProjectInformation read FInformation;
+    property Version: THopeProjectVersion read FVersion;
+    property Icon: THopeProjectIcon read FIcon;
     property CompilerOptions: THopeCompilerOptions read FCompilerOptions;
     property CodeGenOptions: THopeCodeGenJavaScriptOptions read FCodeGenOptions;
+    property Execution: THopeProjectExecution read FExecution;
   end;
 
 implementation
+
+
+{ THopeProjectAuthor }
+
+procedure THopeProjectAuthor.AfterConstruction;
+begin
+  inherited;
+
+  FName := '';
+  FEmail := '';
+  FWebsite := ''
+end;
+
+class function THopeProjectAuthor.GetPreferredName: string;
+begin
+  Result := 'Author';
+end;
+
+procedure THopeProjectAuthor.ReadJson(
+  const JsonValue: TdwsJsonObject);
+begin
+  FName := JsonValue.GetValue('Name', FName);
+  FEmail := JsonValue.GetValue('Email', FEmail);
+  FWebsite := JsonValue.GetValue('Website', FWebsite);
+end;
+
+procedure THopeProjectAuthor.WriteJson(
+  const JsonValue: TdwsJsonObject);
+begin
+  JsonValue.AddValue('Name', FName);
+  JsonValue.AddValue('Email', FEmail);
+  JsonValue.AddValue('Website', FWebsite);
+end;
+
+
+{ THopeProjectInformation }
+
+procedure THopeProjectInformation.AfterConstruction;
+begin
+  inherited;
+
+  FName := '';
+  FDescription := '';
+  FAuthor := THopeProjectAuthor.Create;
+end;
+
+procedure THopeProjectInformation.BeforeDestruction;
+begin
+  inherited;
+
+  FAuthor.Free;
+end;
+
+class function THopeProjectInformation.GetPreferredName: string;
+begin
+  Result := 'Project';
+end;
+
+procedure THopeProjectInformation.ReadJson(const JsonValue: TdwsJsonObject);
+begin
+  FName := JsonValue.GetValue('Name', FName);
+  FDescription := JsonValue.GetValue('Description', FDescription);
+  FAuthor.LoadFromJson(JsonValue, True);
+end;
+
+procedure THopeProjectInformation.WriteJson(const JsonValue: TdwsJsonObject);
+begin
+  JsonValue.AddValue('Name', FName);
+  JsonValue.AddValue('Description', FDescription);
+  FAuthor.SaveToJson(JsonValue);
+end;
+
+
+{ THopeProjectVersion }
+
+procedure THopeProjectVersion.AfterConstruction;
+begin
+  inherited;
+
+  FMajor := 0;
+  FMinor := 0;
+  FRelease := 0;
+  FBuild := 0;
+  FAutoIncrement := False;
+end;
+
+class function THopeProjectVersion.GetPreferredName: string;
+begin
+  Result := 'Version';
+end;
+
+procedure THopeProjectVersion.ReadJson(
+  const JsonValue: TdwsJsonObject);
+begin
+  FMajor := JsonValue.GetValue('Major', FMajor);
+  FMinor := JsonValue.GetValue('Minor', FMinor);
+  FRelease := JsonValue.GetValue('Release', FRelease);
+  FBuild := JsonValue.GetValue('Build', FBuild);
+  FAutoIncrement := JsonValue.GetValue('AutoIncrement', FAutoIncrement);
+end;
+
+procedure THopeProjectVersion.WriteJson(
+  const JsonValue: TdwsJsonObject);
+begin
+  JsonValue.AddValue('Major', FMajor);
+  JsonValue.AddValue('Minor', FMinor);
+  JsonValue.AddValue('Release', FRelease);
+  JsonValue.AddValue('Build', FBuild);
+  JsonValue.AddValue('AutoIncrement', FAutoIncrement);
+end;
+
+
+{ THopeProjectIcon }
+
+procedure THopeProjectIcon.AfterConstruction;
+begin
+  inherited;
+
+  FFileName := '';
+end;
+
+class function THopeProjectIcon.GetPreferredName: string;
+begin
+  Result := 'Icon';
+end;
+
+procedure THopeProjectIcon.ReadJson(const JsonValue: TdwsJsonObject);
+begin
+  inherited;
+
+  FFileName := JsonValue.GetValue('FileName', FFileName);
+end;
+
+procedure THopeProjectIcon.WriteJson(const JsonValue: TdwsJsonObject);
+begin
+  inherited;
+
+  JsonValue.AddValue('FileName', FFileName);
+end;
+
 
 { THopeCompilerOptions }
 
@@ -182,20 +409,54 @@ begin
 end;
 
 
+{ THopeProjectExecution }
+
+procedure THopeProjectExecution.AfterConstruction;
+begin
+  inherited;
+
+end;
+
+class function THopeProjectExecution.GetPreferredName: string;
+begin
+  Result := 'Execution';
+end;
+
+procedure THopeProjectExecution.ReadJson(const JsonValue: TdwsJsonObject);
+begin
+  inherited;
+
+end;
+
+procedure THopeProjectExecution.WriteJson(const JsonValue: TdwsJsonObject);
+begin
+  inherited;
+
+end;
+
+
 { THopeProjectOptions }
 
 procedure THopeProjectOptions.AfterConstruction;
 begin
   inherited;
 
+  FInformation := THopeProjectInformation.Create;
+  FVersion := THopeProjectVersion.Create;
+  FIcon := THopeProjectIcon.Create;
   FCompilerOptions := THopeCompilerOptions.Create;
   FCodeGenOptions := THopeCodeGenJavaScriptOptions.Create;
+  FExecution := THopeProjectExecution.Create;
 end;
 
 procedure THopeProjectOptions.BeforeDestruction;
 begin
+  FInformation.Free;
+  FVersion.Free;
+  FIcon.Free;
   FCompilerOptions.Free;
   FCodeGenOptions.Free;
+  FExecution.Free;
 
   inherited;
 end;
@@ -209,16 +470,25 @@ procedure THopeProjectOptions.ReadJson(const JsonValue: TdwsJsonObject);
 begin
   inherited;
 
+  FInformation.LoadFromJson(JsonValue, True);
+  FVersion.LoadFromJson(JsonValue, True);
+  FIcon.LoadFromJson(JsonValue, True);
   FCompilerOptions.LoadFromJson(JsonValue, True);
   FCodeGenOptions.LoadFromJson(JsonValue, True);
+  FExecution.LoadFromJson(JsonValue, True);
 end;
 
 procedure THopeProjectOptions.WriteJson(const JsonValue: TdwsJsonObject);
 begin
   inherited;
 
+  FInformation.SaveToJson(JsonValue);
+  FVersion.SaveToJson(JsonValue);
+  FIcon.SaveToJson(JsonValue);
   FCompilerOptions.SaveToJson(JsonValue);
   FCodeGenOptions.SaveToJson(JsonValue);
+  FExecution.SaveToJson(JsonValue);
 end;
+
 
 end.
