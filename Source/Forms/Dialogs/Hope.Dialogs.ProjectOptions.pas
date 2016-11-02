@@ -8,7 +8,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, 
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls,
-  VirtualTrees, Hope.Dialog, Hope.DataModule, Hope.Project.Options;
+  VirtualTrees, Hope.Dialog, Hope.DataModule, Hope.Project.Options,
+  Vcl.Samples.Spin;
 
 type
   TTabSheetItem = record
@@ -39,6 +40,43 @@ type
     LabelDescription: TLabel;
     LabelWebsite: TLabel;
     EditAuthorWebsite: TEdit;
+    GroupBox1: TGroupBox;
+    LabelVersionMajor: TLabel;
+    SpinEditVersionMajor: TSpinEdit;
+    SpinEditVersionMinor: TSpinEdit;
+    Label1: TLabel;
+    Label2: TLabel;
+    SpinEditVersionRelease: TSpinEdit;
+    SpinEditVersionBuild: TSpinEdit;
+    Label3: TLabel;
+    CheckBoxAutoIncrement: TCheckBox;
+    LabelFullVersionNumber: TLabel;
+    LabelFullVersionNumberValue: TLabel;
+    CheckBoxAssertions: TCheckBox;
+    CheckBoxOptimizations: TCheckBox;
+    ComboBoxHintLevel: TComboBox;
+    LabelHintLevel: TLabel;
+    TabSheetCodeGenJS: TTabSheet;
+    CheckBoxObfuscation: TCheckBox;
+    CheckBoxInlineMagic: TCheckBox;
+    CheckBoxIgnorePublished: TCheckBox;
+    GroupBoxChecks: TGroupBox;
+    CheckBoxRangeChecks: TCheckBox;
+    CheckBoxInstanceChecks: TCheckBox;
+    CheckBoxConditionChecks: TCheckBox;
+    CheckBoxLoopChecks: TCheckBox;
+    CheckBoxDevirtualize: TCheckBox;
+    CheckBoxEmitRTTI: TCheckBox;
+    CheckBoxEmitSourceLocation: TCheckBox;
+    CheckBoxOptimizeForSize: TCheckBox;
+    CheckBoxSmartLinking: TCheckBox;
+    EditMainBodyName: TEdit;
+    LabelMainBodyName: TLabel;
+    LabelVerbosity: TLabel;
+    ComboBoxVerbosity: TComboBox;
+    LabelIndentSize: TLabel;
+    SpinEditIndentSize: TSpinEdit;
+    CheckBoxEmitFinalization: TCheckBox;
     procedure TreeCategoryGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure TreeCategoryGetImageIndex(Sender: TBaseVirtualTree;
@@ -47,13 +85,20 @@ type
     procedure TreeCategoryIncrementalSearch(Sender: TBaseVirtualTree;
       Node: PVirtualNode; const SearchText: string; var Result: Integer);
     procedure TreeCategoryChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure SpinEditVersionMajorChange(Sender: TObject);
+    procedure SpinEditVersionMinorChange(Sender: TObject);
+    procedure SpinEditVersionReleaseChange(Sender: TObject);
+    procedure SpinEditVersionBuildChange(Sender: TObject);
   private
     procedure UpdateTree;
+    procedure UpdateFullVersionInformation;
   public
     procedure AfterConstruction; override;
 
-    procedure Load(ProjectOptions: THopeProjectOptions);
-    procedure Store(ProjectOptions: THopeProjectOptions);
+    class procedure CreateAndShow(Options: THopeProjectOptions);
+
+    procedure Load(Options: THopeProjectOptions);
+    procedure Store(Options: THopeProjectOptions);
   end;
 
 implementation
@@ -62,6 +107,21 @@ uses
   System.Math, Vcl.FileCtrl;
 
 {$R *.dfm}
+
+{ TFormProjectOptions }
+
+class procedure TFormProjectOptions.CreateAndShow(Options: THopeProjectOptions);
+begin
+  // show project options dialog
+  with TFormProjectOptions.Create(nil) do
+  try
+    ShowModal;
+
+    Load(Options);
+  finally
+    Free;
+  end;
+end;
 
 procedure TFormProjectOptions.AfterConstruction;
 begin
@@ -142,8 +202,9 @@ begin
     TreeCategory.Clear;
 
     Add(TabSheetProject);
-
+    Add(TabSheetVersion);
     ParentNode := Add(TabSheetCompiler);
+    Add(TabSheetCodeGenJS, ParentNode);
     Add(TabSheetCompilerLinker, ParentNode);
     TreeCategory.Expanded[ParentNode] := True;
 
@@ -157,22 +218,113 @@ begin
     PageControl.Pages[Index].TabVisible := False;
 end;
 
-procedure TFormProjectOptions.Load(ProjectOptions: THopeProjectOptions);
+procedure TFormProjectOptions.SpinEditVersionBuildChange(Sender: TObject);
 begin
-  EditProjectName.Text := ProjectOptions.Information.Name;
-  MemoDescription.Text := ProjectOptions.Information.Description;
-  EditAuthorName.Text := ProjectOptions.Information.Author.Name;
-  EditAuthorEmail.Text := ProjectOptions.Information.Author.Email;
-  EditAuthorWebsite.Text := ProjectOptions.Information.Author.Website;
+  UpdateFullVersionInformation;
 end;
 
-procedure TFormProjectOptions.Store(ProjectOptions: THopeProjectOptions);
+procedure TFormProjectOptions.SpinEditVersionMajorChange(Sender: TObject);
 begin
-  ProjectOptions.Information.Name := EditProjectName.Text;
-  ProjectOptions.Information.Description := MemoDescription.Text;
-  ProjectOptions.Information.Author.Name := EditAuthorName.Text;
-  ProjectOptions.Information.Author.Email := EditAuthorEmail.Text;
-  ProjectOptions.Information.Author.Website := EditAuthorWebsite.Text;
+  UpdateFullVersionInformation;
+end;
+
+procedure TFormProjectOptions.SpinEditVersionMinorChange(Sender: TObject);
+begin
+  UpdateFullVersionInformation;
+end;
+
+procedure TFormProjectOptions.SpinEditVersionReleaseChange(Sender: TObject);
+begin
+  UpdateFullVersionInformation;
+end;
+
+procedure TFormProjectOptions.UpdateFullVersionInformation;
+begin
+  LabelFullVersionNumberValue.Caption :=
+    SpinEditVersionMajor.Text + '.' +
+    SpinEditVersionMinor.Text + '.' +
+    SpinEditVersionRelease.Text + '.' +
+    SpinEditVersionBuild.Text;
+end;
+
+procedure TFormProjectOptions.Load(Options: THopeProjectOptions);
+begin
+  // project information
+  EditProjectName.Text := Options.Information.Name;
+  MemoDescription.Text := Options.Information.Description;
+  EditAuthorName.Text := Options.Information.Author.Name;
+  EditAuthorEmail.Text := Options.Information.Author.Email;
+  EditAuthorWebsite.Text := Options.Information.Author.Website;
+
+  // version
+  SpinEditVersionMajor.Text := IntToStr(Options.Version.Major);
+  SpinEditVersionMinor.Text := IntToStr(Options.Version.Minor);
+  SpinEditVersionRelease.Text := IntToStr(Options.Version.Release);
+  SpinEditVersionBuild.Text := IntToStr(Options.Version.Build);
+  CheckBoxAutoIncrement.Checked := Options.Version.AutoIncrement;
+
+  // compiler options
+  CheckBoxAssertions.Checked := Options.CompilerOptions.Assertions;
+  CheckBoxOptimizations.Checked := Options.CompilerOptions.Optimizations;
+  ComboBoxHintLevel.ItemIndex := Options.CompilerOptions.HintsLevel;
+
+  // JS codegen options
+  CheckBoxRangeChecks := Options.CodeGenOptions.RangeChecks;
+  CheckBoxInstanceChecks := Options.CodeGenOptions.InstanceChecks;
+  CheckBoxLoopChecks := Options.CodeGenOptions.LoopChecks;
+  CheckBoxConditionChecks := Options.CodeGenOptions.ConditionChecks;
+  CheckBoxInlineMagic := Options.CodeGenOptions.InlineMagics;
+  CheckBoxObfuscation := Options.CodeGenOptions.Obfuscation;
+  CheckBoxEmitSourceLocation := Options.CodeGenOptions.EmitSourceLocation;
+  CheckBoxOptimizeForSize := Options.CodeGenOptions.OptimizeForSize;
+  CheckBoxSmartLinking := Options.CodeGenOptions.SmartLinking;
+  CheckBoxDevirtualize := Options.CodeGenOptions.Devirtualize;
+  CheckBoxEmitRTTI := Options.CodeGenOptions.EmitRTTI;
+  CheckBoxEmitFinalization := Options.CodeGenOptions.EmitFinalization;
+  CheckBoxIgnorePublished := Options.CodeGenOptions.IgnorePublishedInImplementation;
+  EditMainBodyName.Text := Options.CodeGenOptions.MainBody;
+  SpinEditIndentSize.Value := Options.CodeGenOptions.IndentSize;
+  ComboBoxVerbosity.ItemIndex := Options.CodeGenOptions.Verbosity;
+end;
+
+procedure TFormProjectOptions.Store(Options: THopeProjectOptions);
+begin
+  // project information
+  Options.Information.Name := EditProjectName.Text;
+  Options.Information.Description := MemoDescription.Text;
+  Options.Information.Author.Name := EditAuthorName.Text;
+  Options.Information.Author.Email := EditAuthorEmail.Text;
+  Options.Information.Author.Website := EditAuthorWebsite.Text;
+
+  // version
+  Options.Version.Major := StrToInt(SpinEditVersionMajor.Text);
+  Options.Version.Minor := StrToInt(SpinEditVersionMinor.Text);
+  Options.Version.Release := StrToInt(SpinEditVersionRelease.Text);
+  Options.Version.Build := StrToInt(SpinEditVersionBuild.Text);
+  Options.Version.AutoIncrement := CheckBoxAutoIncrement.Checked;
+
+  // compiler options
+  Options.CompilerOptions.Assertions := CheckBoxAssertions.Checked;
+  Options.CompilerOptions.Optimizations := CheckBoxOptimizations.Checked;
+  Options.CompilerOptions.HintsLevel := ComboBoxHintLevel.ItemIndex;
+
+  // JS codegen options
+  Options.CodeGenOptions.RangeChecks := CheckBoxRangeChecks;
+  Options.CodeGenOptions.InstanceChecks := CheckBoxInstanceChecks;
+  Options.CodeGenOptions.LoopChecks := CheckBoxLoopChecks;
+  Options.CodeGenOptions.ConditionChecks := CheckBoxConditionChecks;
+  Options.CodeGenOptions.InlineMagics := CheckBoxInlineMagic;
+  Options.CodeGenOptions.Obfuscation := CheckBoxObfuscation;
+  Options.CodeGenOptions.EmitSourceLocation := CheckBoxEmitSourceLocation;
+  Options.CodeGenOptions.OptimizeForSize := CheckBoxOptimizeForSize;
+  Options.CodeGenOptions.SmartLinking := CheckBoxSmartLinking;
+  Options.CodeGenOptions.Devirtualize := CheckBoxDevirtualize;
+  Options.CodeGenOptions.EmitRTTI := CheckBoxEmitRTTI;
+  Options.CodeGenOptions.EmitFinalization := CheckBoxEmitFinalization;
+  Options.CodeGenOptions.IgnorePublishedInImplementation := CheckBoxIgnorePublished;
+  Options.CodeGenOptions.MainBody := EditMainBodyName.Text;
+  Options.CodeGenOptions.IndentSize := SpinEditIndentSize.Value;
+  Options.CodeGenOptions.Verbosity := ComboBoxVerbosity.ItemIndex;
 end;
 
 end.

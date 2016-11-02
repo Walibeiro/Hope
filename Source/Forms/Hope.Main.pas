@@ -683,13 +683,11 @@ end;
 
 procedure TFormMain.ActionProjectOptionsExecute(Sender: TObject);
 begin
-  // show project options dialog
-  with TFormProjectOptions.Create(Self) do
-  try
-    ShowModal;
-  finally
-    Free;
-  end;
+  // only show if an active project is available
+  if not Assigned(FProjects.ActiveProject) then
+    Exit;
+
+  TFormProjectOptions.CreateAndShow(FProjects.ActiveProject.Options);
 end;
 
 procedure TFormMain.ActionSearchFindInFilesExecute(Sender: TObject);

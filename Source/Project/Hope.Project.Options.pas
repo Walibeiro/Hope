@@ -98,19 +98,21 @@ type
 
   THopeCodeGenJavaScriptOptions = class(THopeJsonBase)
   private
-    FObfuscation: Boolean;
     FRangeChecks: Boolean;
     FInstanceChecks: Boolean;
-    FConditionChecks: Boolean;
     FLoopChecks: Boolean;
+    FConditionChecks: Boolean;
     FInlineMagics: Boolean;
-    FIgnorePublishedInImplementation: Boolean;
+    FObfuscation: Boolean;
     FEmitSourceLocation: Boolean;
-    FEmitRTTI: Boolean;
-    FDevirtualize: Boolean;
-    FMainBody: string;
-    FCodePacking: Boolean;
+    FOptimizeForSize: Boolean;
     FSmartLinking: Boolean;
+    FDevirtualize: Boolean;
+    FEmitRTTI: Boolean;
+    FEmitFinalizations: Boolean;
+    FIgnorePublishedInImplementation: Boolean;
+    FMainBody: string;
+    FIndentSize: Integer;
     FVerbosity: Integer;
   protected
     procedure ReadJson(const JsonValue: TdwsJsonObject); override;
@@ -119,19 +121,21 @@ type
   public
     procedure AfterConstruction; override;
 
-    property Obfuscation: Boolean read FObfuscation write FObfuscation;
     property RangeChecks: Boolean read FRangeChecks write FRangeChecks;
     property InstanceChecks: Boolean read FInstanceChecks write FInstanceChecks;
-    property ConditionChecks: Boolean read FConditionChecks write FConditionChecks;
     property LoopChecks: Boolean read FLoopChecks write FLoopChecks;
+    property ConditionChecks: Boolean read FConditionChecks write FConditionChecks;
     property InlineMagics: Boolean read FInlineMagics write FInlineMagics;
-    property IgnorePublishedInImplementation: Boolean read FIgnorePublishedInImplementation write FIgnorePublishedInImplementation;
+    property Obfuscation: Boolean read FObfuscation write FObfuscation;
     property EmitSourceLocation: Boolean read FEmitSourceLocation write FEmitSourceLocation;
-    property EmitRTTI: Boolean read FEmitRTTI write FEmitRTTI;
-    property Devirtualize: Boolean read FDevirtualize write FDevirtualize;
-    property MainBody: string read FMainBody write FMainBody;
-    property CodePacking: Boolean read FCodePacking write FCodePacking;
+    property OptimizeForSize: Boolean read FOptimizeForSize write FOptimizeForSize;
     property SmartLinking: Boolean read FSmartLinking write FSmartLinking;
+    property Devirtualize: Boolean read FDevirtualize write FDevirtualize;
+    property EmitRTTI: Boolean read FEmitRTTI write FEmitRTTI;
+    property EmitFinalizations: Boolean read FEmitFinalizations write FEmitFinalizations;
+    property IgnorePublishedInImplementation: Boolean read FIgnorePublishedInImplementation write FIgnorePublishedInImplementation;
+    property MainBody: string read FMainBody write FMainBody;
+    property IndentSize: Integer read FIndentSize write FIndentSize;
     property Verbosity: Integer read FVerbosity write FVerbosity;
   end;
 
@@ -320,7 +324,7 @@ begin
   FAssertions := True;
   FOptimizations := True;
   FConditionalDefines := '';
-  FHintsLevel := 0;
+  FHintsLevel := 1;
 end;
 
 class function THopeCompilerOptions.GetPreferredName: string;
@@ -351,19 +355,22 @@ procedure THopeCodeGenJavaScriptOptions.AfterConstruction;
 begin
   inherited;
 
-  FObfuscation := False;
   FRangeChecks := False;
   FInstanceChecks := False;
-  FConditionChecks := False;
   FLoopChecks := False;
+  FConditionChecks := False;
   FInlineMagics := True;
-  FIgnorePublishedInImplementation := True;
+  FObfuscation := False;
   FEmitSourceLocation := False;
-  FEmitRTTI := False;
-  FDevirtualize := True;
-  FMainBody := '';
-  FCodePacking := False;
+  FOptimizeForSize := False;
   FSmartLinking := True;
+  FDevirtualize := True;
+  FEmitRTTI := False;
+  FEmitFinalizations := True;
+  FIgnorePublishedInImplementation := True;
+
+  FMainBody := '';
+  FIndentSize := 2;
   FVerbosity := 1;
 end;
 
@@ -374,37 +381,41 @@ end;
 
 procedure THopeCodeGenJavaScriptOptions.ReadJson(const JsonValue: TdwsJsonObject);
 begin
-  FObfuscation := JsonValue.GetValue('Obfuscation', FObfuscation);
   FRangeChecks := JsonValue.GetValue('RangeChecks', FRangeChecks);
   FInstanceChecks := JsonValue.GetValue('InstanceChecks', FInstanceChecks);
-  FConditionChecks := JsonValue.GetValue('ConditionChecks', FConditionChecks);
   FLoopChecks := JsonValue.GetValue('LoopChecks', FLoopChecks);
+  FConditionChecks := JsonValue.GetValue('ConditionChecks', FConditionChecks);
   FInlineMagics := JsonValue.GetValue('InlineMagics', FInlineMagics);
-  FIgnorePublishedInImplementation := JsonValue.GetValue('IgnorePublishedInImplementation', FIgnorePublishedInImplementation);
+  FObfuscation := JsonValue.GetValue('Obfuscation', FObfuscation);
   FEmitSourceLocation := JsonValue.GetValue('EmitSourceLocation', FEmitSourceLocation);
-  FEmitRTTI := JsonValue.GetValue('EmitRTTI', FEmitRTTI);
-  FDevirtualize := JsonValue.GetValue('Devirtualize', FDevirtualize);
-  FMainBody := JsonValue.GetValue('MainBody', FMainBody);
-  FCodePacking := JsonValue.GetValue('CodePacking', FCodePacking);
+  FOptimizeForSize := JsonValue.GetValue('OptimizeForSize', FOptimizeForSize);
   FSmartLinking := JsonValue.GetValue('SmartLinking', FSmartLinking);
+  FDevirtualize := JsonValue.GetValue('Devirtualize', FDevirtualize);
+  FEmitRTTI := JsonValue.GetValue('EmitRTTI', FEmitRTTI);
+  FEmitFinalizations := JsonValue.GetValue('EmitFinalizations', FEmitFinalizations);
+  FIgnorePublishedInImplementation := JsonValue.GetValue('IgnorePublishedInImplementation', FIgnorePublishedInImplementation);
+  FMainBody := JsonValue.GetValue('MainBody', FMainBody);
+  FVerbosity := JsonValue.GetValue('IndentSize', FIndentSize);
   FVerbosity := JsonValue.GetValue('Verbosity', FVerbosity);
 end;
 
 procedure THopeCodeGenJavaScriptOptions.WriteJson(const JsonValue: TdwsJsonObject);
 begin
-  JsonValue.AddValue('Obfuscation', FObfuscation);
   JsonValue.AddValue('RangeChecks', FRangeChecks);
   JsonValue.AddValue('InstanceChecks', FInstanceChecks);
-  JsonValue.AddValue('ConditionChecks', FConditionChecks);
   JsonValue.AddValue('LoopChecks', FLoopChecks);
+  JsonValue.AddValue('ConditionChecks', FConditionChecks);
   JsonValue.AddValue('InlineMagics', FInlineMagics);
-  JsonValue.AddValue('IgnorePublishedInImplementation', FIgnorePublishedInImplementation);
+  JsonValue.AddValue('Obfuscation', FObfuscation);
   JsonValue.AddValue('EmitSourceLocation', FEmitSourceLocation);
-  JsonValue.AddValue('EmitRTTI', FEmitRTTI);
-  JsonValue.AddValue('Devirtualize', FDevirtualize);
-  JsonValue.AddValue('MainBody', FMainBody);
-  JsonValue.AddValue('CodePacking', FCodePacking);
+  JsonValue.AddValue('OptimizeForSize', FOptimizeForSize);
   JsonValue.AddValue('SmartLinking', FSmartLinking);
+  JsonValue.AddValue('Devirtualize', FDevirtualize);
+  JsonValue.AddValue('EmitRTTI', FEmitRTTI);
+  JsonValue.AddValue('EmitFinalizations', FEmitFinalizations);
+  JsonValue.AddValue('IgnorePublishedInImplementation', FIgnorePublishedInImplementation);
+  JsonValue.AddValue('MainBody', FMainBody);
+  JsonValue.AddValue('IndentSize', FIndentSize);
   JsonValue.AddValue('Verbosity', FVerbosity);
 end;
 
