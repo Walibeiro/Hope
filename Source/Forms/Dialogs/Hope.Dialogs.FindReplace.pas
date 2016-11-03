@@ -7,7 +7,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
-  SynEdit, SynEditTypes, Hope.Dialog;
+  SynEdit, SynEditTypes, Hope.Dialog, Hope.Datamodule;
 
 type
   TFormFindReplace = class(TFormDialog)
@@ -35,6 +35,11 @@ type
     procedure ButtonReplaceAllClick(Sender: TObject);
     procedure ButtonOKClick(Sender: TObject);
   public
+    procedure AfterConstruction; override;
+
+    procedure AddSearchItem;
+    procedure AddReplaceItem;
+
     procedure PerformSearch;
     procedure PerformReplace(ReplaceAll: Boolean = False);
   end;
@@ -48,9 +53,49 @@ uses
 
 { TFormFindReplace }
 
+procedure TFormFindReplace.AfterConstruction;
+begin
+  inherited;
+
+  ComboBoxSearchText.Items.Assign(DataModuleCommon.Preferences.Search.RecentSearch);
+  ComboBoxReplaceText.Items.Assign(DataModuleCommon.Preferences.Search.RecentSearch);
+end;
+
 procedure TFormFindReplace.CheckBoxReplaceClick(Sender: TObject);
 begin
   ButtonReplaceAll.Visible := True;
+end;
+
+procedure TFormFindReplace.AddReplaceItem;
+var
+  Index: Integer;
+begin
+  Index := ComboBoxReplaceText.Items.IndexOf(ComboBoxReplaceText.Text);
+  if Index >= 0 then
+  begin
+    ComboBoxReplaceText.Items.Move(Index, 0);
+    ComboBoxReplaceText.ItemIndex := 0;
+  end
+  else
+    ComboBoxReplaceText.Items.Insert(0, ComboBoxReplaceText.Text);
+
+  DataModuleCommon.Preferences.Search.RecentReplace.Assign(ComboBoxReplaceText.Items);
+end;
+
+procedure TFormFindReplace.AddSearchItem;
+var
+  Index: Integer;
+begin
+  Index := ComboBoxSearchText.Items.IndexOf(ComboBoxSearchText.Text);
+  if Index >= 0 then
+  begin
+    ComboBoxSearchText.Items.Move(Index, 0);
+    ComboBoxSearchText.ItemIndex := 0;
+  end
+  else
+    ComboBoxSearchText.Items.Insert(0, ComboBoxSearchText.Text);
+
+  DataModuleCommon.Preferences.Search.RecentSearch.Assign(ComboBoxSearchText.Items);
 end;
 
 procedure TFormFindReplace.PerformReplace(ReplaceAll: Boolean);
@@ -89,11 +134,14 @@ begin
   else
     Exclude(Options, ssoPrompt);
 
-  Include(Options, ssoReplace)
+  Include(Options, ssoReplace);
   if ReplaceAll then
     Include(Options, ssoReplaceAll)
   else
-    Exclude(Options, ssoReplaceAll)
+    Exclude(Options, ssoReplaceAll);
+
+  AddSearchItem;
+  AddReplaceItem;
 
   Editor.SearchReplace(ComboBoxSearchText.Text, ComboBoxReplaceText.Text, Options);
 end;
@@ -134,7 +182,9 @@ begin
   else
     Exclude(Options, ssoPrompt);
 
-  Exclude(Options, ssoReplace)
+  Exclude(Options, ssoReplace);
+
+  AddSearchItem;
 
   Editor.SearchReplace(ComboBoxSearchText.Text, ComboBoxReplaceText.Text, Options);
 end;

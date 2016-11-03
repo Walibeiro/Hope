@@ -5,7 +5,7 @@ interface
 {$I Hope.inc}
 
 uses
-  dwsJSON, Hope.Common.JSON;
+  System.Classes, dwsJSON, Hope.Common.JSON;
 
 type
   THopePreferencesEditor = class(THopeJsonBase)
@@ -82,9 +82,26 @@ type
     property DefaultProjectPath: string read FDefaultProjectPath write FDefaultProjectPath;
   end;
 
+  THopePreferencesSearch = class(THopeJsonBase)
+  private
+    FRecentSearch: TStringList;
+    FRecentReplace: TStringList;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJSONObject); override;
+    procedure WriteJson(const JsonValue: TdwsJSONObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
+
+    property RecentSearch: TStringList read FRecentSearch;
+    property RecentReplace: TStringList read FRecentReplace;
+  end;
+
   THopePreferences = class(THopeJsonBase)
   private
     FEnvironment: THopePreferencesEnvironment;
+    FSearch: THopePreferencesSearch;
     FEditor: THopePreferencesEditor;
   protected
     procedure ReadJson(const JsonValue: TdwsJSONObject); override;
@@ -94,10 +111,67 @@ type
     procedure BeforeDestruction; override;
 
     property Environment: THopePreferencesEnvironment read FEnvironment;
+    property Search: THopePreferencesSearch read FSearch;
     property Editor: THopePreferencesEditor read FEditor;
   end;
 
 implementation
+
+{ THopePreferencesSearch }
+
+procedure THopePreferencesSearch.AfterConstruction;
+begin
+  inherited;
+
+  FRecentSearch := TStringList.Create;
+  FRecentReplace := TStringList.Create;
+end;
+
+procedure THopePreferencesSearch.BeforeDestruction;
+begin
+  FRecentSearch.Free;
+  FRecentReplace.Free;
+end;
+
+class function THopePreferencesSearch.GetPreferredName: string;
+begin
+  Result := 'Search';
+end;
+
+procedure THopePreferencesSearch.ReadJson(const JsonValue: TdwsJSONObject);
+var
+  Index: Integer;
+  JsonArray: TdwsJSONArray;
+begin
+  if JsonValue.GetArray('Search', JsonArray) then
+  begin
+    FRecentSearch.Clear;
+    for Index := 0 to FRecentSearch.Count - 1 do
+      FRecentSearch.Add(JsonArray.Elements[Index].AsString)
+  end;
+
+  if JsonValue.GetArray('Replace', JsonArray) then
+  begin
+    FRecentReplace.Clear;
+    for Index := 0 to FRecentSearch.Count - 1 do
+      FRecentReplace.Add(JsonArray.Elements[Index].AsString)
+  end;
+end;
+
+procedure THopePreferencesSearch.WriteJson(const JsonValue: TdwsJSONObject);
+var
+  Index: Integer;
+  JsonArray: TdwsJSONArray;
+begin
+  JsonArray := JsonValue.AddArray('Search');
+  for Index := 0 to FRecentSearch.Count - 1 do
+    JsonArray.Add(FRecentSearch[Index]);
+
+  JsonArray := JsonValue.AddArray('Replace');
+  for Index := 0 to FRecentReplace.Count - 1 do
+    JsonArray.Add(FRecentReplace[Index]);
+end;
+
 
 { THopePreferencesEditor }
 
@@ -195,12 +269,14 @@ begin
   inherited;
 
   FEnvironment := THopePreferencesEnvironment.Create;
+  FSearch := THopePreferencesSearch.Create;
   FEditor := THopePreferencesEditor.Create;
 end;
 
 procedure THopePreferences.BeforeDestruction;
 begin
   FEditor.Free;
+  FSearch.Free;
   FEnvironment.Free;
 
   inherited;
@@ -211,6 +287,7 @@ begin
   inherited;
 
   FEnvironment.LoadFromJson(JsonValue, True);
+  FSearch.LoadFromJson(JsonValue, True);
   FEditor.LoadFromJson(JsonValue, True);
 end;
 
@@ -219,6 +296,7 @@ begin
   inherited;
 
   FEnvironment.SaveToJson(JsonValue);
+  FSearch.SaveToJson(JsonValue);
   FEditor.SaveToJson(JsonValue);
 end;
 
