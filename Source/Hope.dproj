@@ -102,13 +102,27 @@
             <Form>FormAsciiChart</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Buffer\Hope.Buffer.pas"/>
+        <DCCReference Include="Buffer\Hope.Buffer.List.pas"/>
         <DCCReference Include="Forms\Hope.ColorPicker.pas">
             <Form>FormColorPicker</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Common\Hope.Common.Constants.pas"/>
+        <DCCReference Include="Common\Hope.Common.DirectoryMonitor.pas"/>
+        <DCCReference Include="Common\Hope.Common.FileUtilities.pas"/>
+        <DCCReference Include="Common\Hope.Common.History.pas"/>
+        <DCCReference Include="Common\Hope.Common.IDE.pas"/>
         <DCCReference Include="Common\Hope.Common.JSON.pas"/>
         <DCCReference Include="Common\Hope.Common.MimeTypes.pas"/>
+        <DCCReference Include="Common\Hope.Common.MonitoredBuffer.pas"/>
+        <DCCReference Include="Common\Hope.Common.Paths.pas"/>
+        <DCCReference Include="Common\Hope.Common.Preferences.pas"/>
         <DCCReference Include="Compiler\Hope.Compiler.Background.pas"/>
+        <DCCReference Include="Compiler\Hope.Compiler.Base.pas"/>
+        <DCCReference Include="Compiler\Hope.Compiler.Internal.pas">
+            <Form>$R *.res</Form>
+        </DCCReference>
         <DCCReference Include="DataModules\Hope.DataModule.pas">
             <Form>DataModuleCommon</Form>
             <DesignClass>TDataModule</DesignClass>
@@ -129,7 +143,7 @@
             <Form>FormFindInFiles</Form>
         </DCCReference>
         <DCCReference Include="Forms\Dialogs\Hope.Dialogs.FindReplace.pas">
-            <Form>FormFind</Form>
+            <Form>FormFindReplace</Form>
         </DCCReference>
         <DCCReference Include="Forms\Dialogs\Hope.Dialogs.GotoLineNumber.pas">
             <Form>FormGotoLineNumber</Form>
@@ -154,7 +168,7 @@
             <Form>FormEditor</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Common\Hope.Common.History.pas"/>
+        <DCCReference Include="Utils\Hope.EditorList.pas"/>
         <DCCReference Include="Forms\Hope.Main.pas">
             <Form>FormMain</Form>
         </DCCReference>
@@ -170,7 +184,6 @@
         <DCCReference Include="Forms\MessageWindow\Hope.MessageWindow.Output.pas">
             <Form>FormOutputMessages</Form>
         </DCCReference>
-        <DCCReference Include="Common\Hope.Common.Paths.pas"/>
         <DCCReference Include="Project\Hope.Project.pas"/>
         <DCCReference Include="Project\Hope.Project.Files.pas"/>
         <DCCReference Include="Project\Hope.Project.List.pas"/>
@@ -191,17 +204,6 @@
             <Form>FormWelcomePage</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Utils\Hope.EditorList.pas"/>
-        <DCCReference Include="Buffer\Hope.Buffer.pas"/>
-        <DCCReference Include="Common\Hope.Common.FileUtilities.pas"/>
-        <DCCReference Include="Buffer\Hope.Buffer.List.pas"/>
-        <DCCReference Include="Common\Hope.Common.DirectoryMonitor.pas"/>
-        <DCCReference Include="Common\Hope.Common.Constants.pas"/>
-        <DCCReference Include="Common\Hope.Common.MonitoredBuffer.pas"/>
-        <DCCReference Include="Common\Hope.Common.Preferences.pas"/>
-        <DCCReference Include="Compiler\Hope.Compiler.Base.pas"/>
-        <DCCReference Include="Compiler\Hope.Compiler.Internal.pas"/>
-        <DCCReference Include="Common\Hope.Common.IDE.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -428,6 +428,7 @@ object FormMain: TFormMain
       Hint = 'Find|Finds the specified text'
       ImageIndex = 9
       ShortCut = 16454
+      BeforeExecute = ActionSearchFindBeforeExecute
     end
     object ActionSearchFindInFiles: TAction
       Category = 'Search'
@@ -447,6 +448,7 @@ object FormMain: TFormMain
       Hint = 'Replace|Replaces specific text with different text'
       ImageIndex = 10
       ShortCut = 16466
+      BeforeExecute = ActionSearchReplaceBeforeExecute
     end
     object ActionSearchFindFirst: TSearchFindFirst
       Category = 'Search'

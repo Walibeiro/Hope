@@ -12,7 +12,7 @@ uses
   Hope.DataModule, Hope.WelcomePage, Hope.ProjectManager, Hope.UnitManager,
   Hope.MessageWindow.Compiler, Hope.MessageWindow.Output, Hope.Docking.Host,
   Hope.Project, Hope.Project.List, Hope.Editor, Hope.EditorList,
-  Hope.Compiler.Internal;
+  Hope.Compiler.Internal, Hope.Dialogs.FindReplace;
 
 type
   TFormMain = class(TForm)
@@ -187,6 +187,8 @@ type
     procedure ActionProjectCompileExecute(Sender: TObject);
     procedure ActionProjectBuildExecute(Sender: TObject);
     procedure ActionFileSaveProjectExecute(Sender: TObject);
+    procedure ActionSearchFindBeforeExecute(Sender: TObject);
+    procedure ActionSearchReplaceBeforeExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -199,6 +201,8 @@ type
     FProjectManager: TFormProjectManager;
     FCompilerMessages: TFormCompilerMessages;
     FOutputMessages: TFormOutputMessages;
+
+    FFormFindReplace: TFormFindReplace;
 
     procedure CMDockClient(var Message: TCMDockClient); message CM_DOCKCLIENT;
     function ComputeDockingRect(var DockRect: TRect; MousePos: TPoint): TAlign;
@@ -257,7 +261,6 @@ begin
   FProjectManager := TFormProjectManager.Create(nil);
   FCompilerMessages := TFormCompilerMessages.Create(nil);
   FOutputMessages := TFormOutputMessages.Create(nil);
-
 end;
 
 procedure TFormMain.BeforeDestruction;
@@ -266,6 +269,8 @@ begin
   FOutputMessages.Free;
   FCompilerMessages.Free;
 *)
+  FFormFindReplace.Free;
+
   FProjectManager.Free;
   FUnitManager.Free;
   FWelcomePage.Free;
@@ -743,6 +748,15 @@ begin
   Modified := TFormProjectOptions.CreateAndShow(Project.Options);
 end;
 
+procedure TFormMain.ActionSearchFindBeforeExecute(Sender: TObject);
+begin
+  if not Assigned(FFormFindReplace) then
+    FFormFindReplace := TFormFindReplace.Create(Self);
+
+  FFormFindReplace.CheckBoxReplace.Checked := False;
+  FFormFindReplace.Show;
+end;
+
 procedure TFormMain.ActionSearchFindInFilesExecute(Sender: TObject);
 begin
   // show 'find in files' dialog
@@ -752,6 +766,15 @@ begin
   finally
     Free;
   end;
+end;
+
+procedure TFormMain.ActionSearchReplaceBeforeExecute(Sender: TObject);
+begin
+  if not Assigned(FFormFindReplace) then
+    FFormFindReplace := TFormFindReplace.Create(Self);
+
+  FFormFindReplace.CheckBoxReplace.Checked := True;
+  FFormFindReplace.Show;
 end;
 
 procedure TFormMain.ActionToolsCodeTemplatesExecute(Sender: TObject);
