@@ -158,6 +158,7 @@ type
     SplitterRight: TSplitter;
     TabSet: TTabSet;
     procedure FormShow(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDockOver(Sender: TObject; Source: TDragDockObject; X,
       Y: Integer; State: TDragState; var Accept: Boolean);
     procedure FormGetSiteInfo(Sender: TObject; DockClient: TControl;
@@ -185,6 +186,7 @@ type
     procedure ActionProjectSyntaxCheckExecute(Sender: TObject);
     procedure ActionProjectCompileExecute(Sender: TObject);
     procedure ActionProjectBuildExecute(Sender: TObject);
+    procedure ActionFileSaveProjectExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -212,6 +214,8 @@ type
     procedure BeforeDestruction; override;
 
     procedure LoadProject(ProjectFileName: TFileName);
+    procedure SaveProject; overload;
+    procedure SaveProject(ProjectFileName: TFileName); overload;
 
     procedure ShowDockPanel(APanel: TPanel; MakeVisible: Boolean; Client: TControl);
 
@@ -253,6 +257,7 @@ begin
   FProjectManager := TFormProjectManager.Create(nil);
   FCompilerMessages := TFormCompilerMessages.Create(nil);
   FOutputMessages := TFormOutputMessages.Create(nil);
+
 end;
 
 procedure TFormMain.BeforeDestruction;
@@ -398,12 +403,19 @@ begin
   ShowDockPanel(PanelBottom, True, Host);
   Host.TabSet.TabIndex := 0;
 
+  DataModuleCommon.Positions.Main.LoadPosition(Self);
+
   RegisterNewTab(FWelcomePage);
   FWelcomePage.ReloadUrl;
   // FWelcomePage.Chromium.ShowDevTools;
 
   FFocusedEditorForm := nil;
   FFocusedEditor := nil;
+end;
+
+procedure TFormMain.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  DataModuleCommon.Positions.Main.SavePosition(Self);
 end;
 
 function TFormMain.GetCompiler: THopeInternalCompiler;
@@ -426,7 +438,35 @@ begin
     DataModuleCommon.MonitoredBuffer.AddPath(FProjects.ActiveProject.RootPath);
 
     DataModuleCommon.BackgroundCompiler.Invalidate;
+
+    DataModuleCommon.AddProjectToHistory(ProjectFileName);
   end;
+end;
+
+procedure TFormMain.SaveProject;
+var
+  Project: THopeProject;
+begin
+  // get active project and check whether it is not nil
+  Project := FProjects.ActiveProject;
+  if not Assigned(Project) then
+    Exit;
+
+  Project.SaveToFile(Project.FileName);
+  DataModuleCommon.AddProjectToHistory(Project.FileName);
+end;
+
+procedure TFormMain.SaveProject(ProjectFileName: TFileName);
+var
+  Project: THopeProject;
+begin
+  // get active project and check whether it is not nil
+  Project := FProjects.ActiveProject;
+  if not Assigned(Project) then
+    Exit;
+
+  Project.SaveToFile(ProjectFileName);
+  DataModuleCommon.AddProjectToHistory(ProjectFileName);
 end;
 
 procedure TFormMain.LogCompilerMessages(Messages: TdwsMessageList);
@@ -632,6 +672,11 @@ begin
   LoadProject(ActionFileOpenProject.Dialog.FileName);
 end;
 
+procedure TFormMain.ActionFileSaveProjectExecute(Sender: TObject);
+begin
+  SaveProject;
+end;
+
 procedure TFormMain.ActionHelpAboutExecute(Sender: TObject);
 begin
   with TFormAbout.Create(Self) do
@@ -677,6 +722,8 @@ end;
 
 procedure TFormMain.ActionProjectBuildExecute(Sender: TObject);
 begin
+  FOutputMessages.Clear;
+
   // build project
   Compiler.BuildProject(Projects.ActiveProject);
 end;

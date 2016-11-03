@@ -18,12 +18,12 @@ type
   public
     procedure AfterConstruction; override;
 
+    procedure AddProject(FileName: string);
+    procedure AddUnit(FileName: string);
+
     property ProjectsHistory: TStringList read FProjectsHistory;
     property UnitsHistory: TStringList read FUnitsHistory;
   end;
-
-const
-  CHistoryFileName = 'History.json';
 
 implementation
 
@@ -37,8 +37,35 @@ procedure THopeHistory.AfterConstruction;
 begin
   inherited;
 
+  // create lists (not case sensitive)
   FProjectsHistory := TStringList.Create;
+  FProjectsHistory.CaseSensitive := False;
   FUnitsHistory := TStringList.Create;
+  FUnitsHistory.CaseSensitive := False;
+end;
+
+procedure THopeHistory.AddProject(FileName: string);
+var
+  Index: Integer;
+begin
+  Index := FProjectsHistory.IndexOf(FileName);
+
+  if Index < 0 then
+    FProjectsHistory.Add(FileName)
+  else
+    FProjectsHistory.Move(Index, 0);
+end;
+
+procedure THopeHistory.AddUnit(FileName: string);
+var
+  Index: Integer;
+begin
+  Index := FUnitsHistory.IndexOf(FileName);
+
+  if Index < 0 then
+    FUnitsHistory.Add(FileName)
+  else
+    FUnitsHistory.Move(Index, 0);
 end;
 
 procedure THopeHistory.ReadJson(const JsonValue: TdwsJSONObject);

@@ -13,6 +13,7 @@ object FormMain: TFormMain
   Font.Style = []
   Menu = MainMenu
   OldCreateOrder = False
+  OnClose = FormClose
   OnDockOver = FormDockOver
   OnGetSiteInfo = FormGetSiteInfo
   OnShow = FormShow
@@ -512,6 +513,7 @@ object FormMain: TFormMain
     object ActionFileSaveProject: TAction
       Category = 'File'
       Caption = '&Save Project'
+      OnExecute = ActionFileSaveProjectExecute
     end
     object ActionFileClose: TAction
       Category = 'File'

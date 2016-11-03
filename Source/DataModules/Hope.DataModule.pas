@@ -13,7 +13,8 @@ uses
   SynHighlighterJSON, SynHighlighterJScript, SynHighlighterDWS,
 
   Hope.Common.History, Hope.Common.Paths, Hope.Common.MonitoredBuffer,
-  Hope.Common.Preferences, Hope.Compiler.Internal, Hope.Compiler.Background;
+  Hope.Common.Preferences, Hope.Compiler.Internal, Hope.Compiler.Background,
+  Hope.Common.IDE;
 
 type
   TMacroAction = (maRecord, maStop, maPlay);
@@ -37,6 +38,7 @@ type
     procedure SynMacroRecorderStateChange(Sender: TObject);
   private
     FHistory: THopeHistory;
+    FPositions: THopePositions;
     FPaths: THopePaths;
     FPreferences: THopePreferences;
     FMonitoredBuffer: TMonitoredBuffer;
@@ -49,11 +51,15 @@ type
     function GetText(FileName: TFileName): string; inline;
     function GetUnit(UnitName: string): string; inline;
 
+    procedure AddProjectToHistory(FileName: string);
+    procedure AddUnitToHistory(FileName: string);
+
     procedure PerformMacro(Editor: TSynEdit; Action: TMacroAction);
 
     property InternalCompiler: THopeInternalCompiler read FInternalCompiler;
     property BackgroundCompiler: THopeBackgroundCompilerThread read FBackgroundCompiler;
     property History: THopeHistory read FHistory;
+    property Positions: THopePositions read FPositions;
     property Paths: THopePaths read FPaths;
     property Preferences: THopePreferences read FPreferences;
     property MonitoredBuffer: TMonitoredBuffer read FMonitoredBuffer;
@@ -87,8 +93,13 @@ begin
   if FileExists(FPaths.HistoryFileName) then
     FHistory.LoadFromFile(FPaths.HistoryFileName);
 
+  FPositions := THopePositions.Create;
+  if FileExists(FPaths.PositionsFileName) then
+    FPositions.LoadFromFile(FPaths.PositionsFileName);
+
   FMonitoredBuffer := TMonitoredBuffer.Create;
   FMonitoredBuffer.AddPath(ExpandFileName(Paths.Root + '..\Common\APIs\'));
+  FMonitoredBuffer.AddPath(ExpandFileName(Paths.Root + '..\Common\Frameworks\'));
 
   FInternalCompiler := THopeInternalCompiler.Create;
   FBackgroundCompiler := THopeBackgroundCompilerThread.Create;
@@ -96,14 +107,16 @@ end;
 
 procedure TDataModuleCommon.BeforeDestruction;
 begin
-
+  // save history and preferences
   FHistory.SaveToFile(FPaths.HistoryFileName);
+  FPositions.SaveToFile(FPaths.PositionsFileName);
   FPreferences.SaveToFile(FPaths.PreferenceFileName);
 
   FBackgroundCompiler.Free;
   FInternalCompiler.Free;
   FMonitoredBuffer.Free;
   FHistory.Free;
+  FPositions.Free;
   FPreferences.Free;
 
   inherited;
@@ -117,6 +130,20 @@ end;
 function TDataModuleCommon.GetUnit(UnitName: string): string;
 begin
   Result := FMonitoredBuffer.GetSourceCode(UnitName);
+end;
+
+procedure TDataModuleCommon.AddProjectToHistory(FileName: string);
+begin
+  // add project to history and save history
+  FHistory.AddProject(FileName);
+  FHistory.SaveToFile(FPaths.HistoryFileName);
+end;
+
+procedure TDataModuleCommon.AddUnitToHistory(FileName: string);
+begin
+  // add unit to history and save history
+  FHistory.AddUnit(FileName);
+  FHistory.SaveToFile(FPaths.HistoryFileName);
 end;
 
 procedure TDataModuleCommon.PerformMacro(Editor: TSynEdit;

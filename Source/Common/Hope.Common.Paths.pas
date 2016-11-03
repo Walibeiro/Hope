@@ -12,6 +12,7 @@ type
   private
     FRootPath: string;
     function GetHistoryFileName: TFileName;
+    function GetPositionsFileName: TFileName;
     function GetPreferenceFileName: TFileName;
     function GetWelcomePage: string;
   public
@@ -20,6 +21,7 @@ type
     property Root: string read FRootPath;
     property WelcomePage: string read GetWelcomePage;
     property HistoryFileName: TFileName read GetHistoryFileName;
+    property PositionsFileName: TFileName read GetPositionsFileName;
     property PreferenceFileName: TFileName read GetPreferenceFileName;
   end;
 
@@ -32,6 +34,11 @@ begin
   inherited;
 
   FRootPath := ExtractFilePath(ParamStr(0));
+end;
+
+function THopePaths.GetPositionsFileName: TFileName;
+begin
+  Result := FRootPath + '..\Common\Positions.json';
 end;
 
 function THopePaths.GetHistoryFileName: TFileName;

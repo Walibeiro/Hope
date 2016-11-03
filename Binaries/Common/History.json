@@ -1,5 +1,6 @@
 {
 	"Projects" : [
+		"..\\Common\\Projects\\Cards\\Source\\Cards.hproj",
 		"..\\Common\\Projects\\Test\\Test.hproj"
 	],
 	"Units" : [

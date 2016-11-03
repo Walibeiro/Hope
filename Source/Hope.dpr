@@ -46,7 +46,8 @@ uses
   Hope.Common.MonitoredBuffer in 'Common\Hope.Common.MonitoredBuffer.pas',
   Hope.Common.Preferences in 'Common\Hope.Common.Preferences.pas',
   Hope.Compiler.Base in 'Compiler\Hope.Compiler.Base.pas',
-  Hope.Compiler.Internal in 'Compiler\Hope.Compiler.Internal.pas';
+  Hope.Compiler.Internal in 'Compiler\Hope.Compiler.Internal.pas',
+  Hope.Common.IDE in 'Common\Hope.Common.IDE.pas';
 
 {$R *.res}
 
