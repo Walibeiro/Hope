@@ -109,7 +109,7 @@ type
     FSmartLinking: Boolean;
     FDevirtualize: Boolean;
     FEmitRTTI: Boolean;
-    FEmitFinalizations: Boolean;
+    FEmitFinalization: Boolean;
     FIgnorePublishedInImplementation: Boolean;
     FMainBody: string;
     FIndentSize: Integer;
@@ -132,11 +132,65 @@ type
     property SmartLinking: Boolean read FSmartLinking write FSmartLinking;
     property Devirtualize: Boolean read FDevirtualize write FDevirtualize;
     property EmitRTTI: Boolean read FEmitRTTI write FEmitRTTI;
-    property EmitFinalizations: Boolean read FEmitFinalizations write FEmitFinalizations;
+    property EmitFinalization: Boolean read FEmitFinalization write FEmitFinalization;
     property IgnorePublishedInImplementation: Boolean read FIgnorePublishedInImplementation write FIgnorePublishedInImplementation;
     property MainBody: string read FMainBody write FMainBody;
     property IndentSize: Integer read FIndentSize write FIndentSize;
     property Verbosity: Integer read FVerbosity write FVerbosity;
+  end;
+
+  THopeDwsFilterOptions = class(THopeJsonBase)
+  private
+    FEditorMode: Boolean;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJsonObject); override;
+    procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+
+    property EditorMode: Boolean read FEditorMode write FEditorMode;
+  end;
+
+  TCustomHopeOutputOptions = class(THopeJsonBase)
+  private
+    FFileName: string;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJsonObject); override;
+    procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+  public
+    property FileName: string read FFileName write FFileName;
+  end;
+
+  THopeOutputHtmlOptions = class(TCustomHopeOutputOptions)
+  protected
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+  end;
+
+  THopeOutputCssOptions = class(TCustomHopeOutputOptions)
+  protected
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+  end;
+
+  THopeOutputOptions = class(TCustomHopeOutputOptions)
+  private
+    FPath: string;
+    FHtmlOutput: THopeOutputHtmlOptions;
+    FCssOutput: THopeOutputCssOptions;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJsonObject); override;
+    procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+
+    property Path: string read FPath write FPath;
+    property HtmlOutput: THopeOutputHtmlOptions read FHtmlOutput;
+    property CssOutput: THopeOutputCssOptions read FCssOutput;
   end;
 
   THopeProjectExecution = class(THopeJsonBase)
@@ -156,6 +210,8 @@ type
     FIcon: THopeProjectIcon;
     FCompilerOptions: THopeCompilerOptions;
     FCodeGenOptions: THopeCodeGenJavaScriptOptions;
+    FFilterOptions: THopeDwsFilterOptions;
+    FOutput: THopeOutputOptions;
     FExecution: THopeProjectExecution;
   protected
     procedure ReadJson(const JsonValue: TdwsJsonObject); override;
@@ -170,6 +226,8 @@ type
     property Icon: THopeProjectIcon read FIcon;
     property CompilerOptions: THopeCompilerOptions read FCompilerOptions;
     property CodeGenOptions: THopeCodeGenJavaScriptOptions read FCodeGenOptions;
+    property FilterOptions: THopeDwsFilterOptions read FFilterOptions;
+    property Output: THopeOutputOptions read FOutput;
     property Execution: THopeProjectExecution read FExecution;
   end;
 
@@ -366,7 +424,7 @@ begin
   FSmartLinking := True;
   FDevirtualize := True;
   FEmitRTTI := False;
-  FEmitFinalizations := True;
+  FEmitFinalization := True;
   FIgnorePublishedInImplementation := True;
 
   FMainBody := '';
@@ -392,10 +450,10 @@ begin
   FSmartLinking := JsonValue.GetValue('SmartLinking', FSmartLinking);
   FDevirtualize := JsonValue.GetValue('Devirtualize', FDevirtualize);
   FEmitRTTI := JsonValue.GetValue('EmitRTTI', FEmitRTTI);
-  FEmitFinalizations := JsonValue.GetValue('EmitFinalizations', FEmitFinalizations);
+  FEmitFinalization := JsonValue.GetValue('EmitFinalization', FEmitFinalization);
   FIgnorePublishedInImplementation := JsonValue.GetValue('IgnorePublishedInImplementation', FIgnorePublishedInImplementation);
   FMainBody := JsonValue.GetValue('MainBody', FMainBody);
-  FVerbosity := JsonValue.GetValue('IndentSize', FIndentSize);
+  FIndentSize := JsonValue.GetValue('IndentSize', FIndentSize);
   FVerbosity := JsonValue.GetValue('Verbosity', FVerbosity);
 end;
 
@@ -412,11 +470,118 @@ begin
   JsonValue.AddValue('SmartLinking', FSmartLinking);
   JsonValue.AddValue('Devirtualize', FDevirtualize);
   JsonValue.AddValue('EmitRTTI', FEmitRTTI);
-  JsonValue.AddValue('EmitFinalizations', FEmitFinalizations);
+  JsonValue.AddValue('EmitFinalization', FEmitFinalization);
   JsonValue.AddValue('IgnorePublishedInImplementation', FIgnorePublishedInImplementation);
   JsonValue.AddValue('MainBody', FMainBody);
   JsonValue.AddValue('IndentSize', FIndentSize);
   JsonValue.AddValue('Verbosity', FVerbosity);
+end;
+
+
+{ THopeDwsFilterOptions }
+
+procedure THopeDwsFilterOptions.AfterConstruction;
+begin
+  inherited;
+
+  FEditorMode := False;
+end;
+
+class function THopeDwsFilterOptions.GetPreferredName: string;
+begin
+  Result := 'Filter';
+end;
+
+procedure THopeDwsFilterOptions.ReadJson(const JsonValue: TdwsJsonObject);
+begin
+  FEditorMode := JsonValue.GetValue('EditorMode', FEditorMode);
+end;
+
+procedure THopeDwsFilterOptions.WriteJson(const JsonValue: TdwsJsonObject);
+begin
+  JsonValue.AddValue('EditorMode', FEditorMode);
+end;
+
+
+{ TCustomHopeOutputOptions }
+
+procedure TCustomHopeOutputOptions.ReadJson(const JsonValue: TdwsJsonObject);
+begin
+  FFilename := JsonValue.GetValue('Filename', FFilename);
+end;
+
+procedure TCustomHopeOutputOptions.WriteJson(const JsonValue: TdwsJsonObject);
+begin
+  JsonValue.AddValue('Filename', FFilename);
+end;
+
+
+{ THopeOutputOptions }
+
+procedure THopeOutputOptions.AfterConstruction;
+begin
+  inherited;
+
+  FHtmlOutput := THopeOutputHtmlOptions.Create;
+  FCssOutput  := THopeOutputCssOptions.Create ;
+
+  FPath := '..\Output\';
+  FFileName := 'main.js';
+end;
+
+class function THopeOutputOptions.GetPreferredName: string;
+begin
+  Result := 'Output';
+end;
+
+procedure THopeOutputOptions.ReadJson(const JsonValue: TdwsJsonObject);
+begin
+  inherited ReadJson(JsonValue);
+
+  FPath := JsonValue.GetValue('Path', FPath);
+
+  FHtmlOutput.LoadFromJson(JsonValue, True);
+  FCssOutput.LoadFromJson(JsonValue, True);
+end;
+
+procedure THopeOutputOptions.WriteJson(const JsonValue: TdwsJsonObject);
+begin
+  inherited WriteJson(JsonValue);
+
+  JsonValue.AddValue('Path', FPath);
+
+  FHtmlOutput.SaveToJson(JsonValue);
+  FCssOutput.SaveToJson(JsonValue);
+end;
+
+
+{ THopeOutputHtmlOptions }
+
+procedure THopeOutputHtmlOptions.AfterConstruction;
+begin
+  inherited;
+
+  FileName := 'index.html';
+end;
+
+class function THopeOutputHtmlOptions.GetPreferredName: string;
+begin
+  Result := 'HTML';
+end;
+
+
+{ THopeOutputCssOptions }
+
+procedure THopeOutputCssOptions.AfterConstruction;
+begin
+  inherited;
+
+  FFileName := 'main.css';
+end;
+
+class function THopeOutputCssOptions.GetPreferredName: string;
+begin
+  Result := 'CSS';
 end;
 
 
@@ -457,6 +622,8 @@ begin
   FIcon := THopeProjectIcon.Create;
   FCompilerOptions := THopeCompilerOptions.Create;
   FCodeGenOptions := THopeCodeGenJavaScriptOptions.Create;
+  FFilterOptions := THopeDwsFilterOptions.Create;
+  FOutput := THopeOutputOptions.Create;
   FExecution := THopeProjectExecution.Create;
 end;
 
@@ -467,6 +634,8 @@ begin
   FIcon.Free;
   FCompilerOptions.Free;
   FCodeGenOptions.Free;
+  FFilterOptions.Free;
+  FOutput.Free;
   FExecution.Free;
 
   inherited;
@@ -486,6 +655,8 @@ begin
   FIcon.LoadFromJson(JsonValue, True);
   FCompilerOptions.LoadFromJson(JsonValue, True);
   FCodeGenOptions.LoadFromJson(JsonValue, True);
+  FFilterOptions.LoadFromJson(JsonValue, True);
+  FOutput.LoadFromJson(JsonValue, True);
   FExecution.LoadFromJson(JsonValue, True);
 end;
 
@@ -498,6 +669,8 @@ begin
   FIcon.SaveToJson(JsonValue);
   FCompilerOptions.SaveToJson(JsonValue);
   FCodeGenOptions.SaveToJson(JsonValue);
+  FFilterOptions.SaveToJson(JsonValue);
+  FOutput.SaveToJson(JsonValue);
   FExecution.SaveToJson(JsonValue);
 end;
 

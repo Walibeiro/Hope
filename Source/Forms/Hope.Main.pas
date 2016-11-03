@@ -682,12 +682,18 @@ begin
 end;
 
 procedure TFormMain.ActionProjectOptionsExecute(Sender: TObject);
+var
+  Project: THopeProject;
+  Modified: Boolean;
 begin
   // only show if an active project is available
   if not Assigned(FProjects.ActiveProject) then
     Exit;
 
-  TFormProjectOptions.CreateAndShow(FProjects.ActiveProject.Options);
+  // local alias for active project
+  Project := FProjects.ActiveProject;
+
+  Modified := TFormProjectOptions.CreateAndShow(Project.Options);
 end;
 
 procedure TFormMain.ActionSearchFindInFilesExecute(Sender: TObject);

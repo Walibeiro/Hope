@@ -53,7 +53,7 @@ inherited FormProjectOptions: TFormProjectOptions
     Top = 8
     Width = 536
     Height = 471
-    ActivePage = TabSheetCodeGenJS
+    ActivePage = TabSheetFilter
     Anchors = [akLeft, akTop, akRight, akBottom]
     Style = tsButtons
     TabOrder = 4
@@ -156,43 +156,82 @@ inherited FormProjectOptions: TFormProjectOptions
     object TabSheetCompiler: TTabSheet
       Caption = 'Compiler'
       ImageIndex = 1
-      object LabelHintLevel: TLabel
-        Left = 16
-        Top = 81
-        Width = 53
-        Height = 15
-        Caption = 'Hint Level'
-      end
-      object CheckBoxAssertions: TCheckBox
-        Left = 16
-        Top = 16
-        Width = 81
-        Height = 17
-        Caption = 'Assertions'
+      object GroupBoxCompilerOptions: TGroupBox
+        AlignWithMargins = True
+        Left = 4
+        Top = 4
+        Width = 520
+        Height = 85
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
+        Align = alTop
+        Caption = 'Compiler Configuration'
         TabOrder = 0
+        object LabelHintLevel: TLabel
+          Left = 269
+          Top = 24
+          Width = 56
+          Height = 15
+          Caption = 'Hint Level:'
+        end
+        object CheckBoxAssertions: TCheckBox
+          Left = 21
+          Top = 24
+          Width = 81
+          Height = 17
+          Caption = 'Assertions'
+          TabOrder = 0
+        end
+        object CheckBoxOptimizations: TCheckBox
+          Left = 21
+          Top = 47
+          Width = 105
+          Height = 17
+          Caption = 'Optimizations'
+          TabOrder = 1
+        end
+        object ComboBoxHintLevel: TComboBox
+          Left = 357
+          Top = 21
+          Width = 145
+          Height = 23
+          Style = csDropDownList
+          ItemIndex = 1
+          TabOrder = 2
+          Text = 'Normal'
+          Items.Strings = (
+            'Disabled'
+            'Normal'
+            'Strict'
+            'Pedantic')
+        end
       end
-      object CheckBoxOptimizations: TCheckBox
-        Left = 16
-        Top = 39
-        Width = 105
-        Height = 17
-        Caption = 'Optimizations'
+      object GroupBoxConditionalDefines: TGroupBox
+        AlignWithMargins = True
+        Left = 4
+        Top = 97
+        Width = 520
+        Height = 75
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
+        Align = alTop
+        Caption = 'Conditional Defines'
         TabOrder = 1
-      end
-      object ComboBoxHintLevel: TComboBox
-        Left = 120
-        Top = 78
-        Width = 145
-        Height = 23
-        Style = csDropDownList
-        ItemIndex = 1
-        TabOrder = 2
-        Text = 'Normal'
-        Items.Strings = (
-          'Disabled'
-          'Normal'
-          'Strict'
-          'Pedantic')
+        DesignSize = (
+          520
+          75)
+        object EditConditionalDefines: TEdit
+          Left = 21
+          Top = 32
+          Width = 484
+          Height = 23
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 0
+        end
       end
     end
     object TabSheetCodeGenJS: TTabSheet
@@ -233,6 +272,8 @@ inherited FormProjectOptions: TFormProjectOptions
         Width = 196
         Height = 17
         Caption = 'Inline Magic'
+        Checked = True
+        State = cbChecked
         TabOrder = 1
       end
       object CheckBoxIgnorePublished: TCheckBox
@@ -289,6 +330,8 @@ inherited FormProjectOptions: TFormProjectOptions
         Width = 196
         Height = 17
         Caption = 'Devirtualize'
+        Checked = True
+        State = cbChecked
         TabOrder = 4
       end
       object CheckBoxEmitRTTI: TCheckBox
@@ -321,6 +364,8 @@ inherited FormProjectOptions: TFormProjectOptions
         Width = 196
         Height = 17
         Caption = 'Smart Linking'
+        Checked = True
+        State = cbChecked
         TabOrder = 8
       end
       object EditMainBodyName: TEdit
@@ -363,9 +408,76 @@ inherited FormProjectOptions: TFormProjectOptions
         TabOrder = 12
       end
     end
-    object TabSheetCompilerLinker: TTabSheet
-      Caption = 'Linker'
+    object TabSheetCompilerOutput: TTabSheet
+      Caption = 'Output'
       ImageIndex = 2
+      object GroupBoxOutput: TGroupBox
+        AlignWithMargins = True
+        Left = 4
+        Top = 4
+        Width = 520
+        Height = 117
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
+        Align = alTop
+        Caption = 'Output'
+        TabOrder = 0
+        DesignSize = (
+          520
+          117)
+        object LabelOutputPath: TLabel
+          Left = 16
+          Top = 30
+          Width = 27
+          Height = 15
+          Caption = 'Path:'
+        end
+        object LabelOutputFilename: TLabel
+          Left = 16
+          Top = 59
+          Width = 51
+          Height = 15
+          Caption = 'Filename:'
+        end
+        object EditOutputPath: TEdit
+          Left = 96
+          Top = 27
+          Width = 377
+          Height = 23
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 0
+        end
+        object EditOutputFilename: TEdit
+          Left = 96
+          Top = 56
+          Width = 377
+          Height = 23
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 1
+        end
+        object ButtonPath: TButton
+          Left = 479
+          Top = 27
+          Width = 23
+          Height = 23
+          Anchors = [akTop, akRight]
+          Caption = '...'
+          TabOrder = 2
+          OnClick = ButtonPathClick
+        end
+        object ButtonFileName: TButton
+          Left = 479
+          Top = 56
+          Width = 23
+          Height = 23
+          Anchors = [akTop, akRight]
+          Caption = '...'
+          TabOrder = 3
+          OnClick = ButtonFileNameClick
+        end
+      end
     end
     object TabSheetExecution: TTabSheet
       Caption = 'Execution'
@@ -374,6 +486,14 @@ inherited FormProjectOptions: TFormProjectOptions
     object TabSheetFilter: TTabSheet
       Caption = 'Filter'
       ImageIndex = 4
+      object CheckBoxEditorMode: TCheckBox
+        Left = 16
+        Top = 16
+        Width = 196
+        Height = 17
+        Caption = 'Editor Mode'
+        TabOrder = 0
+      end
     end
     object TabSheetIcon: TTabSheet
       Caption = 'Icon'
@@ -382,7 +502,7 @@ inherited FormProjectOptions: TFormProjectOptions
     object TabSheetVersion: TTabSheet
       Caption = 'Version'
       ImageIndex = 6
-      object GroupBox1: TGroupBox
+      object GroupBoxVersion: TGroupBox
         AlignWithMargins = True
         Left = 0
         Top = 0
@@ -402,21 +522,21 @@ inherited FormProjectOptions: TFormProjectOptions
           Height = 15
           Caption = 'Major:'
         end
-        object Label1: TLabel
+        object LabelVersionMinor: TLabel
           Left = 126
           Top = 30
           Width = 35
           Height = 15
           Caption = 'Minor:'
         end
-        object Label2: TLabel
+        object LabelVersionRelease: TLabel
           Left = 246
           Top = 30
           Width = 42
           Height = 15
           Caption = 'Release:'
         end
-        object Label3: TLabel
+        object LabelVersionBuild: TLabel
           Left = 374
           Top = 30
           Width = 30
