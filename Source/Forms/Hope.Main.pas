@@ -56,13 +56,9 @@ type
     ActionRunAbort: TAction;
     ActionRunParameters: TAction;
     ActionRunRun: TAction;
-    ActionSearchFind: TSearchFind;
     ActionSearchFindClass: TAction;
-    ActionSearchFindFirst: TSearchFindFirst;
     ActionSearchFindInFiles: TAction;
-    ActionSearchFindNext: TSearchFindNext;
     ActionSearchGotoLineNumber: TAction;
-    ActionSearchReplace: TSearchReplace;
     ActionToolsAsciiChart: TAction;
     ActionToolsCodeTemplates: TAction;
     ActionToolsColorPicker: TAction;
@@ -157,6 +153,9 @@ type
     SplitterLeft: TSplitter;
     SplitterRight: TSplitter;
     TabSet: TTabSet;
+    ActionSearchFind: TAction;
+    ActionSearchReplace: TAction;
+    ActionSearchFindNext: TAction;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDockOver(Sender: TObject; Source: TDragDockObject; X,
@@ -187,8 +186,9 @@ type
     procedure ActionProjectCompileExecute(Sender: TObject);
     procedure ActionProjectBuildExecute(Sender: TObject);
     procedure ActionFileSaveProjectExecute(Sender: TObject);
-    procedure ActionSearchFindBeforeExecute(Sender: TObject);
-    procedure ActionSearchReplaceBeforeExecute(Sender: TObject);
+    procedure ActionSearchFindExecute(Sender: TObject);
+    procedure ActionSearchReplaceExecute(Sender: TObject);
+    procedure ActionSearchFindNextExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -748,7 +748,7 @@ begin
   Modified := TFormProjectOptions.CreateAndShow(Project.Options);
 end;
 
-procedure TFormMain.ActionSearchFindBeforeExecute(Sender: TObject);
+procedure TFormMain.ActionSearchFindExecute(Sender: TObject);
 begin
   if not Assigned(FFormFindReplace) then
     FFormFindReplace := TFormFindReplace.Create(Self);
@@ -768,7 +768,15 @@ begin
   end;
 end;
 
-procedure TFormMain.ActionSearchReplaceBeforeExecute(Sender: TObject);
+procedure TFormMain.ActionSearchFindNextExecute(Sender: TObject);
+begin
+  if not Assigned(FFormFindReplace) then
+    FFormFindReplace := TFormFindReplace.Create(Self);
+
+  FFormFindReplace.PerformNext;
+end;
+
+procedure TFormMain.ActionSearchReplaceExecute(Sender: TObject);
 begin
   if not Assigned(FFormFindReplace) then
     FFormFindReplace := TFormFindReplace.Create(Self);

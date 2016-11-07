@@ -86,6 +86,7 @@ type
   private
     FRecentSearch: TStringList;
     FRecentReplace: TStringList;
+    FRecentGotoLine: TStringList;
   protected
     procedure ReadJson(const JsonValue: TdwsJSONObject); override;
     procedure WriteJson(const JsonValue: TdwsJSONObject); override;
@@ -96,6 +97,7 @@ type
 
     property RecentSearch: TStringList read FRecentSearch;
     property RecentReplace: TStringList read FRecentReplace;
+    property RecentGotoLine: TStringList read FRecentGotoLine;
   end;
 
   THopePreferences = class(THopeJsonBase)
@@ -125,12 +127,14 @@ begin
 
   FRecentSearch := TStringList.Create;
   FRecentReplace := TStringList.Create;
+  FRecentGotoLine := TStringList.Create;
 end;
 
 procedure THopePreferencesSearch.BeforeDestruction;
 begin
-  FRecentSearch.Free;
+  FRecentGotoLine.Free;
   FRecentReplace.Free;
+  FRecentSearch.Free;
 end;
 
 class function THopePreferencesSearch.GetPreferredName: string;

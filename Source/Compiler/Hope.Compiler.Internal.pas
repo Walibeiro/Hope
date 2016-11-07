@@ -179,6 +179,8 @@ begin
     CodeGen.Clear;
     CodeGen.CompileProgram(CompiledProgram);
     CodeJS := CodeGen.CompiledOutput(CompiledProgram);
+
+    SaveTextToUTF8File(OutputFileName, CodeJS);
   end;
 end;
 
@@ -211,6 +213,8 @@ begin
     CodeGen.Clear;
     CodeGen.CompileProgram(CompiledProgram);
     CodeJS := CodeGen.CompiledOutput(CompiledProgram);
+
+    SaveTextToUTF8File(OutputFileName, CodeJS);
   end;
 end;
 

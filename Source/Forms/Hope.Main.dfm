@@ -422,13 +422,13 @@ object FormMain: TFormMain
       Hint = 'Save As|Saves the active file with a new name'
       ImageIndex = 4
     end
-    object ActionSearchFind: TSearchFind
+    object ActionSearchFind: TAction
       Category = 'Search'
       Caption = '&Find...'
       Hint = 'Find|Finds the specified text'
       ImageIndex = 9
       ShortCut = 16454
-      BeforeExecute = ActionSearchFindBeforeExecute
+      OnExecute = ActionSearchFindExecute
     end
     object ActionSearchFindInFiles: TAction
       Category = 'Search'
@@ -436,24 +436,20 @@ object FormMain: TFormMain
       ShortCut = 24646
       OnExecute = ActionSearchFindInFilesExecute
     end
-    object ActionSearchFindNext: TSearchFindNext
+    object ActionSearchFindNext: TAction
       Category = 'Search'
       Caption = 'Find &Next'
       Hint = 'Find Next|Repeats the last find'
       ShortCut = 114
+      OnExecute = ActionSearchFindNextExecute
     end
-    object ActionSearchReplace: TSearchReplace
+    object ActionSearchReplace: TAction
       Category = 'Search'
       Caption = '&Replace...'
       Hint = 'Replace|Replaces specific text with different text'
       ImageIndex = 10
       ShortCut = 16466
-      BeforeExecute = ActionSearchReplaceBeforeExecute
-    end
-    object ActionSearchFindFirst: TSearchFindFirst
-      Category = 'Search'
-      Caption = 'F&ind First'
-      Hint = 'Find First|Finds the first occurance of specified text'
+      OnExecute = ActionSearchReplaceExecute
     end
     object ActionEditCut: TEditCut
       Category = 'Edit'

@@ -34,6 +34,9 @@ type
     procedure CheckBoxReplaceClick(Sender: TObject);
     procedure ButtonReplaceAllClick(Sender: TObject);
     procedure ButtonOKClick(Sender: TObject);
+  private
+    FLastOptions: TSynSearchOptions;
+    procedure SetupOptions(Editor: TSynEdit);
   public
     procedure AfterConstruction; override;
 
@@ -42,6 +45,7 @@ type
 
     procedure PerformSearch;
     procedure PerformReplace(ReplaceAll: Boolean = False);
+    procedure PerformNext;
   end;
 
 implementation
@@ -98,95 +102,88 @@ begin
   DataModuleCommon.Preferences.Search.RecentSearch.Assign(ComboBoxSearchText.Items);
 end;
 
-procedure TFormFindReplace.PerformReplace(ReplaceAll: Boolean);
+procedure TFormFindReplace.PerformNext;
 var
   Editor: TSynEdit;
-  Options: TSynSearchOptions;
 begin
   Editor := FormMain.FocusedEditor;
   if not Assigned(Editor) then
     Exit;
 
-  Options := [];
+  Editor.SearchReplace(ComboBoxSearchText.Text, ComboBoxReplaceText.Text, FLastOptions);
+end;
 
+procedure TFormFindReplace.SetupOptions(Editor: TSynEdit);
+begin
   if CheckBoxCaseSensitivity.Checked then
-    Include(Options, ssoMatchCase)
+    Include(FLastOptions, ssoMatchCase)
   else
-    Exclude(Options, ssoMatchCase);
+    Exclude(FLastOptions, ssoMatchCase);
   if CheckBoxWholeWordOnly.Checked then
-    Include(Options, ssoWholeWord)
+    Include(FLastOptions, ssoWholeWord)
   else
-    Exclude(Options, ssoWholeWord);
+    Exclude(FLastOptions, ssoWholeWord);
   if RadioButtonBackward.Checked then
-    Include(Options, ssoBackwards)
+    Include(FLastOptions, ssoBackwards)
   else
-    Exclude(Options, ssoBackwards);
+    Exclude(FLastOptions, ssoBackwards);
   if RadioButtonEntireScope.Checked then
-    Include(Options, ssoEntireScope)
+    Include(FLastOptions, ssoEntireScope)
   else
-    Exclude(Options, ssoEntireScope);
+    Exclude(FLastOptions, ssoEntireScope);
   if RadioButtonSelectedText.Checked then
-    Include(Options, ssoSelectedOnly)
+    Include(FLastOptions, ssoSelectedOnly)
   else
-    Exclude(Options, ssoSelectedOnly);
+    Exclude(FLastOptions, ssoSelectedOnly);
   if CheckBoxPromptEachReplace.Checked then
-    Include(Options, ssoPrompt)
+    Include(FLastOptions, ssoPrompt)
   else
-    Exclude(Options, ssoPrompt);
+    Exclude(FLastOptions, ssoPrompt);
 
-  Include(Options, ssoReplace);
-  if ReplaceAll then
-    Include(Options, ssoReplaceAll)
+  // setup search engine (normal or regex)
+  if CheckBoxRegularExpressions.Checked then
+    Editor.SearchEngine := DataModuleCommon.SynEditRegexSearch
   else
-    Exclude(Options, ssoReplaceAll);
+    Editor.SearchEngine := DataModuleCommon.SynEditSearch
+end;
+
+procedure TFormFindReplace.PerformReplace(ReplaceAll: Boolean);
+var
+  Editor: TSynEdit;
+begin
+  Editor := FormMain.FocusedEditor;
+  if not Assigned(Editor) then
+    Exit;
+
+  SetupOptions(Editor);
+
+  Include(FLastOptions, ssoReplace);
+  if ReplaceAll then
+    Include(FLastOptions, ssoReplaceAll)
+  else
+    Exclude(FLastOptions, ssoReplaceAll);
 
   AddSearchItem;
   AddReplaceItem;
 
-  Editor.SearchReplace(ComboBoxSearchText.Text, ComboBoxReplaceText.Text, Options);
+  Editor.SearchReplace(ComboBoxSearchText.Text, ComboBoxReplaceText.Text, FLastOptions);
 end;
 
 procedure TFormFindReplace.PerformSearch;
 var
   Editor: TSynEdit;
-  Options: TSynSearchOptions;
 begin
   Editor := FormMain.FocusedEditor;
   if not Assigned(Editor) then
     Exit;
 
-  Options := [];
+  SetupOptions(Editor);
 
-  if CheckBoxCaseSensitivity.Checked then
-    Include(Options, ssoMatchCase)
-  else
-    Exclude(Options, ssoMatchCase);
-  if CheckBoxWholeWordOnly.Checked then
-    Include(Options, ssoWholeWord)
-  else
-    Exclude(Options, ssoWholeWord);
-  if RadioButtonBackward.Checked then
-    Include(Options, ssoBackwards)
-  else
-    Exclude(Options, ssoBackwards);
-  if RadioButtonEntireScope.Checked then
-    Include(Options, ssoEntireScope)
-  else
-    Exclude(Options, ssoEntireScope);
-  if RadioButtonSelectedText.Checked then
-    Include(Options, ssoSelectedOnly)
-  else
-    Exclude(Options, ssoSelectedOnly);
-  if CheckBoxPromptEachReplace.Checked then
-    Include(Options, ssoPrompt)
-  else
-    Exclude(Options, ssoPrompt);
-
-  Exclude(Options, ssoReplace);
+  Exclude(FLastOptions, ssoReplace);
 
   AddSearchItem;
 
-  Editor.SearchReplace(ComboBoxSearchText.Text, ComboBoxReplaceText.Text, Options);
+  Editor.SearchReplace(ComboBoxSearchText.Text, ComboBoxReplaceText.Text, FLastOptions);
 end;
 
 procedure TFormFindReplace.ButtonOKClick(Sender: TObject);

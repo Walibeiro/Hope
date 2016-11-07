@@ -1,5 +1,7 @@
 program Hope;
 
+{$R 'dwsJSRTL.res' '..\..\DWScript\Libraries\JSCodeGen\dwsJSRTL.rc'}
+
 uses
   Vcl.Forms,
   Hope.About in 'Forms\Hope.About.pas' {FormAbout},
@@ -19,7 +21,7 @@ uses
   Hope.Common.Preferences in 'Common\Hope.Common.Preferences.pas',
   Hope.Compiler.Background in 'Compiler\Hope.Compiler.Background.pas',
   Hope.Compiler.Base in 'Compiler\Hope.Compiler.Base.pas',
-  Hope.Compiler.Internal in 'Compiler\Hope.Compiler.Internal.pas' {$R *.res},
+  Hope.Compiler.Internal in 'Compiler\Hope.Compiler.Internal.pas',
   Hope.DataModule in 'DataModules\Hope.DataModule.pas' {DataModuleCommon: TDataModule},
   Hope.Dialog in 'Forms\Dialogs\Hope.Dialog.pas' {FormDialog},
   Hope.Dialog.FindClass in 'Forms\Dialogs\Hope.Dialog.FindClass.pas' {FormFindClass},

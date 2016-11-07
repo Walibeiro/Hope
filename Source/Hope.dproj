@@ -95,6 +95,9 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
+        <RcCompile Include="..\..\DWScript\Libraries\JSCodeGen\dwsJSRTL.rc">
+            <Form>dwsJSRTL.res</Form>
+        </RcCompile>
         <DCCReference Include="Forms\Hope.About.pas">
             <Form>FormAbout</Form>
         </DCCReference>
