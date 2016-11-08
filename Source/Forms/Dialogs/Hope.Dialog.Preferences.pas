@@ -1,4 +1,4 @@
-unit Hope.Dialogs.Preferences;
+unit Hope.Dialog.Preferences;
 
 {$I Hope.inc}
 

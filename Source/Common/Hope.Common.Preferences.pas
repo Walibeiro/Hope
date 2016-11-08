@@ -100,11 +100,27 @@ type
     property RecentGotoLine: TStringList read FRecentGotoLine;
   end;
 
+  THopePreferencesRecent = class(THopeJsonBase)
+  private
+    FProjectCount: Integer;
+    FUnitCount: Integer;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJSONObject); override;
+    procedure WriteJson(const JsonValue: TdwsJSONObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+
+    property ProjectCount: Integer read FProjectCount write FProjectCount;
+    property UnitCount: Integer read FUnitCount write FUnitCount;
+  end;
+
   THopePreferences = class(THopeJsonBase)
   private
     FEnvironment: THopePreferencesEnvironment;
     FSearch: THopePreferencesSearch;
     FEditor: THopePreferencesEditor;
+    FRecent: THopePreferencesRecent;
   protected
     procedure ReadJson(const JsonValue: TdwsJSONObject); override;
     procedure WriteJson(const JsonValue: TdwsJSONObject); override;
@@ -115,6 +131,7 @@ type
     property Environment: THopePreferencesEnvironment read FEnvironment;
     property Search: THopePreferencesSearch read FSearch;
     property Editor: THopePreferencesEditor read FEditor;
+    property Recent: THopePreferencesRecent read FRecent;
   end;
 
 implementation
@@ -266,6 +283,33 @@ begin
 end;
 
 
+{ THopePreferencesRecent }
+
+procedure THopePreferencesRecent.AfterConstruction;
+begin
+  inherited;
+  FProjectCount := 10;
+  FUnitCount := 10;
+end;
+
+class function THopePreferencesRecent.GetPreferredName: string;
+begin
+  Result := 'Recent';
+end;
+
+procedure THopePreferencesRecent.ReadJson(const JsonValue: TdwsJSONObject);
+begin
+  FProjectCount := JsonValue.GetValue('Projects', FProjectCount);
+  FUnitCount := JsonValue.GetValue('Units', FUnitCount);
+end;
+
+procedure THopePreferencesRecent.WriteJson(const JsonValue: TdwsJSONObject);
+begin
+  JsonValue.AddValue('Projects', FProjectCount);
+  JsonValue.AddValue('Units', FUnitCount);
+end;
+
+
 { THopePreferences }
 
 procedure THopePreferences.AfterConstruction;
@@ -275,10 +319,12 @@ begin
   FEnvironment := THopePreferencesEnvironment.Create;
   FSearch := THopePreferencesSearch.Create;
   FEditor := THopePreferencesEditor.Create;
+  FRecent := THopePreferencesRecent.Create;
 end;
 
 procedure THopePreferences.BeforeDestruction;
 begin
+  FRecent.Free;
   FEditor.Free;
   FSearch.Free;
   FEnvironment.Free;
@@ -292,6 +338,7 @@ begin
 
   FEnvironment.LoadFromJson(JsonValue, True);
   FSearch.LoadFromJson(JsonValue, True);
+  FRecent.LoadFromJson(JsonValue, True);
   FEditor.LoadFromJson(JsonValue, True);
 end;
 
@@ -301,6 +348,7 @@ begin
 
   FEnvironment.SaveToJson(JsonValue);
   FSearch.SaveToJson(JsonValue);
+  FRecent.SaveToJson(JsonValue);
   FEditor.SaveToJson(JsonValue);
 end;
 

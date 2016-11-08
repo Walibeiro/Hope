@@ -175,11 +175,13 @@ begin
   begin
     OutputFileName := Project.RootPath + Project.Options.Output.Path +
       Project.Options.Output.FileName;
+    OutputFileName := ExpandFileName(OutputFileName);
 
     CodeGen.Clear;
     CodeGen.CompileProgram(CompiledProgram);
     CodeJS := CodeGen.CompiledOutput(CompiledProgram);
 
+    ForceDirectories(ExtractFileDir(OutputFileName));
     SaveTextToUTF8File(OutputFileName, CodeJS);
   end;
 end;

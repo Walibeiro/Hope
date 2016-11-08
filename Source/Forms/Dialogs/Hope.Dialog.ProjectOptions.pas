@@ -1,4 +1,4 @@
-unit Hope.Dialogs.ProjectOptions;
+unit Hope.Dialog.ProjectOptions;
 
 {$I Hope.inc}
 

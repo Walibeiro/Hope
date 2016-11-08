@@ -12,7 +12,7 @@ uses
   Hope.DataModule, Hope.WelcomePage, Hope.ProjectManager, Hope.UnitManager,
   Hope.MessageWindow.Compiler, Hope.MessageWindow.Output, Hope.Docking.Host,
   Hope.Project.IDE, Hope.Editor, Hope.EditorList,
-  Hope.Compiler.Internal, Hope.Dialogs.FindReplace;
+  Hope.Compiler.Internal, Hope.Dialog.FindReplace;
 
 type
   TFormMain = class(TForm)
@@ -33,7 +33,6 @@ type
     ActionFileNewUnit: TAction;
     ActionFileOpen: TFileOpen;
     ActionFileOpenProject: TFileOpen;
-    ActionFileOpenRecent: TAction;
     ActionFileSave: TAction;
     ActionFileSaveAs: TFileSaveAs;
     ActionFileSaveProject: TAction;
@@ -226,6 +225,7 @@ type
     function RegisterNewEditor(FileName: TFileName): TFormEditor;
 
     procedure UpdateUnitMap(CompiledProgran: IdwsProgram);
+    procedure UpdateRecentFiles;
 
     procedure LogCompilerMessages(Messages: TdwsMessageList);
 
@@ -244,9 +244,9 @@ implementation
 
 uses
   dwsUtils,
-  Hope.About, Hope.AsciiChart, Hope.ColorPicker, Hope.Dialogs.CodeTemplates,
-  Hope.Dialogs.FindInFiles, Hope.Dialogs.Preferences,
-  Hope.Dialogs.ProjectOptions, Hope.Docking.Form, Hope.UnicodeExplorer;
+  Hope.About, Hope.AsciiChart, Hope.ColorPicker, Hope.Dialog.CodeTemplates,
+  Hope.Dialog.FindInFiles, Hope.Dialog.Preferences, Hope.Common.History,
+  Hope.Dialog.ProjectOptions, Hope.Docking.Form, Hope.UnicodeExplorer;
 
 {$R *.dfm}
 
@@ -418,6 +418,8 @@ begin
   FWelcomePage.ReloadUrl;
   // FWelcomePage.Chromium.ShowDevTools;
 
+  UpdateRecentFiles;
+
   FFocusedEditorForm := nil;
   FFocusedEditor := nil;
 end;
@@ -449,6 +451,8 @@ begin
     DataModuleCommon.BackgroundCompiler.Invalidate;
 
     DataModuleCommon.AddProjectToHistory(ProjectFileName);
+
+    UpdateRecentFiles;
   end;
 end;
 
@@ -641,6 +645,40 @@ begin
   // locate active control
   for Index := 0 to PanelTabs.DockClientCount - 1 do
     PanelTabs.DockClients[Index].Visible := Index = NewTab;
+end;
+
+procedure TFormMain.UpdateRecentFiles;
+var
+  Index: Integer;
+  History: THopeHistory;
+  MaxFiles: Integer;
+  MenuItem: TMenuItem;
+begin
+  MenuItemFileOpenRecent.Clear;
+  History := DataModuleCommon.History;
+
+  MaxFiles := DataModuleCommon.Preferences.Recent.ProjectCount;
+  for Index := 0 to Min(MaxFiles, History.ProjectsHistory.Count - 1) do
+  begin
+    MenuItem := TMenuItem.Create(MenuItemFileOpenRecent);
+    MenuItem.Caption := History.ProjectsHistory[Index];
+    MenuItem.Tag := Index;
+    MenuItemFileOpenRecent.Add(MenuItem);
+  end;
+
+  // add separator
+  MenuItem := TMenuItem.Create(MenuItemFileOpenRecent);
+  MenuItem.Caption := '-';
+  MenuItemFileOpenRecent.Add(MenuItem);
+
+  MaxFiles := DataModuleCommon.Preferences.Recent.UnitCount;
+  for Index := 0 to Min(MaxFiles, History.UnitsHistory.Count - 1) do
+  begin
+    MenuItem := TMenuItem.Create(MenuItemFileOpenRecent);
+    MenuItem.Caption := History.UnitsHistory[Index];
+    MenuItem.Tag := Index;
+    MenuItemFileOpenRecent.Add(MenuItem);
+  end;
 end;
 
 procedure TFormMain.UpdateUnitMap(CompiledProgran: IdwsProgram);

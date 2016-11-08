@@ -136,26 +136,29 @@
         <DCCReference Include="Forms\Dialogs\Hope.Dialog.FindClass.pas">
             <Form>FormFindClass</Form>
         </DCCReference>
-        <DCCReference Include="Forms\Dialogs\Hope.Dialogs.CodeTemplates.pas">
+        <DCCReference Include="Forms\Dialogs\Hope.Dialog.CodeTemplates.pas">
             <Form>FormCodeTemplates</Form>
         </DCCReference>
-        <DCCReference Include="Forms\Dialogs\Hope.Dialogs.FindInFiles.pas">
+        <DCCReference Include="Forms\Dialogs\Hope.Dialog.FindInFiles.pas">
             <Form>FormFindInFiles</Form>
         </DCCReference>
-        <DCCReference Include="Forms\Dialogs\Hope.Dialogs.FindReplace.pas">
+        <DCCReference Include="Forms\Dialogs\Hope.Dialog.FindReplace.pas">
             <Form>FormFindReplace</Form>
         </DCCReference>
-        <DCCReference Include="Forms\Dialogs\Hope.Dialogs.GotoLineNumber.pas">
+        <DCCReference Include="Forms\Dialogs\Hope.Dialog.GotoLineNumber.pas">
             <Form>FormGotoLineNumber</Form>
         </DCCReference>
-        <DCCReference Include="Forms\Dialogs\Hope.Dialogs.NewMore.pas">
+        <DCCReference Include="Forms\Dialogs\Hope.Dialog.NewMore.pas">
             <Form>FormObjectGallery</Form>
         </DCCReference>
-        <DCCReference Include="Forms\Dialogs\Hope.Dialogs.Preferences.pas">
+        <DCCReference Include="Forms\Dialogs\Hope.Dialog.Preferences.pas">
             <Form>FormPreferences</Form>
         </DCCReference>
-        <DCCReference Include="Forms\Dialogs\Hope.Dialogs.ProjectOptions.pas">
+        <DCCReference Include="Forms\Dialogs\Hope.Dialog.ProjectOptions.pas">
             <Form>FormProjectOptions</Form>
+        </DCCReference>
+        <DCCReference Include="Forms\Dialogs\Hope.Dialog.RecentProperties.pas">
+            <Form>FormFindReplace</Form>
         </DCCReference>
         <DCCReference Include="Forms\Docking\Hope.Docking.Form.pas">
             <Form>FormDockable</Form>
@@ -258,7 +261,7 @@
                 </Parameters>
             </Delphi.Personality>
             <Deployment>
-                <DeployFile LocalName="..\DCU\Hope.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="Win32\Debug\Hope.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Hope.exe</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -270,6 +273,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\DCU\Hope.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>Hope.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="..\Binaries\x86\Hope.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Hope.exe</RemoteName>
@@ -277,12 +286,6 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="..\Binaries\Hope.exe" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
-                        <RemoteName>Hope.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="Win32\Debug\Hope.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Hope.exe</RemoteName>
                         <Overwrite>true</Overwrite>

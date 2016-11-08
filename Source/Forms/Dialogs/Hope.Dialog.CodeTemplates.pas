@@ -1,4 +1,4 @@
-unit Hope.Dialogs.CodeTemplates;
+unit Hope.Dialog.CodeTemplates;
 
 {$I Hope.inc}
 

@@ -157,7 +157,7 @@ object FormMain: TFormMain
         Action = ActionFileOpenProject
       end
       object MenuItemFileOpenRecent: TMenuItem
-        Action = ActionFileOpenRecent
+        Caption = 'Open Recent'
       end
       object N01: TMenuItem
         Caption = '-'
@@ -393,10 +393,6 @@ object FormMain: TFormMain
       Dialog.Options = [ofHideReadOnly, ofFileMustExist, ofEnableSizing]
       Hint = 'Open|Opens an existing file'
       ImageIndex = 1
-    end
-    object ActionFileOpenRecent: TAction
-      Category = 'File'
-      Caption = 'Open Recent'
     end
     object ActionFileOpenProject: TFileOpen
       Category = 'File'

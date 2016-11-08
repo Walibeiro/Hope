@@ -1,4 +1,4 @@
-unit Hope.Dialogs.GotoLineNumber;
+unit Hope.Dialog.GotoLineNumber;
 
 {$I Hope.inc}
 

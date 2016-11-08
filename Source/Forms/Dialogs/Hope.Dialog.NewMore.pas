@@ -1,4 +1,4 @@
-unit Hope.Dialogs.NewMore;
+unit Hope.Dialog.NewMore;
 
 {$I Hope.inc}
 

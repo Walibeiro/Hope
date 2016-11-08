@@ -1,4 +1,4 @@
-unit Hope.Dialogs.FindReplace;
+unit Hope.Dialog.FindReplace;
 
 {$I Hope.inc}
 

@@ -1,4 +1,4 @@
-unit Hope.Dialogs.FindInFiles;
+unit Hope.Dialog.FindInFiles;
 
 {$I Hope.inc}
 
