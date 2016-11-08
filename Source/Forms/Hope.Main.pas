@@ -11,7 +11,7 @@ uses
   Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Tabs, SynEdit, dwsErrors, dwsExprs,
   Hope.DataModule, Hope.WelcomePage, Hope.ProjectManager, Hope.UnitManager,
   Hope.MessageWindow.Compiler, Hope.MessageWindow.Output, Hope.Docking.Host,
-  Hope.Project, Hope.Project.List, Hope.Editor, Hope.EditorList,
+  Hope.Project.IDE, Hope.Editor, Hope.EditorList,
   Hope.Compiler.Internal, Hope.Dialogs.FindReplace;
 
 type
@@ -56,6 +56,9 @@ type
     ActionRunAbort: TAction;
     ActionRunParameters: TAction;
     ActionRunRun: TAction;
+    ActionSearchFind: TAction;
+    ActionSearchReplace: TAction;
+    ActionSearchFindNext: TAction;
     ActionSearchFindClass: TAction;
     ActionSearchFindInFiles: TAction;
     ActionSearchGotoLineNumber: TAction;
@@ -153,15 +156,19 @@ type
     SplitterLeft: TSplitter;
     SplitterRight: TSplitter;
     TabSet: TTabSet;
-    ActionSearchFind: TAction;
-    ActionSearchReplace: TAction;
-    ActionSearchFindNext: TAction;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDockOver(Sender: TObject; Source: TDragDockObject; X,
       Y: Integer; State: TDragState; var Accept: Boolean);
     procedure FormGetSiteInfo(Sender: TObject; DockClient: TControl;
       var InfluenceRect: TRect; MousePos: TPoint; var CanDock: Boolean);
+    procedure ActionProjectSyntaxCheckExecute(Sender: TObject);
+    procedure ActionProjectCompileExecute(Sender: TObject);
+    procedure ActionProjectBuildExecute(Sender: TObject);
+    procedure ActionFileSaveProjectExecute(Sender: TObject);
+    procedure ActionSearchFindExecute(Sender: TObject);
+    procedure ActionSearchReplaceExecute(Sender: TObject);
+    procedure ActionSearchFindNextExecute(Sender: TObject);
     procedure ActionFileCloseProjectExecute(Sender: TObject);
     procedure ActionFileNewProjectExecute(Sender: TObject);
     procedure ActionFileOpenProjectAccept(Sender: TObject);
@@ -182,17 +189,10 @@ type
       Y: Integer);
     procedure TabSetChange(Sender: TObject; NewTab: Integer;
       var AllowChange: Boolean);
-    procedure ActionProjectSyntaxCheckExecute(Sender: TObject);
-    procedure ActionProjectCompileExecute(Sender: TObject);
-    procedure ActionProjectBuildExecute(Sender: TObject);
-    procedure ActionFileSaveProjectExecute(Sender: TObject);
-    procedure ActionSearchFindExecute(Sender: TObject);
-    procedure ActionSearchReplaceExecute(Sender: TObject);
-    procedure ActionSearchFindNextExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
-    FProjects: THopeProjectList;
+    FProjects: THopeProjectListIDE;
     FEditors: TEditorList;
     FFocusedEditorForm: TFormEditor;
     FFocusedEditor: TSynEdit;
@@ -229,7 +229,7 @@ type
 
     procedure LogCompilerMessages(Messages: TdwsMessageList);
 
-    property Projects: THopeProjectList read FProjects;
+    property Projects: THopeProjectListIDE read FProjects;
     property FocusedEditor: TSynEdit read FFocusedEditor;
     property Compiler: THopeInternalCompiler read GetCompiler;
   end;
@@ -254,7 +254,7 @@ begin
   inherited;
 
   FEditors := TEditorList.Create;
-  FProjects := THopeProjectList.Create;
+  FProjects := THopeProjectListIDE.Create;
 
   FWelcomePage := TFormWelcomePage.Create(nil);
   FUnitManager := TFormUnitManager.Create(nil);
@@ -450,10 +450,10 @@ end;
 
 procedure TFormMain.SaveProject;
 var
-  Project: THopeProject;
+  Project: THopeProjectIDE;
 begin
   // get active project and check whether it is not nil
-  Project := FProjects.ActiveProject;
+  Project := FProjects.ActiveProjectIDE;
   if not Assigned(Project) then
     Exit;
 
@@ -463,10 +463,10 @@ end;
 
 procedure TFormMain.SaveProject(ProjectFileName: TFileName);
 var
-  Project: THopeProject;
+  Project: THopeProjectIDE;
 begin
   // get active project and check whether it is not nil
-  Project := FProjects.ActiveProject;
+  Project := FProjects.ActiveProjectIDE;
   if not Assigned(Project) then
     Exit;
 
@@ -735,7 +735,7 @@ end;
 
 procedure TFormMain.ActionProjectOptionsExecute(Sender: TObject);
 var
-  Project: THopeProject;
+  Project: THopeProjectIDE;
   Modified: Boolean;
 begin
   // only show if an active project is available
@@ -743,7 +743,7 @@ begin
     Exit;
 
   // local alias for active project
-  Project := FProjects.ActiveProject;
+  Project := FProjects.ActiveProjectIDE;
 
   Modified := TFormProjectOptions.CreateAndShow(Project.Options);
 end;

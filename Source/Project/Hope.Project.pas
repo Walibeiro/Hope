@@ -5,13 +5,13 @@ interface
 {$I Hope.inc}
 
 uses
-  System.SysUtils, dwsJson, Hope.Common.JSON, Hope.Project.Files,
-  Hope.Project.Options;
+  System.SysUtils, dwsJson, Hope.Common.JSON, Hope.Project.Interfaces,
+  Hope.Project.Files, Hope.Project.Options;
 
 type
   EHopeProject = class(Exception);
 
-  THopeProject = class(THopeJsonBase)
+  THopeProject = class(THopeJsonBase, IProjectInterface)
   private
     FName: string;
     FCreateDateTime: TDateTime;
@@ -52,6 +52,7 @@ type
     property MainScript: THopeProjectFile read FMainScript;
     property Files: THopeProjectFiles read FFiles;
   end;
+  THopeProjectClass = class of THopeProject;
 
 implementation
 

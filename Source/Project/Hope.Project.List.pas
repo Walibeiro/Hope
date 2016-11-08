@@ -6,12 +6,12 @@ interface
 
 uses
   System.Contnrs, System.Classes, System.SysUtils, dwsJson, Hope.Common.JSON,
-  Hope.Project;
+  Hope.Project, Hope.Project.Interfaces;
 
 type
   EHopeProjectList = class(Exception);
 
-  THopeProjectList = class(THopeJsonBase)
+  THopeProjectList = class(THopeJsonBase, IProjectListInterface)
   private
     FProjects: TObjectList;
     FActiveProject: THopeProject;
@@ -22,9 +22,14 @@ type
   protected
     procedure ReadJson(const JsonValue: TdwsJSONObject); override;
     procedure WriteJson(const JsonValue: TdwsJSONObject); override;
+    class function GetProjectClass: THopeProjectClass; virtual;
+
+    property ProjectClass: THopeProjectClass read GetProjectClass;
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
+
+    procedure Clear;
 
     procedure AddProject(Project: THopeProject);
     procedure RemoveProject(Project: THopeProject);
@@ -57,12 +62,22 @@ begin
   inherited;
 end;
 
+procedure THopeProjectList.Clear;
+begin
+  FProjects.Clear;
+end;
+
 function THopeProjectList.GetProject(Index: Integer): THopeProject;
 begin
   if (Index < 0) or (Index >= FProjects.Count) then
     raise Exception.CreateFmt('Index out of bounds (%d)', [Index]);
 
   Result := THopeProject(FProjects[Index]);
+end;
+
+class function THopeProjectList.GetProjectClass: THopeProjectClass;
+begin
+  Result := THopeProject;
 end;
 
 function THopeProjectList.GetProjectCount: Integer;
@@ -91,7 +106,7 @@ begin
     Exit(False);
 
   // create and load project
-  Project := THopeProject.Create;
+  Project := ProjectClass.Create;
   Project.LoadFromFile(ProjectFileName);
 
   // add project to the project list
