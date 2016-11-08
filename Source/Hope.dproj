@@ -190,6 +190,7 @@
         <DCCReference Include="Project\Hope.Project.List.pas"/>
         <DCCReference Include="Project\Hope.Project.Local.pas"/>
         <DCCReference Include="Project\Hope.Project.Options.pas"/>
+        <DCCReference Include="Project\Hope.Project.Statistics.pas"/>
         <DCCReference Include="Forms\Hope.ProjectManager.pas">
             <Form>FormProjectManager</Form>
         </DCCReference>

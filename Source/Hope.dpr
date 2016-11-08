@@ -49,6 +49,7 @@ uses
   Hope.Project.List in 'Project\Hope.Project.List.pas',
   Hope.Project.Local in 'Project\Hope.Project.Local.pas',
   Hope.Project.Options in 'Project\Hope.Project.Options.pas',
+  Hope.Project.Statistics in 'Project\Hope.Project.Statistics.pas',
   Hope.ProjectManager in 'Forms\Hope.ProjectManager.pas' {FormProjectManager},
   Hope.UnicodeExplorer in 'Forms\Hope.UnicodeExplorer.pas' {FormUnicodeExplorer},
   Hope.UnitManager in 'Forms\Hope.UnitManager.pas' {FormUnitManager},
