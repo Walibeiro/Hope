@@ -8,7 +8,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
   Vcl.Samples.Spin,
-  Hope.Dialog, VirtualTrees;
+  Hope.Dialog, VirtualTrees, System.Actions, Vcl.ActnList, Vcl.Menus;
 
 type
   THistoryItem = record
@@ -27,9 +27,18 @@ type
     ButtonRemoveInvalid: TButton;
     ButtonDelete: TButton;
     ButtonClear: TButton;
+    PopupMenu: TPopupMenu;
+    ActionList: TActionList;
+    ActionDelete: TAction;
+    ActionClear: TAction;
+    ActionRemoveInvalid: TAction;
+    MenuItemDelete: TMenuItem;
+    MenuItemClear: TMenuItem;
     procedure TreeItemsGetText(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
       var CellText: string);
+  private
+    procedure UpdateHistoryItems;
   public
     procedure AfterConstruction; override;
 
@@ -50,6 +59,36 @@ begin
   inherited;
 
   TreeItems.NodeDataSize := SizeOf(THistoryItem);
+
+  UpdateHistoryItems;
+end;
+
+procedure TFormRecentProperties.UpdateHistoryItems;
+var
+  Index: Integer;
+  NodeItem: PVirtualNode;
+  NodeData: PHistoryItem;
+begin
+  TreeItems.BeginUpdate;
+  try
+    TreeItems.Clear;
+
+    for Index := 0 to DataModuleCommon.History.ProjectsHistory.Count - 1 do
+    begin
+      NodeItem := TreeItems.AddChild(TreeItems.RootNode);
+      NodeData := TreeItems.GetNodeData(NodeItem);
+      NodeData^.FileName := DataModuleCommon.History.ProjectsHistory[Index];
+    end;
+
+    for Index := 0 to DataModuleCommon.History.UnitsHistory.Count - 1 do
+    begin
+      NodeItem := TreeItems.AddChild(TreeItems.RootNode);
+      NodeData := TreeItems.GetNodeData(NodeItem);
+      NodeData^.FileName := DataModuleCommon.History.UnitsHistory[Index];
+    end;
+  finally
+    TreeItems.EndUpdate;
+  end;
 end;
 
 class procedure TFormRecentProperties.CreateAndShow;

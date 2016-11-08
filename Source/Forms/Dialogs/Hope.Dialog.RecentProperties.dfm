@@ -80,8 +80,8 @@ inherited FormRecentProperties: TFormRecentProperties
       Top = 264
       Width = 161
       Height = 25
+      Action = ActionRemoveInvalid
       Anchors = [akLeft, akBottom]
-      Caption = '&Remove invalid'
       TabOrder = 0
     end
     object ButtonDelete: TButton
@@ -89,8 +89,8 @@ inherited FormRecentProperties: TFormRecentProperties
       Top = 264
       Width = 84
       Height = 25
+      Action = ActionDelete
       Anchors = [akRight, akBottom]
-      Caption = '&Delete'
       TabOrder = 1
     end
     object ButtonClear: TButton
@@ -98,8 +98,8 @@ inherited FormRecentProperties: TFormRecentProperties
       Top = 264
       Width = 84
       Height = 25
+      Action = ActionClear
       Anchors = [akRight, akBottom]
-      Caption = '&Clear'
       TabOrder = 2
     end
   end
@@ -117,9 +117,37 @@ inherited FormRecentProperties: TFormRecentProperties
     Header.Font.Style = []
     Header.MainColumn = -1
     Images = DataModuleCommon.ImageList16
+    PopupMenu = PopupMenu
     StateImages = DataModuleCommon.ImageList16
     TabOrder = 5
+    TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
+    TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowTreeLines, toThemeAware, toUseBlendedImages]
+    TreeOptions.SelectionOptions = [toFullRowSelect]
     OnGetText = TreeItemsGetText
     Columns = <>
+  end
+  object PopupMenu: TPopupMenu
+    Left = 200
+    Top = 208
+    object MenuItemDelete: TMenuItem
+      Action = ActionDelete
+    end
+    object MenuItemClear: TMenuItem
+      Action = ActionClear
+    end
+  end
+  object ActionList: TActionList
+    Left = 272
+    Top = 208
+    object ActionClear: TAction
+      Caption = '&Clear'
+    end
+    object ActionDelete: TAction
+      Caption = '&Delete'
+      ShortCut = 46
+    end
+    object ActionRemoveInvalid: TAction
+      Caption = 'Remove &Invalid'
+    end
   end
 end

@@ -667,29 +667,30 @@ begin
 
   History := DataModuleCommon.History;
 
-  MaxFiles := DataModuleCommon.Preferences.Recent.ProjectCount;
-  for Index := 0 to Min(MaxFiles, History.ProjectsHistory.Count - 1) do
-  begin
-    MenuItem := TMenuItem.Create(MenuItemFileOpenRecent);
-    MenuItem.Caption := History.ProjectsHistory[Index];
-    MenuItem.OnClick := RecentProjectClickHandler;
-    MenuItem.Tag := Index;
-    MenuItemFileOpenRecent.Add(MenuItem);
-  end;
-
-  // add separator
-  MenuItem := TMenuItem.Create(MenuItemFileOpenRecent);
-  MenuItem.Caption := '-';
-  MenuItemFileOpenRecent.Add(MenuItem);
-
+  // add units
   MaxFiles := DataModuleCommon.Preferences.Recent.UnitCount;
-  for Index := 0 to Min(MaxFiles, History.UnitsHistory.Count - 1) do
+  for Index := Min(MaxFiles, History.UnitsHistory.Count) - 1 downto 0 do
   begin
     MenuItem := TMenuItem.Create(MenuItemFileOpenRecent);
     MenuItem.Caption := History.UnitsHistory[Index];
     MenuItem.OnClick := RecentUnitClickHandler;
     MenuItem.Tag := Index;
-    MenuItemFileOpenRecent.Add(MenuItem);
+    MenuItemFileOpenRecent.Insert(0, MenuItem);
+  end;
+
+  // add separator
+  MenuItem := TMenuItem.Create(MenuItemFileOpenRecent);
+  MenuItem.Caption := '-';
+  MenuItemFileOpenRecent.Insert(0, MenuItem);
+
+  MaxFiles := DataModuleCommon.Preferences.Recent.ProjectCount;
+  for Index := Min(MaxFiles, History.ProjectsHistory.Count) - 1 downto 0 do
+  begin
+    MenuItem := TMenuItem.Create(MenuItemFileOpenRecent);
+    MenuItem.Caption := History.ProjectsHistory[Index];
+    MenuItem.OnClick := RecentProjectClickHandler;
+    MenuItem.Tag := Index;
+    MenuItemFileOpenRecent.Insert(0, MenuItem);
   end;
 end;
 
