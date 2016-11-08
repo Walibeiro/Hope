@@ -63,8 +63,18 @@ begin
 end;
 
 procedure THopeProjectIDE.UpdateLocalFile;
+var
+  Index: Integer;
+  OpenedFile: THopeOpenedFile;
 begin
+  FLocal.OpenedFiles.Clear;
 
+  for Index := 0 to FormMain.Editors.Count - 1 do
+  begin
+    OpenedFile := THopeOpenedFile.Create;
+    OpenedFile.Assign(FormMain.Editors[Index]);
+    FLocal.OpenedFiles.Add(OpenedFile);
+  end;
 end;
 
 procedure THopeProjectIDE.SaveToFile(const FileName: TFileName);

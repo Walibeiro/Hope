@@ -18,9 +18,12 @@ type
     procedure WriteJson(const JsonValue: TdwsJSONObject); override;
     class function GetPreferredName: string; override;
   public
-    property ID: Integer read FID;
-    property Line: Integer read FLine;
-    property Character: Integer read FCharacter;
+    constructor Create; overload;
+    constructor Create(const ID, Line, Character: Integer); overload;
+
+    property ID: Integer read FID write FID;
+    property Line: Integer read FLine write FLine;
+    property Character: Integer read FCharacter write FCharacter;
   end;
 
   THopeOpenedFile = class(THopeJsonBase)
@@ -30,7 +33,7 @@ type
     FCharacter: Integer;
     FTopLine: Integer;
     FBookmarks: TObjectList;
-    function GetBookmarks(Index: Integer): THopeBookmark;
+    function GetBookmark(Index: Integer): THopeBookmark;
     function GetCount: Integer;
   protected
     procedure ReadJson(const JsonValue: TdwsJSONObject); override;
@@ -40,12 +43,13 @@ type
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
-    property FileName: TFileName read FFileName;
-    property Line: Integer read FLine;
-    property Character: Integer read FCharacter;
-    property TopLine: Integer read FTopLine;
+    property FileName: TFileName read FFileName write FFileName;
+    property Line: Integer read FLine write FLine;
+    property Character: Integer read FCharacter write FCharacter;
+    property TopLine: Integer read FTopLine write FTopLine;
 
-    property Bookmarks[Index: Integer]: THopeBookmark read GetBookmarks;
+    property Bookmarks: TObjectList read FBookmarks;
+    property Bookmark[Index: Integer]: THopeBookmark read GetBookmark;
     property Count: Integer read GetCount;
   end;
 
@@ -61,6 +65,7 @@ type
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
+    property OpenedFiles: TObjectList read FOpenedFiles;
     property OpenedFile[Index: Integer]: THopeOpenedFile read GetOpenedFile;
     property Count: Integer read GetCount;
   end;
@@ -69,6 +74,22 @@ implementation
 
 
 { THopeBookmark }
+
+constructor THopeBookmark.Create;
+begin
+  inherited Create;
+
+  FID := -1;
+end;
+
+constructor THopeBookmark.Create(const ID, Line, Character: Integer);
+begin
+  inherited Create;
+
+  FID := ID;
+  FLine := Line;
+  FCharacter := Character;
+end;
 
 class function THopeBookmark.GetPreferredName: string;
 begin
@@ -111,7 +132,7 @@ begin
   Result := 'File';
 end;
 
-function THopeOpenedFile.GetBookmarks(Index: Integer): THopeBookmark;
+function THopeOpenedFile.GetBookmark(Index: Integer): THopeBookmark;
 begin
   if (Index < 0) or (Index >= FBookmarks.Count) then
     raise Exception.CreateFmt('Index out of bounds (%d)', [Index]);

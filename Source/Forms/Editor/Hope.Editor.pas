@@ -7,7 +7,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls,
-  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ToolWin, SynEdit, Hope.DataModule;
+  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ToolWin, SynEdit, Hope.DataModule,
+  Hope.Project.Local;
 
 type
   TStatusBar = class(Vcl.ComCtrls.TStatusBar)
@@ -32,6 +33,8 @@ type
     FNeedsSync: Boolean;
     procedure SetFileName(const Value: TFileName);
     procedure FileNameChanged;
+  protected
+    procedure AssignTo(Dest: TPersistent); override;
   public
     procedure AfterConstruction; override;
 
@@ -150,6 +153,25 @@ begin
   end;
 
   Caption := FShortFileName;
+end;
+
+procedure TFormEditor.AssignTo(Dest: TPersistent);
+var
+  Bookmark: THopeBookmark;
+  Index, X, Y: Integer;
+begin
+  if Dest is THopeOpenedFile then
+  begin
+    THopeOpenedFile(Dest).FileName := FileName;
+    THopeOpenedFile(Dest).TopLine := Editor.TopLine;
+    THopeOpenedFile(Dest).Line := Editor.CaretXY.Line;
+    THopeOpenedFile(Dest).Character := Editor.CaretXY.Char;
+    for Index := 0 to 9 do
+      if Editor.GetBookMark(Index, X, Y) then
+        THopeOpenedFile(Dest).Bookmarks.Add(THopeBookmark.Create(Index, X, Y));
+  end
+  else
+    inherited;
 end;
 
 procedure TFormEditor.BufferToEditor(Text: string);

@@ -232,6 +232,8 @@ type
     property Projects: THopeProjectListIDE read FProjects;
     property FocusedEditor: TSynEdit read FFocusedEditor;
     property Compiler: THopeInternalCompiler read GetCompiler;
+
+    property Editors: TEditorList read FEditors;
   end;
 
 var
