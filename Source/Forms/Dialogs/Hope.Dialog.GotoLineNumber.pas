@@ -16,7 +16,7 @@ type
     LabelNewLineNumber: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   public
-
+    class procedure CreateAndShow;
 
     procedure AddLineNumber(LineNumber: Integer);
     procedure AfterConstruction; override;
@@ -26,7 +26,8 @@ implementation
 
 {$R *.dfm}
 
-uses Hope.Main, Hope.DataModule;
+uses
+  Hope.Main, Hope.DataModule;
 
 { TFormGotoLineNumber }
 
@@ -35,6 +36,25 @@ begin
   inherited;
 
   ComboBoxLineNumber.Items.Assign(DataModuleCommon.Preferences.Search.RecentGotoLine);
+end;
+
+class procedure TFormGotoLineNumber.CreateAndShow;
+var
+  Editor: TSynEdit;
+  LineNumber: Integer;
+begin
+  with TFormGotoLineNumber.Create(nil) do
+  try
+    if (ShowModal = mrOk) then
+    begin
+      Editor := FormMain.FocusedEditor;
+
+      if Assigned(Editor) and TryStrToInt(ComboBoxLineNumber.Text, LineNumber) then
+        Editor.GotoLineAndCenter(LineNumber);
+    end;
+  finally
+    Free;
+  end;
 end;
 
 procedure TFormGotoLineNumber.AddLineNumber(LineNumber: Integer);

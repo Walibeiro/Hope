@@ -56,7 +56,7 @@ inherited FormPreferences: TFormPreferences
     Top = 8
     Width = 487
     Height = 484
-    ActivePage = TabSheetEditorOptions
+    ActivePage = TabSheetLibraryPaths
     Anchors = [akLeft, akTop, akRight, akBottom]
     Images = DataModuleCommon.ImageList16
     MultiLine = True
@@ -182,7 +182,7 @@ inherited FormPreferences: TFormPreferences
           Anchors = [akRight, akBottom]
           TabOrder = 5
         end
-        object Edit: TEdit
+        object EditPath: TEdit
           Left = 16
           Top = 329
           Width = 411
@@ -543,14 +543,14 @@ inherited FormPreferences: TFormPreferences
           Left = 16
           Top = 21
           Width = 61
-          Height = 13
+          Height = 15
           Caption = 'Insert caret:'
         end
         object LabelOverwriteCaret: TLabel
           Left = 16
           Top = 49
           Width = 83
-          Height = 13
+          Height = 15
           Caption = 'Overwrite caret:'
         end
         object ComboBoxInsertCaret: TComboBox
@@ -704,7 +704,7 @@ inherited FormPreferences: TFormPreferences
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 2
-        object GroupBox1: TGroupBox
+        object GroupBoxSettings: TGroupBox
           AlignWithMargins = True
           Left = 240
           Top = 3
@@ -713,28 +713,28 @@ inherited FormPreferences: TFormPreferences
           Align = alRight
           Caption = 'Settings'
           TabOrder = 0
-          object Label1: TLabel
+          object LabelForeground: TLabel
             Left = 16
             Top = 27
             Width = 65
             Height = 15
             Caption = 'Foreground:'
           end
-          object Label2: TLabel
+          object LabelBackground: TLabel
             Left = 16
             Top = 55
             Width = 67
             Height = 15
             Caption = 'Background:'
           end
-          object ColorBox1: TColorBox
+          object ColorBoxForeground: TColorBox
             Left = 96
             Top = 24
             Width = 129
             Height = 22
             TabOrder = 0
           end
-          object ColorBox2: TColorBox
+          object ColorBoxBackground: TColorBox
             Left = 96
             Top = 52
             Width = 129
@@ -749,7 +749,7 @@ inherited FormPreferences: TFormPreferences
             Caption = 'Bold'
             TabOrder = 2
           end
-          object CheckBox1: TCheckBox
+          object CheckBoxItalic: TCheckBox
             Left = 80
             Top = 80
             Width = 49
@@ -757,7 +757,7 @@ inherited FormPreferences: TFormPreferences
             Caption = 'Italic'
             TabOrder = 3
           end
-          object CheckBox2: TCheckBox
+          object CheckBoxUnderlined: TCheckBox
             Left = 144
             Top = 80
             Width = 81
@@ -766,7 +766,7 @@ inherited FormPreferences: TFormPreferences
             TabOrder = 4
           end
         end
-        object GroupBox2: TGroupBox
+        object GroupBoxElement: TGroupBox
           AlignWithMargins = True
           Left = 4
           Top = 4

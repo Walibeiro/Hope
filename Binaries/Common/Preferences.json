@@ -2,6 +2,14 @@
 	"Environment" : {
 		"Default Project Path" : ""
 	},
+	"Search" : {
+		"Search" : [ ],
+		"Replace" : [ ]
+	},
+	"Recent" : {
+		"Projects" : 10,
+		"Units" : 10
+	},
 	"Editor" : {
 		"AltSetsColumnMode" : false,
 		"AutoIndent" : false,

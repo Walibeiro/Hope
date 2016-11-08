@@ -145,6 +145,8 @@ procedure TFormProjectOptions.AfterConstruction;
 begin
   inherited;
 
+  TreeCategory.NodeDataSize := SizeOf(TTabSheetItem);
+
   UpdateTree;
 end;
 

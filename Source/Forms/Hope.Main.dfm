@@ -158,6 +158,12 @@ object FormMain: TFormMain
       end
       object MenuItemFileOpenRecent: TMenuItem
         Caption = 'Open Recent'
+        object N1: TMenuItem
+          Caption = '-'
+        end
+        object MenuFileOpenRecentProperties: TMenuItem
+          Action = ActionFileOpenRecentProperties
+        end
       end
       object N01: TMenuItem
         Caption = '-'
@@ -650,6 +656,11 @@ object FormMain: TFormMain
       Hint = 'Stop|Stops running macro'
       ImageIndex = 2
       OnExecute = ActionMacroStopExecute
+    end
+    object ActionFileOpenRecentProperties: TAction
+      Category = 'File'
+      Caption = 'Properties...'
+      OnExecute = ActionFileOpenRecentPropertiesExecute
     end
   end
 end

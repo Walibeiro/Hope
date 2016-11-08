@@ -155,6 +155,9 @@ type
     SplitterLeft: TSplitter;
     SplitterRight: TSplitter;
     TabSet: TTabSet;
+    ActionFileOpenRecentProperties: TAction;
+    N1: TMenuItem;
+    MenuFileOpenRecentProperties: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDockOver(Sender: TObject; Source: TDragDockObject; X,
@@ -188,6 +191,7 @@ type
       Y: Integer);
     procedure TabSetChange(Sender: TObject; NewTab: Integer;
       var AllowChange: Boolean);
+    procedure ActionFileOpenRecentPropertiesExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -211,6 +215,8 @@ type
     procedure RegisterNewTab(Form: TForm; Focus: Boolean = True);
     procedure FocusTab(Form: TForm);
     function GetCompiler: THopeInternalCompiler; inline;
+    procedure RecentProjectClickHandler(Sender: TObject);
+    procedure RecentUnitClickHandler(Sender: TObject);
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
@@ -246,7 +252,8 @@ uses
   dwsUtils,
   Hope.About, Hope.AsciiChart, Hope.ColorPicker, Hope.Dialog.CodeTemplates,
   Hope.Dialog.FindInFiles, Hope.Dialog.Preferences, Hope.Common.History,
-  Hope.Dialog.ProjectOptions, Hope.Docking.Form, Hope.UnicodeExplorer;
+  Hope.Dialog.ProjectOptions, Hope.Docking.Form, Hope.UnicodeExplorer,
+  Hope.Dialog.RecentProperties;
 
 {$R *.dfm}
 
@@ -654,7 +661,10 @@ var
   MaxFiles: Integer;
   MenuItem: TMenuItem;
 begin
-  MenuItemFileOpenRecent.Clear;
+  // delete all items except the last two
+  while MenuItemFileOpenRecent.Count > 2 do
+    MenuItemFileOpenRecent.Delete(0);
+
   History := DataModuleCommon.History;
 
   MaxFiles := DataModuleCommon.Preferences.Recent.ProjectCount;
@@ -662,6 +672,7 @@ begin
   begin
     MenuItem := TMenuItem.Create(MenuItemFileOpenRecent);
     MenuItem.Caption := History.ProjectsHistory[Index];
+    MenuItem.OnClick := RecentProjectClickHandler;
     MenuItem.Tag := Index;
     MenuItemFileOpenRecent.Add(MenuItem);
   end;
@@ -676,9 +687,21 @@ begin
   begin
     MenuItem := TMenuItem.Create(MenuItemFileOpenRecent);
     MenuItem.Caption := History.UnitsHistory[Index];
+    MenuItem.OnClick := RecentUnitClickHandler;
     MenuItem.Tag := Index;
     MenuItemFileOpenRecent.Add(MenuItem);
   end;
+end;
+
+procedure TFormMain.RecentProjectClickHandler(Sender: TObject);
+begin
+  Assert(Sender is TMenuItem);
+  LoadProject(DataModuleCommon.History.ProjectsHistory[TMenuItem(Sender).Tag]);
+end;
+
+procedure TFormMain.RecentUnitClickHandler(Sender: TObject);
+begin
+  //
 end;
 
 procedure TFormMain.UpdateUnitMap(CompiledProgran: IdwsProgram);
@@ -713,6 +736,16 @@ end;
 procedure TFormMain.ActionFileOpenProjectAccept(Sender: TObject);
 begin
   LoadProject(ActionFileOpenProject.Dialog.FileName);
+end;
+
+procedure TFormMain.ActionFileOpenRecentPropertiesExecute(Sender: TObject);
+begin
+  with TFormRecentProperties.Create(Self) do
+  try
+    ShowModal;
+  finally
+    Free;
+  end;
 end;
 
 procedure TFormMain.ActionFileSaveProjectExecute(Sender: TObject);
