@@ -7,8 +7,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls,
-  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ToolWin, SynEdit, Hope.DataModule,
-  Hope.Project.Local;
+  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ToolWin, SynEdit, SynEditTypes,
+  Hope.DataModule, Hope.Project.Local;
 
 type
   TStatusBar = class(Vcl.ComCtrls.TStatusBar)
@@ -34,6 +34,7 @@ type
     procedure SetFileName(const Value: TFileName);
     procedure FileNameChanged;
   protected
+    procedure Assign(Source: TPersistent); override;
     procedure AssignTo(Dest: TPersistent); override;
   public
     procedure AfterConstruction; override;
@@ -155,6 +156,28 @@ begin
   Caption := FShortFileName;
 end;
 
+procedure TFormEditor.Assign(Source: TPersistent);
+var
+  Bookmark: THopeBookmark;
+  Index, X, Y: Integer;
+begin
+  if Source is THopeOpenedFile then
+  begin
+    FileName := THopeOpenedFile(Source).FileName;
+    Editor.TopLine := THopeOpenedFile(Source).TopLine;
+    Editor.CaretXY := BufferCoord(
+      THopeOpenedFile(Source).Character,
+      THopeOpenedFile(Source).Line);
+    for Index := 0 to THopeOpenedFile(Source).BookmarkCount - 1 do
+    begin
+      Bookmark := THopeOpenedFile(Source).Bookmark[Index];
+      Editor.SetBookMark(Bookmark.ID, Bookmark.Character, Bookmark.Line);
+    end;
+  end
+  else
+    inherited;
+end;
+
 procedure TFormEditor.AssignTo(Dest: TPersistent);
 var
   Bookmark: THopeBookmark;
@@ -168,7 +191,7 @@ begin
     THopeOpenedFile(Dest).Character := Editor.CaretXY.Char;
     for Index := 0 to 9 do
       if Editor.GetBookMark(Index, X, Y) then
-        THopeOpenedFile(Dest).Bookmarks.Add(THopeBookmark.Create(Index, X, Y));
+        THopeOpenedFile(Dest).Bookmarks.Add(THopeBookmark.Create(Index, Y, X));
   end
   else
     inherited;

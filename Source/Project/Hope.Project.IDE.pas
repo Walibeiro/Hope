@@ -5,20 +5,23 @@ interface
 {$I Hope.inc}
 
 uses
-  System.SysUtils, Hope.Project, Hope.Project.List,
-  Hope.Project.Local;
+  System.SysUtils, System.Classes, System.Contnrs, Hope.Project,
+  Hope.Project.List, Hope.Project.Local;
 
 type
   THopeProjectIDE = class(THopeProject)
   private
     FLocal: THopeLocal;
-    procedure UpdateLocalFile;
+    procedure LoadFromLocalFile;
+    procedure SaveToLocalFile;
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
     procedure LoadFromFile(const FileName: TFileName); override;
     procedure SaveToFile(const FileName: TFileName); override;
+
+    procedure SaveLocalFile;
   end;
 
   THopeProjectListIDE = class(THopeProjectList)
@@ -27,13 +30,16 @@ type
   protected
     class function GetProjectClass: THopeProjectClass; override;
   public
+    procedure CloseProjects;
+    procedure SaveLocalFiles;
+
     property ActiveProjectIDE: THopeProjectIDE read GetActiveProject;
   end;
 
 implementation
 
 uses
-  Hope.Main;
+  Hope.Main, Hope.Editor, SynEditTypes;
 
 { THopeProjectIDE }
 
@@ -51,18 +57,31 @@ begin
   FLocal.Free;
 end;
 
-procedure THopeProjectIDE.LoadFromFile(const FileName: TFileName);
+procedure THopeProjectIDE.LoadFromLocalFile;
 var
-  LocalFile: TFileName;
+  Index: Integer;
+  OpenedFile: THopeOpenedFile;
+  FormEditor: TFormEditor;
 begin
-  inherited;
+  for Index := 0 to FLocal.OpenedFiles.Count - 1 do
+  begin
+    OpenedFile := FLocal.OpenedFile[Index];
 
-  LocalFile := ChangeFileExt(FileName, '.hloc');
-  if FileExists(LocalFile) then
-    FLocal.LoadFromFile(LocalFile);
+    FormEditor := FormMain.Editors.GetEditorForFileName(OpenedFile.FileName);
+
+    if not Assigned(FormEditor) then
+      FormEditor := FormMain.RegisterNewEditor(OpenedFile.FileName);
+
+    // assign form properties from local file
+    if Assigned(FormEditor) then
+      FormEditor.Assign(OpenedFile);
+  end;
+
+  if FLocal.ActiveFileName <> '' then
+    FormMain.FocusEditor(FLocal.ActiveFileName);
 end;
 
-procedure THopeProjectIDE.UpdateLocalFile;
+procedure THopeProjectIDE.SaveToLocalFile;
 var
   Index: Integer;
   OpenedFile: THopeOpenedFile;
@@ -75,6 +94,33 @@ begin
     OpenedFile.Assign(FormMain.Editors[Index]);
     FLocal.OpenedFiles.Add(OpenedFile);
   end;
+
+  if Assigned(FormMain.FocusedEditorForm) then
+    FLocal.ActiveFileName := FormMain.FocusedEditorForm.FileName;
+end;
+
+procedure THopeProjectIDE.LoadFromFile(const FileName: TFileName);
+var
+  LocalFile: TFileName;
+begin
+  inherited;
+
+  LocalFile := ChangeFileExt(FileName, '.hloc');
+  if FileExists(LocalFile) then
+  begin
+    FLocal.LoadFromFile(LocalFile);
+
+    LoadFromLocalFile;
+  end;
+end;
+
+procedure THopeProjectIDE.SaveLocalFile;
+var
+  LocalFile: TFileName;
+begin
+  SaveToLocalFile;
+  LocalFile := ChangeFileExt(FileName, '.hloc');
+  FLocal.SaveToFile(LocalFile);
 end;
 
 procedure THopeProjectIDE.SaveToFile(const FileName: TFileName);
@@ -83,7 +129,7 @@ var
 begin
   inherited;
 
-  UpdateLocalFile;
+  SaveToLocalFile;
 
   LocalFile := ChangeFileExt(FileName, '.hloc');
   FLocal.SaveToFile(LocalFile);
@@ -102,5 +148,18 @@ begin
   Result := THopeProjectIDE;
 end;
 
-end.
+procedure THopeProjectListIDE.SaveLocalFiles;
+var
+  Index: Integer;
+begin
+  for Index := 0 to Count - 1 do
+    THopeProjectIDE(Project[Index]).SaveLocalFile;
+end;
 
+procedure THopeProjectListIDE.CloseProjects;
+begin
+  while Count > 0 do
+    RemoveProject(Project[0]);
+end;
+
+end.

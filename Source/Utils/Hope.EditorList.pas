@@ -20,11 +20,16 @@ type
     function Add(Editor: TFormEditor): Integer;
     procedure Delete(Index: Integer);
 
+    function GetEditorForFileName(FileName: TFileName): TFormEditor;
+
     property Editor[Index: Integer]: TFormEditor read GetEditor; default;
     property Count: Integer read GetCount;
   end;
 
 implementation
+
+uses
+  dwsUtils;
 
 { TEditorList }
 
@@ -64,6 +69,16 @@ begin
     raise EEditorList.CreateFmt('Index exceeded bounds (%d)', [Index]);
 
   Result := TFormEditor(FList[Index]);
+end;
+
+function TEditorList.GetEditorForFileName(FileName: TFileName): TFormEditor;
+var
+  Index: Integer;
+begin
+  Result := nil;
+  for Index := 0 to FList.Count - 1 do
+    if UnicodeSameText(TFormEditor(FList[Index]).FileName, FileName) then
+      Exit(TFormEditor(FList[Index]));
 end;
 
 end.

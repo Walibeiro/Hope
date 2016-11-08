@@ -210,7 +210,6 @@ type
     procedure TabChanged;
 
     procedure RegisterNewTab(Form: TForm; Focus: Boolean = True);
-    procedure RegisterNewEditor(FileName: TFileName);
     procedure FocusTab(Form: TForm);
     function GetCompiler: THopeInternalCompiler; inline;
   public
@@ -224,6 +223,7 @@ type
     procedure ShowDockPanel(APanel: TPanel; MakeVisible: Boolean; Client: TControl);
 
     procedure FocusEditor(FileName: TFileName);
+    function RegisterNewEditor(FileName: TFileName): TFormEditor;
 
     procedure UpdateUnitMap(CompiledProgran: IdwsProgram);
 
@@ -231,6 +231,7 @@ type
 
     property Projects: THopeProjectListIDE read FProjects;
     property FocusedEditor: TSynEdit read FFocusedEditor;
+    property FocusedEditorForm: TFormEditor read FFocusedEditorForm;
     property Compiler: THopeInternalCompiler read GetCompiler;
 
     property Editors: TEditorList read FEditors;
@@ -267,6 +268,7 @@ end;
 
 procedure TFormMain.BeforeDestruction;
 begin
+  FProjects.SaveLocalFiles;
 (*
   FOutputMessages.Free;
   FCompilerMessages.Free;
@@ -490,16 +492,14 @@ begin
     Source.Control.Align := alClient;
 end;
 
-procedure TFormMain.RegisterNewEditor(FileName: TFileName);
-var
-  Editor: TFormEditor;
+function TFormMain.RegisterNewEditor(FileName: TFileName): TFormEditor;
 begin
-  Editor := TFormEditor.Create(nil);
-  Editor.FileName := FileName;
+  Result := TFormEditor.Create(nil);
+  Result.FileName := FileName;
 
-  FEditors.Add(Editor);
+  FEditors.Add(Result);
 
-  RegisterNewTab(Editor);
+  RegisterNewTab(Result);
 end;
 
 procedure TFormMain.RegisterNewTab(Form: TForm; Focus: Boolean = True);
@@ -564,15 +564,13 @@ end;
 procedure TFormMain.FocusEditor(FileName: TFileName);
 var
   Index: Integer;
+  FormEditor: TFormEditor;
 begin
-  for Index := 0 to FEditors.Count - 1 do
-    if UnicodeSameText(FileName, FEditors[Index].FileName) then
-    begin
-      FocusTab(FEditors[Index]);
-      Exit;
-    end;
-
-  RegisterNewEditor(FileName);
+  FormEditor := FEditors.GetEditorForFileName(FileName);
+  if Assigned(FormEditor) then
+    FocusTab(FormEditor)
+  else
+    RegisterNewEditor(FileName);
 end;
 
 procedure TFormMain.FocusTab(Form: TForm);

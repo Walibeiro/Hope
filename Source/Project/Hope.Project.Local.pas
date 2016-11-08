@@ -34,7 +34,7 @@ type
     FTopLine: Integer;
     FBookmarks: TObjectList;
     function GetBookmark(Index: Integer): THopeBookmark;
-    function GetCount: Integer;
+    function GetBookmarkCount: Integer;
   protected
     procedure ReadJson(const JsonValue: TdwsJSONObject); override;
     procedure WriteJson(const JsonValue: TdwsJSONObject); override;
@@ -50,12 +50,13 @@ type
 
     property Bookmarks: TObjectList read FBookmarks;
     property Bookmark[Index: Integer]: THopeBookmark read GetBookmark;
-    property Count: Integer read GetCount;
+    property BookmarkCount: Integer read GetBookmarkCount;
   end;
 
   THopeLocal = class(THopeJsonBase)
   private
     FOpenedFiles: TObjectList;
+    FActiveFileName: TFileName;
     function GetCount: Integer;
     function GetOpenedFile(Index: Integer): THopeOpenedFile;
   protected
@@ -67,6 +68,7 @@ type
 
     property OpenedFiles: TObjectList read FOpenedFiles;
     property OpenedFile[Index: Integer]: THopeOpenedFile read GetOpenedFile;
+    property ActiveFileName: TFileName read FActiveFileName write FActiveFileName;
     property Count: Integer read GetCount;
   end;
 
@@ -140,7 +142,7 @@ begin
   Result := THopeBookmark(FBookmarks.Items[Index]);
 end;
 
-function THopeOpenedFile.GetCount: Integer;
+function THopeOpenedFile.GetBookmarkCount: Integer;
 begin
   Result := FBookmarks.Count;
 end;
@@ -229,6 +231,7 @@ begin
       OpenedFile.ReadJson(TdwsJSONObject(FilesArray.Elements[Index]));
       FOpenedFiles.Add(OpenedFile);
     end;
+  FActiveFileName := JsonValue.GetValue('ActiveFile', FActiveFileName);
 end;
 
 procedure THopeLocal.WriteJson(const JsonValue: TdwsJSONObject);
@@ -243,6 +246,7 @@ begin
     OpenedFile := FilesArray.AddObject;
     THopeOpenedFile(FOpenedFiles[Index]).WriteJson(OpenedFile);
   end;
+  JsonValue.AddValue('ActiveFile', FActiveFileName);
 end;
 
 end.

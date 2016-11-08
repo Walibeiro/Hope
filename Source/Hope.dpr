@@ -54,8 +54,6 @@ uses
   Hope.UnitManager in 'Forms\Hope.UnitManager.pas' {FormUnitManager},
   Hope.WelcomePage in 'Forms\Hope.WelcomePage.pas' {FormWelcomePage};
 
-{$R *.res}
-
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
