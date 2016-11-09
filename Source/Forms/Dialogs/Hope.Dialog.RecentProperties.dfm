@@ -117,12 +117,16 @@ inherited FormRecentProperties: TFormRecentProperties
     Header.Font.Style = []
     Header.MainColumn = -1
     Images = DataModuleCommon.ImageList16
+    Indent = 0
     PopupMenu = PopupMenu
     StateImages = DataModuleCommon.ImageList16
     TabOrder = 5
     TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
-    TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowTreeLines, toThemeAware, toUseBlendedImages]
+    TreeOptions.PaintOptions = [toThemeAware, toUseBlendedImages]
     TreeOptions.SelectionOptions = [toFullRowSelect]
+    OnCollapsing = TreeItemsCollapsing
+    OnDrawText = TreeItemsDrawText
+    OnFreeNode = TreeItemsFreeNode
     OnGetText = TreeItemsGetText
     Columns = <>
   end
@@ -141,10 +145,12 @@ inherited FormRecentProperties: TFormRecentProperties
     Top = 208
     object ActionClear: TAction
       Caption = '&Clear'
+      OnExecute = ActionClearExecute
     end
     object ActionDelete: TAction
       Caption = '&Delete'
       ShortCut = 46
+      OnExecute = ActionDeleteExecute
     end
     object ActionRemoveInvalid: TAction
       Caption = 'Remove &Invalid'

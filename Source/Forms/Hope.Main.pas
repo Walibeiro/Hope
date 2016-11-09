@@ -33,6 +33,7 @@ type
     ActionFileNewUnit: TAction;
     ActionFileOpen: TFileOpen;
     ActionFileOpenProject: TFileOpen;
+    ActionFileOpenRecentProperties: TAction;
     ActionFileSave: TAction;
     ActionFileSaveAs: TFileSaveAs;
     ActionFileSaveProject: TAction;
@@ -56,11 +57,11 @@ type
     ActionRunParameters: TAction;
     ActionRunRun: TAction;
     ActionSearchFind: TAction;
-    ActionSearchReplace: TAction;
-    ActionSearchFindNext: TAction;
     ActionSearchFindClass: TAction;
     ActionSearchFindInFiles: TAction;
+    ActionSearchFindNext: TAction;
     ActionSearchGotoLineNumber: TAction;
+    ActionSearchReplace: TAction;
     ActionToolsAsciiChart: TAction;
     ActionToolsCodeTemplates: TAction;
     ActionToolsColorPicker: TAction;
@@ -71,6 +72,7 @@ type
     ActionViewUnits: TAction;
     ActionViewWelcomePage: TAction;
     MainMenu: TMainMenu;
+    MenuFileOpenRecentProperties: TMenuItem;
     MenuItemEdit: TMenuItem;
     MenuItemEditCopy: TMenuItem;
     MenuItemEditCut: TMenuItem;
@@ -140,6 +142,7 @@ type
     N07: TMenuItem;
     N08: TMenuItem;
     N09: TMenuItem;
+    N1: TMenuItem;
     N10: TMenuItem;
     N11: TMenuItem;
     N12: TMenuItem;
@@ -155,9 +158,13 @@ type
     SplitterLeft: TSplitter;
     SplitterRight: TSplitter;
     TabSet: TTabSet;
-    ActionFileOpenRecentProperties: TAction;
-    N1: TMenuItem;
-    MenuFileOpenRecentProperties: TMenuItem;
+    PopupMenu: TPopupMenu;
+    ActionPageClosePage: TAction;
+    MenuItemPageClosePage: TMenuItem;
+    Pages1: TMenuItem;
+    ActionPageCloseOthers: TAction;
+    N2: TMenuItem;
+    Closeallotherpages1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDockOver(Sender: TObject; Source: TDragDockObject; X,
@@ -192,6 +199,11 @@ type
     procedure TabSetChange(Sender: TObject; NewTab: Integer;
       var AllowChange: Boolean);
     procedure ActionFileOpenRecentPropertiesExecute(Sender: TObject);
+    procedure ActionSearchFindClassExecute(Sender: TObject);
+    procedure ActionSearchGotoLineNumberExecute(Sender: TObject);
+    procedure ActionViewWelcomePageExecute(Sender: TObject);
+    procedure ActionPageClosePageExecute(Sender: TObject);
+    procedure ActionPageCloseOthersExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -250,10 +262,11 @@ implementation
 
 uses
   dwsUtils,
-  Hope.About, Hope.AsciiChart, Hope.ColorPicker, Hope.Dialog.CodeTemplates,
-  Hope.Dialog.FindInFiles, Hope.Dialog.Preferences, Hope.Common.History,
-  Hope.Dialog.ProjectOptions, Hope.Docking.Form, Hope.UnicodeExplorer,
-  Hope.Dialog.RecentProperties;
+  Hope.About, Hope.AsciiChart, Hope.ColorPicker, Hope.Common.History,
+  Hope.Dialog.CodeTemplates, Hope.Dialog.FindClass, Hope.Dialog.FindInFiles,
+  Hope.Dialog.GotoLineNumber, Hope.Dialog.Preferences,
+  Hope.Dialog.ProjectOptions, Hope.Dialog.RecentProperties,
+  Hope.Docking.Form, Hope.UnicodeExplorer;
 
 {$R *.dfm}
 
@@ -427,6 +440,12 @@ begin
 
   UpdateRecentFiles;
 
+  ActionFileSave.Enabled := False;
+  ActionFileSaveAs.Enabled := False;
+  ActionFileSaveProject.Enabled := False;
+  ActionFileSaveProjectAs.Enabled := False;
+  ActionFileCloseProject.Enabled := False;
+
   FFocusedEditorForm := nil;
   FFocusedEditor := nil;
 end;
@@ -458,6 +477,10 @@ begin
     DataModuleCommon.BackgroundCompiler.Invalidate;
 
     DataModuleCommon.AddProjectToHistory(ProjectFileName);
+
+    ActionFileSaveProject.Enabled := True;
+    ActionFileSaveProjectAs.Enabled := True;
+    ActionFileCloseProject.Enabled := True;
 
     UpdateRecentFiles;
   end;
@@ -727,6 +750,10 @@ begin
 
   // now remove project from projects list
   FProjects.RemoveProject(FProjects.ActiveProject);
+
+  ActionFileSaveProject.Enabled := Assigned(FProjects.ActiveProject);
+  ActionFileSaveProjectAs.Enabled := Assigned(FProjects.ActiveProject);
+  ActionFileCloseProject.Enabled := Assigned(FProjects.ActiveProject);
 end;
 
 procedure TFormMain.ActionFileNewProjectExecute(Sender: TObject);
@@ -797,6 +824,29 @@ begin
   Compiler.CompileProject(Projects.ActiveProject);
 end;
 
+procedure TFormMain.ActionPageClosePageExecute(Sender: TObject);
+begin
+  if TabSet.TabIndex > 0 then
+  begin
+    Editors.Delete(TabSet.TabIndex - 1);
+    TabSet.Tabs.Delete(TabSet.TabIndex);
+  end;
+end;
+
+procedure TFormMain.ActionPageCloseOthersExecute(Sender: TObject);
+var
+  Index: Integer;
+begin
+  if TabSet.TabIndex > 0 then
+  begin
+    for Index := TabSet.TabIndex + 1 to TabSet.Tabs.Count - 1 do
+    begin
+      Editors.Delete(Index - 1);
+      TabSet.Tabs.Delete(Index);
+    end;
+  end;
+end;
+
 procedure TFormMain.ActionProjectBuildExecute(Sender: TObject);
 begin
   FOutputMessages.Clear;
@@ -818,6 +868,17 @@ begin
   Project := FProjects.ActiveProjectIDE;
 
   Modified := TFormProjectOptions.CreateAndShow(Project.Options);
+end;
+
+procedure TFormMain.ActionSearchFindClassExecute(Sender: TObject);
+begin
+  // show 'find in files' dialog
+  with TFormFindClass.Create(Self) do
+  try
+    ShowModal;
+  finally
+    Free;
+  end;
 end;
 
 procedure TFormMain.ActionSearchFindExecute(Sender: TObject);
@@ -846,6 +907,17 @@ begin
     FFormFindReplace := TFormFindReplace.Create(Self);
 
   FFormFindReplace.PerformNext;
+end;
+
+procedure TFormMain.ActionSearchGotoLineNumberExecute(Sender: TObject);
+begin
+  // show 'find in files' dialog
+  with TFormGotoLineNumber.Create(Self) do
+  try
+    ShowModal;
+  finally
+    Free;
+  end;
 end;
 
 procedure TFormMain.ActionSearchReplaceExecute(Sender: TObject);
@@ -899,6 +971,11 @@ begin
   finally
     Free;
   end;
+end;
+
+procedure TFormMain.ActionViewWelcomePageExecute(Sender: TObject);
+begin
+  //
 end;
 
 end.

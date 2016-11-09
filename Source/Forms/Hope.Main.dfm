@@ -118,6 +118,7 @@ object FormMain: TFormMain
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
+      PopupMenu = PopupMenu
       SoftTop = True
       Style = tsSoftTabs
       TabPosition = tpTop
@@ -533,11 +534,13 @@ object FormMain: TFormMain
     object ActionSearchFindClass: TAction
       Category = 'Search'
       Caption = 'Find Class...'
+      OnExecute = ActionSearchFindClassExecute
     end
     object ActionSearchGotoLineNumber: TAction
       Category = 'Search'
       Caption = 'Goto Line Number'
       ShortCut = 32839
+      OnExecute = ActionSearchGotoLineNumberExecute
     end
     object ActionViewUnits: TAction
       Category = 'View'
@@ -555,6 +558,7 @@ object FormMain: TFormMain
     object ActionViewWelcomePage: TAction
       Category = 'View'
       Caption = 'Welcome Page'
+      OnExecute = ActionViewWelcomePageExecute
     end
     object ActionProjectCompile: TAction
       Category = 'Project'
@@ -639,14 +643,14 @@ object FormMain: TFormMain
       Caption = '&Play'
       Enabled = False
       Hint = 'Play|Play macro'
-      ImageIndex = 0
+      ImageIndex = 21
       OnExecute = ActionMacroPlayExecute
     end
     object ActionMacroRecord: TAction
       Category = 'Macro'
       Caption = 'ActionMacroRecord'
       Hint = 'Record|Record macro'
-      ImageIndex = 1
+      ImageIndex = 23
       OnExecute = ActionMacroRecordExecute
     end
     object ActionMacroStop: TAction
@@ -654,13 +658,43 @@ object FormMain: TFormMain
       Caption = '&Stop'
       Enabled = False
       Hint = 'Stop|Stops running macro'
-      ImageIndex = 2
+      ImageIndex = 22
       OnExecute = ActionMacroStopExecute
     end
     object ActionFileOpenRecentProperties: TAction
       Category = 'File'
       Caption = 'Properties...'
       OnExecute = ActionFileOpenRecentPropertiesExecute
+    end
+    object ActionPageClosePage: TAction
+      Category = 'Page'
+      Caption = '&Close Page'
+      SecondaryShortCuts.Strings = (
+        'Ctrl+W')
+      ShortCut = 16499
+      OnExecute = ActionPageClosePageExecute
+    end
+    object ActionPageCloseOthers: TAction
+      Category = 'Page'
+      Caption = 'Close all other pages'
+      ShortCut = 24691
+      OnExecute = ActionPageCloseOthersExecute
+    end
+  end
+  object PopupMenu: TPopupMenu
+    Left = 248
+    Top = 104
+    object MenuItemPageClosePage: TMenuItem
+      Action = ActionPageClosePage
+    end
+    object Pages1: TMenuItem
+      Caption = 'Pages'
+    end
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object Closeallotherpages1: TMenuItem
+      Action = ActionPageCloseOthers
     end
   end
 end
