@@ -162,7 +162,7 @@
             <Form>FormFindReplace</Form>
         </DCCReference>
         <DCCReference Include="Forms\Dialogs\Hope.Dialog.ReloadChangedFiles.pas">
-            <Form>FormReloadChanges</Form>
+            <Form>FormReloadChangedFiles</Form>
         </DCCReference>
         <DCCReference Include="Forms\Docking\Hope.Docking.Form.pas">
             <Form>FormDockable</Form>
@@ -265,7 +265,7 @@
                 </Parameters>
             </Delphi.Personality>
             <Deployment>
-                <DeployFile LocalName="..\Binaries\x86\Hope.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\DCU\Hope.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Hope.exe</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -277,6 +277,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\Binaries\x86\Hope.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>Hope.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Win32\Debug\Hope.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Hope.exe</RemoteName>
@@ -284,12 +290,6 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="..\Binaries\Hope.exe" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
-                        <RemoteName>Hope.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\DCU\Hope.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Hope.exe</RemoteName>
                         <Overwrite>true</Overwrite>

@@ -37,6 +37,7 @@ inherited FormFindClass: TFormFindClass
     Height = 23
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 3
+    OnChange = EditSearchChange
   end
   object TreeClasses: TVirtualStringTree
     Left = 8

@@ -9,11 +9,13 @@ uses
   Hope.Buffer.List, Hope.Common.DirectoryMonitor;
 
 type
+  TOnModifiedEvent = procedure(Sender: TObject; const FileName: TFileName) of object;
   TMonitoredBuffer = class
   private
     FBuffferList: THopeBufferList;
     FDirectoryMonitor: TDirectoryMonitor;
     FLastFileName: TFileName;
+    FOnModified: TOnModifiedEvent;
 
     function GetText(FileName: TFileName): string;
     procedure SetText(FileName: TFileName; const Text: string);
@@ -30,6 +32,8 @@ type
     property BuffferList: THopeBufferList read FBuffferList;
     property DirectoryMonitor: TDirectoryMonitor read FDirectoryMonitor;
     property Text[FileName: TFileName]: string read GetText write SetText; default;
+
+    property OnModified: TOnModifiedEvent read FOnModified write FOnModified;
   end;
 
 implementation
@@ -83,7 +87,11 @@ begin
     FILE_ACTION_REMOVED:
       FBuffferList.Remove(FileName);
     FILE_ACTION_MODIFIED:
-      SetText(FileName, LoadTextFromFile(FileName));
+      begin
+        SetText(FileName, LoadTextFromFile(FileName));
+        if Assigned(FOnModified) then
+          FOnModified(Self, FileName)
+      end;
     FILE_ACTION_RENAMED_OLD_NAME:
       FLastFileName := FileName;
     FILE_ACTION_RENAMED_NEW_NAME:

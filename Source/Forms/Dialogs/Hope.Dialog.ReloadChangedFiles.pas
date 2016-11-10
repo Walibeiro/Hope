@@ -7,22 +7,52 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.StdCtrls;
 
 type
-  TFormReloadChanges = class(TForm)
+  TFileItem = record
+    FileName: TFileName;
+  end;
+  PFileItem = ^TFileItem;
+
+  TFormReloadChangedFiles = class(TForm)
     ButtonCancel: TButton;
     ButtonReload: TButton;
     TreeFiles: TVirtualStringTree;
-  private
-    { Private-Deklarationen }
+    procedure TreeFilesFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure TreeFilesGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
+      Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
   public
-    { Public-Deklarationen }
+    procedure AfterConstruction; override;
   end;
-
-var
-  FormReloadChanges: TFormReloadChanges;
 
 implementation
 
 {$R *.dfm}
+
+procedure TFormReloadChangedFiles.AfterConstruction;
+begin
+  inherited;
+
+  TreeFiles.NodeDataSize := SizeOf(TFileItem);
+end;
+
+
+procedure TFormReloadChangedFiles.TreeFilesFreeNode(Sender: TBaseVirtualTree;
+  Node: PVirtualNode);
+var
+  NodeData: PFileItem;
+begin
+  NodeData := Sender.GetNodeData(Node);
+  Finalize(NodeData^.FileName);
+end;
+
+procedure TFormReloadChangedFiles.TreeFilesGetText(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
+  var CellText: string);
+var
+  NodeData: PFileItem;
+begin
+  NodeData := Sender.GetNodeData(Node);
+  CellText := NodeData^.FileName;
+end;
 
 end.
 

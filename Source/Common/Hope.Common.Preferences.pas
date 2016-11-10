@@ -82,6 +82,30 @@ type
     property DefaultProjectPath: string read FDefaultProjectPath write FDefaultProjectPath;
   end;
 
+  TFindInFilesScope = (fsProjectFiles, fsEditorFiles, fsProjectGroup,
+    fsSpecificDirectory);
+
+  THopePreferencesFindInFiles = class(THopeJsonBase)
+  private
+    FCaseSensitive: Boolean;
+    FRegularExpressions: Boolean;
+    FWholeWordsOnly: Boolean;
+    FScope: TFindInFilesScope;
+    FConfirmReplace: Boolean;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJSONObject); override;
+    procedure WriteJson(const JsonValue: TdwsJSONObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+
+    property CaseSensitive: Boolean read FCaseSensitive write FCaseSensitive;
+    property RegularExpressions: Boolean read FRegularExpressions write FRegularExpressions;
+    property WholeWordsOnly: Boolean read FWholeWordsOnly write FWholeWordsOnly;
+    property ConfirmReplace: Boolean read FConfirmReplace write FConfirmReplace;
+    property Scope: TFindInFilesScope read FScope write FScope;
+  end;
+
   THopePreferencesSearch = class(THopeJsonBase)
   private
     FRecentSearch: TStringList;
@@ -203,6 +227,7 @@ type
   THopePreferences = class(THopeJsonBase)
   private
     FEnvironment: THopePreferencesEnvironment;
+    FFindInFiles: THopePreferencesFindInFiles;
     FSearch: THopePreferencesSearch;
     FEditor: THopePreferencesEditor;
     FRecent: THopePreferencesRecent;
@@ -218,6 +243,7 @@ type
 
     property Environment: THopePreferencesEnvironment read FEnvironment;
     property Search: THopePreferencesSearch read FSearch;
+    property FindInFiles: THopePreferencesFindInFiles read FFindInFiles;
     property Editor: THopePreferencesEditor read FEditor;
     property Recent: THopePreferencesRecent read FRecent;
     property CodeInsight: THopePreferencesCodeInsight read FCodeInsight;
@@ -226,64 +252,6 @@ type
   end;
 
 implementation
-
-{ THopePreferencesSearch }
-
-procedure THopePreferencesSearch.AfterConstruction;
-begin
-  inherited;
-
-  FRecentSearch := TStringList.Create;
-  FRecentReplace := TStringList.Create;
-  FRecentGotoLine := TStringList.Create;
-end;
-
-procedure THopePreferencesSearch.BeforeDestruction;
-begin
-  FRecentGotoLine.Free;
-  FRecentReplace.Free;
-  FRecentSearch.Free;
-end;
-
-class function THopePreferencesSearch.GetPreferredName: string;
-begin
-  Result := 'Search';
-end;
-
-procedure THopePreferencesSearch.ReadJson(const JsonValue: TdwsJSONObject);
-var
-  Index: Integer;
-  JsonArray: TdwsJSONArray;
-begin
-  if JsonValue.GetArray('Search', JsonArray) then
-  begin
-    FRecentSearch.Clear;
-    for Index := 0 to FRecentSearch.Count - 1 do
-      FRecentSearch.Add(JsonArray.Elements[Index].AsString)
-  end;
-
-  if JsonValue.GetArray('Replace', JsonArray) then
-  begin
-    FRecentReplace.Clear;
-    for Index := 0 to FRecentSearch.Count - 1 do
-      FRecentReplace.Add(JsonArray.Elements[Index].AsString)
-  end;
-end;
-
-procedure THopePreferencesSearch.WriteJson(const JsonValue: TdwsJSONObject);
-var
-  Index: Integer;
-  JsonArray: TdwsJSONArray;
-begin
-  JsonArray := JsonValue.AddArray('Search');
-  for Index := 0 to FRecentSearch.Count - 1 do
-    JsonArray.Add(FRecentSearch[Index]);
-
-  JsonArray := JsonValue.AddArray('Replace');
-  for Index := 0 to FRecentReplace.Count - 1 do
-    JsonArray.Add(FRecentReplace[Index]);
-end;
-
 
 { THopePreferencesEditor }
 
@@ -371,6 +339,101 @@ procedure THopePreferencesEnvironment.WriteJson(
   const JsonValue: TdwsJSONObject);
 begin
   JsonValue.AddValue('Default Project Path', FDefaultProjectPath);
+end;
+
+
+{ THopePreferencesSearch }
+
+procedure THopePreferencesSearch.AfterConstruction;
+begin
+  inherited;
+
+  FRecentSearch := TStringList.Create;
+  FRecentReplace := TStringList.Create;
+  FRecentGotoLine := TStringList.Create;
+end;
+
+procedure THopePreferencesSearch.BeforeDestruction;
+begin
+  FRecentGotoLine.Free;
+  FRecentReplace.Free;
+  FRecentSearch.Free;
+end;
+
+class function THopePreferencesSearch.GetPreferredName: string;
+begin
+  Result := 'Search';
+end;
+
+procedure THopePreferencesSearch.ReadJson(const JsonValue: TdwsJSONObject);
+var
+  Index: Integer;
+  JsonArray: TdwsJSONArray;
+begin
+  if JsonValue.GetArray('Search', JsonArray) then
+  begin
+    FRecentSearch.Clear;
+    for Index := 0 to FRecentSearch.Count - 1 do
+      FRecentSearch.Add(JsonArray.Elements[Index].AsString)
+  end;
+
+  if JsonValue.GetArray('Replace', JsonArray) then
+  begin
+    FRecentReplace.Clear;
+    for Index := 0 to FRecentSearch.Count - 1 do
+      FRecentReplace.Add(JsonArray.Elements[Index].AsString)
+  end;
+end;
+
+procedure THopePreferencesSearch.WriteJson(const JsonValue: TdwsJSONObject);
+var
+  Index: Integer;
+  JsonArray: TdwsJSONArray;
+begin
+  JsonArray := JsonValue.AddArray('Search');
+  for Index := 0 to FRecentSearch.Count - 1 do
+    JsonArray.Add(FRecentSearch[Index]);
+
+  JsonArray := JsonValue.AddArray('Replace');
+  for Index := 0 to FRecentReplace.Count - 1 do
+    JsonArray.Add(FRecentReplace[Index]);
+end;
+
+
+{ THopePreferencesFindInFiles }
+
+procedure THopePreferencesFindInFiles.AfterConstruction;
+begin
+  inherited;
+
+  FCaseSensitive := False;
+  FRegularExpressions := False;
+  FWholeWordsOnly := False;
+  FConfirmReplace := False;
+end;
+
+class function THopePreferencesFindInFiles.GetPreferredName: string;
+begin
+  Result := 'FindInFiles';
+end;
+
+procedure THopePreferencesFindInFiles.ReadJson(const JsonValue: TdwsJSONObject);
+begin
+  FCaseSensitive := JsonValue.GetValue('CaseSensitive', FCaseSensitive);
+  FRegularExpressions := JsonValue.GetValue('RegularExpressions', FRegularExpressions);
+  FWholeWordsOnly := JsonValue.GetValue('WholeWordsOnly', FWholeWordsOnly);
+  FConfirmReplace := JsonValue.GetValue('ConfirmReplace', FConfirmReplace);
+  FScope := TFindInFilesScope(JsonValue.GetValue('Scope', Integer(FScope)));
+end;
+
+procedure THopePreferencesFindInFiles.WriteJson(
+  const JsonValue: TdwsJSONObject);
+begin
+  JsonValue.AddValue('CaseSensitive', FCaseSensitive);
+  JsonValue.AddValue('RegularExpressions', FRegularExpressions);
+  JsonValue.AddValue('WholeWordsOnly', FWholeWordsOnly);
+  JsonValue.AddValue('ConfirmReplace', FConfirmReplace);
+  JsonValue.AddValue('Scope', Integer(FScope));
 end;
 
 
@@ -583,6 +646,7 @@ begin
 
   FEnvironment := THopePreferencesEnvironment.Create;
   FSearch := THopePreferencesSearch.Create;
+  FFindInFiles := THopePreferencesFindInFiles.Create;
   FEditor := THopePreferencesEditor.Create;
   FRecent := THopePreferencesRecent.Create;
   FCodeInsight := THopePreferencesCodeInsight.Create;
@@ -597,6 +661,7 @@ begin
   FCodeInsight.Free;
   FRecent.Free;
   FEditor.Free;
+  FFindInFiles.Free;
   FSearch.Free;
   FEnvironment.Free;
 
@@ -609,6 +674,7 @@ begin
 
   FEnvironment.LoadFromJson(JsonValue, True);
   FSearch.LoadFromJson(JsonValue, True);
+  FFindInFiles.LoadFromJson(JsonValue, True);
   FRecent.LoadFromJson(JsonValue, True);
   FEditor.LoadFromJson(JsonValue, True);
   FCodeInsight.LoadFromJson(JsonValue, True);
@@ -622,6 +688,7 @@ begin
 
   FEnvironment.SaveToJson(JsonValue);
   FSearch.SaveToJson(JsonValue);
+  FFindInFiles.SaveToJson(JsonValue);
   FRecent.SaveToJson(JsonValue);
   FEditor.SaveToJson(JsonValue);
   FCodeInsight.SaveToJson(JsonValue);

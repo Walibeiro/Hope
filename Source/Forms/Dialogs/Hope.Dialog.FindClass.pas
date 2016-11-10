@@ -15,6 +15,7 @@ type
     LabelClasses: TLabel;
     LabelSearch: TLabel;
     TreeClasses: TVirtualStringTree;
+    procedure EditSearchChange(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -24,6 +25,13 @@ type
 implementation
 
 {$R *.dfm}
+
+{ TFormFindClass }
+
+procedure TFormFindClass.EditSearchChange(Sender: TObject);
+begin
+  //
+end;
 
 end.
 

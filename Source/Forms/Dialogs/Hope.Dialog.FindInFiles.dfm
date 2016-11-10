@@ -1,20 +1,20 @@
 inherited FormFindInFiles: TFormFindInFiles
   Caption = 'Find in Files'
-  ClientHeight = 425
+  ClientHeight = 418
   ClientWidth = 574
   PixelsPerInch = 96
   TextHeight = 15
   inherited ButtonOK: TButton
     Left = 329
-    Top = 392
+    Top = 385
   end
   inherited ButtonCancel: TButton
     Left = 410
-    Top = 392
+    Top = 385
   end
   inherited ButtonHelp: TButton
     Left = 491
-    Top = 392
+    Top = 385
   end
   object GroupBoxText: TGroupBox
     AlignWithMargins = True
@@ -64,7 +64,7 @@ inherited FormFindInFiles: TFormFindInFiles
       Caption = '&Replace with:'
       TabOrder = 2
     end
-    object CheckBoxCaseInsensitivity: TCheckBox
+    object CheckBoxCaseSensitivity: TCheckBox
       Left = 16
       Top = 83
       Width = 129
@@ -229,7 +229,7 @@ inherited FormFindInFiles: TFormFindInFiles
     Left = 8
     Top = 322
     Width = 558
-    Height = 61
+    Height = 56
     Margins.Left = 8
     Margins.Top = 4
     Margins.Right = 8

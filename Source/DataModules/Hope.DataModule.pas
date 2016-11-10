@@ -52,6 +52,7 @@ type
     FMonitoredBuffer: TMonitoredBuffer;
     FInternalCompiler: THopeInternalCompiler;
     FBackgroundCompiler: THopeBackgroundCompilerThread;
+    procedure FileModifiedHandler(Sender: TObject; const FileName: TFileName);
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
@@ -87,7 +88,8 @@ implementation
 uses
   Vcl.Forms, Vcl.Graphics, ceflib, dwsUtils, dwsExprs, dwsUnitSymbols,
   dwsSymbols, dwsErrors, dwsCompiler, dwsSuggestions, Hope.Common.DWS,
-  Hope.Common.FileUtilities, Hope.Main, Hope.Editor;
+  Hope.Common.FileUtilities, Hope.Main, Hope.Editor,
+  Hope.Dialog.ReloadChangedFiles;
 
 { TDataModuleCommon }
 
@@ -112,6 +114,7 @@ begin
   FMonitoredBuffer := TMonitoredBuffer.Create;
   FMonitoredBuffer.AddPath(ExpandFileName(Paths.Root + '..\Common\APIs\'));
   FMonitoredBuffer.AddPath(ExpandFileName(Paths.Root + '..\Common\Frameworks\'));
+  FMonitoredBuffer.OnModified := FileModifiedHandler;
 
   FInternalCompiler := THopeInternalCompiler.Create;
   FBackgroundCompiler := THopeBackgroundCompilerThread.Create;
@@ -132,6 +135,17 @@ begin
   FPreferences.Free;
 
   inherited;
+end;
+
+procedure TDataModuleCommon.FileModifiedHandler(Sender: TObject;
+  const FileName: TFileName);
+begin
+  with TFormReloadChangedFiles.Create(nil) do
+  try
+    ShowModal;
+  finally
+    Free;
+  end;
 end;
 
 function TDataModuleCommon.GetText(FileName: TFileName): string;
@@ -198,22 +212,14 @@ begin
 end;
 
 procedure TDataModuleCommon.SynCodeSuggestionsShow(Sender: TObject);
-var
-  CompletionProposalForm: TSynBaseCompletionProposalForm;
 begin
-  inherited;
-
-  if (Sender <> nil) and (Sender is TSynBaseCompletionProposalForm) then
+  Assert(Sender is TSynBaseCompletionProposalForm);
+  with TSynBaseCompletionProposalForm(Sender) do
   begin
-    CompletionProposalForm := TSynBaseCompletionProposalForm(Sender);
-    try
-      CompletionProposalForm.DoubleBuffered := True;
+    DoubleBuffered := True;
 
-      if CompletionProposalForm.Height > 300 then
-        CompletionProposalForm.Height := 300
-    except
-      on Exception do;
-    end;
+    if Height > 256 then
+      Height := 256
   end;
 end;
 
@@ -229,6 +235,7 @@ var
   Suggestions: IdwsSuggestions;
   Item, AddOn: string;
   CurrentEditor: TCustomSynEdit;
+  SuggestionOptions: TdwsSuggestionsOptions;
 begin
   CanExecute := False;
 
@@ -256,8 +263,14 @@ begin
   SourceFile := ScriptProgram.SourceList.MainScript.SourceFile;
   ScriptPos := TScriptPos.Create(SourceFile, CurrentEditor.CaretY,
     CurrentEditor.CaretX);
+
+  if Preferences.CodeInsight.CodeSuggestions.ShowReservedWords then
+    SuggestionOptions := []
+  else
+    SuggestionOptions := [soNoReservedWords];
+
   Suggestions := TDWSSuggestions.Create(ScriptProgram, ScriptPos,
-    [soNoReservedWords]);
+    SuggestionOptions);
 
   // now populate the suggestion box
   for SuggestionIndex := 0 to Suggestions.Count - 1 do

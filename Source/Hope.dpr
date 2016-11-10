@@ -34,7 +34,7 @@ uses
   Hope.Dialog.Preferences in 'Forms\Dialogs\Hope.Dialog.Preferences.pas' {FormPreferences},
   Hope.Dialog.ProjectOptions in 'Forms\Dialogs\Hope.Dialog.ProjectOptions.pas' {FormProjectOptions},
   Hope.Dialog.RecentProperties in 'Forms\Dialogs\Hope.Dialog.RecentProperties.pas' {FormFindReplace},
-  Hope.Dialog.ReloadChangedFiles in 'Forms\Dialogs\Hope.Dialog.ReloadChangedFiles.pas' {FormReloadChanges},
+  Hope.Dialog.ReloadChangedFiles in 'Forms\Dialogs\Hope.Dialog.ReloadChangedFiles.pas' {FormReloadChangedFiles},
   Hope.Docking.Form in 'Forms\Docking\Hope.Docking.Form.pas' {FormDockable},
   Hope.Docking.Host in 'Forms\Docking\Hope.Docking.Host.pas' {FormDockHost},
   Hope.DockingUtils in 'Utils\Hope.DockingUtils.pas',
@@ -63,6 +63,5 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TDataModuleCommon, DataModuleCommon);
   Application.CreateForm(TFormMain, FormMain);
-  Application.CreateForm(TFormReloadChanges, FormReloadChanges);
   Application.Run;
 end.

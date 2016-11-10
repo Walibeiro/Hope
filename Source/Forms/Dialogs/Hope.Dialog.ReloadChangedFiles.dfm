@@ -1,4 +1,4 @@
-object FormReloadChanges: TFormReloadChanges
+object FormReloadChangedFiles: TFormReloadChangedFiles
   Left = 0
   Top = 0
   Caption = 'Reload changed files'
@@ -49,7 +49,14 @@ object FormReloadChanges: TFormReloadChanges
     Header.Font.Name = 'Tahoma'
     Header.Font.Style = []
     Header.MainColumn = -1
+    Images = DataModuleCommon.ImageList16
+    StateImages = DataModuleCommon.ImageList16
     TabOrder = 2
+    TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
+    TreeOptions.PaintOptions = [toShowRoot, toThemeAware, toUseBlendedImages]
+    TreeOptions.SelectionOptions = [toFullRowSelect]
+    OnFreeNode = TreeFilesFreeNode
+    OnGetText = TreeFilesGetText
     Columns = <>
   end
 end

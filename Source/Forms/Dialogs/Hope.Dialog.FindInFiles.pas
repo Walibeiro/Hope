@@ -12,7 +12,7 @@ uses
 type
   TFormFindInFiles = class(TFormDialog)
     ButtonSelectDirectory: TButton;
-    CheckBoxCaseInsensitivity: TCheckBox;
+    CheckBoxCaseSensitivity: TCheckBox;
     CheckBoxConfirmReplace: TCheckBox;
     CheckBoxGroupFiles: TCheckBox;
     CheckBoxRegularExpression: TCheckBox;
@@ -35,11 +35,52 @@ type
     RadioButtonEditorFiles: TRadioButton;
     RadioButtonProjectFiles: TRadioButton;
     RadioButtonProjectGroups: TRadioButton;
+  public
+    procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
+
+    procedure Load;
+    procedure Store;
   end;
 
 implementation
 
 {$R *.dfm}
+
+uses
+  Hope.DataModule;
+
+{ TFormFindInFiles }
+
+procedure TFormFindInFiles.AfterConstruction;
+begin
+  inherited;
+
+  Load;
+end;
+
+procedure TFormFindInFiles.BeforeDestruction;
+begin
+  inherited;
+
+  Store;
+end;
+
+procedure TFormFindInFiles.Load;
+begin
+  CheckBoxCaseSensitivity.Checked := DataModuleCommon.Preferences.FindInFiles.CaseSensitive;
+  CheckBoxWholeWords.Checked := DataModuleCommon.Preferences.FindInFiles.WholeWordsOnly;
+  CheckBoxRegularExpression.Checked := DataModuleCommon.Preferences.FindInFiles.RegularExpressions;
+  CheckBoxConfirmReplace.Checked := DataModuleCommon.Preferences.FindInFiles.ConfirmReplace;
+end;
+
+procedure TFormFindInFiles.Store;
+begin
+  DataModuleCommon.Preferences.FindInFiles.CaseSensitive := CheckBoxCaseSensitivity.Checked;
+  DataModuleCommon.Preferences.FindInFiles.WholeWordsOnly := CheckBoxWholeWords.Checked;
+  DataModuleCommon.Preferences.FindInFiles.RegularExpressions := CheckBoxRegularExpression.Checked;
+  DataModuleCommon.Preferences.FindInFiles.ConfirmReplace := CheckBoxConfirmReplace.Checked;
+end;
 
 end.
 
