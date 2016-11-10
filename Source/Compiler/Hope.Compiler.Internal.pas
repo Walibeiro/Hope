@@ -5,9 +5,8 @@ unit Hope.Compiler.Internal;
 interface
 
 uses
-  System.SysUtils, dwsUtils, dwsComp, dwsCompiler, dwsExprs, dwsJSCodeGen,
-  dwsJSLibModule, dwsCodeGen, dwsErrors, dwsFunctions, Hope.Project,
-  Hope.Project.Options, Hope.Compiler.Base;
+  System.SysUtils, dwsExprs, dwsFunctions,
+  Hope.Project, Hope.Project.Options, Hope.Compiler.Base;
 
 type
   THopeCompilationEvent = procedure(Sender: TObject; CompiledProgram: IdwsProgram) of object;
@@ -18,6 +17,7 @@ type
 
     function GetMainScript(Project: THopeProject): string;
   protected
+    procedure InstanciateCodeGen; override;
     procedure OnIncludeEventHandler(const ScriptName: string;
       var ScriptSource: string); override;
     function OnNeedUnitEventHandler(const UnitName: string;
@@ -35,7 +35,8 @@ type
 implementation
 
 uses
-  dwsXPlatform, dwsExprList, Hope.Common.Constants, Hope.Main, Hope.DataModule,
+  dwsXPlatform, dwsUtils, dwsCompiler, dwsErrors, dwsJSLibModule, dwsCodeGen,
+  dwsJSCodeGen, Hope.Common.Constants, Hope.Main, Hope.DataModule,
   Hope.Common.MonitoredBuffer;
 
 { THopeInternalCompiler }
@@ -55,6 +56,21 @@ function THopeInternalCompiler.OnNeedUnitEventHandler(const UnitName: string;
   var UnitSource: string): IdwsUnit;
 begin
   UnitSource := DataModuleCommon.GetUnit(UnitName);
+end;
+
+procedure THopeInternalCompiler.InstanciateCodeGen;
+begin
+  // create JS lib module (needed for JS asm sections)
+  FCodeGenLib := TdwsJSLibModule.Create(nil);
+  FCodeGenLib.Script := DelphiWebScript;
+
+  // create JS code gen
+  FCodeGen := TdwsJSCodeGen.Create;
+  FCodeGen.Options := [cgoNoRangeChecks, cgoNoCheckInstantiated,
+    cgoNoCheckLoopStep, cgoNoConditions, cgoNoInlineMagics, cgoDeVirtualize,
+    cgoNoRTTI, cgoNoFinalizations, cgoIgnorePublishedInImplementation];
+  FCodeGen.Verbosity := cgovNone;
+  TdwsJSCodeGen(FCodeGen).MainBodyName := '';
 end;
 
 procedure THopeInternalCompiler.SetupCompiler(Options: THopeProjectOptions);

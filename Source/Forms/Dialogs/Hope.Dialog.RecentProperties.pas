@@ -20,7 +20,7 @@ type
     ActionClear: TAction;
     ActionDelete: TAction;
     ActionList: TActionList;
-    ActionRemoveInvalid: TAction;
+    ActionDeleteNonExistingFiles: TAction;
     ButtonClear: TButton;
     ButtonDelete: TButton;
     ButtonRemoveInvalid: TButton;

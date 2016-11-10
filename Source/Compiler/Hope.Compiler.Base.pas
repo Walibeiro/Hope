@@ -5,23 +5,25 @@ unit Hope.Compiler.Base;
 interface
 
 uses
-  System.SysUtils, dwsUtils, dwsComp, dwsCompiler, dwsExprs, dwsJSCodeGen,
-  dwsJSLibModule, dwsCodeGen, dwsErrors, dwsFunctions, Hope.Project;
+  System.SysUtils, dwsUtils, dwsComp, dwsCompiler, dwsExprs, dwsErrors,
+  dwsFunctions, dwsCodeGen, Hope.Project;
 
 type
   THopeBaseCompiler = class
   private
     FDelphiWebScript: TDelphiWebScript;
-    FCodeGen: TdwsJSCodeGen;
-    FJSLib: TdwsJSLibModule;
   protected
+    FCodeGen: TdwsCodeGen;
+    FCodeGenLib: TdwsCustomLangageExtension;
+
+    procedure InstanciateCodeGen; virtual; abstract;
     procedure OnIncludeEventHandler(const ScriptName: string;
       var ScriptSource: string); virtual; abstract;
     function OnNeedUnitEventHandler(const UnitName: string;
       var UnitSource: string) : IdwsUnit; virtual; abstract;
 
     property DelphiWebScript: TDelphiWebScript read FDelphiWebScript;
-    property CodeGen: TdwsJSCodeGen read FCodeGen;
+    property CodeGen: TdwsCodeGen read FCodeGen;
   public
     constructor Create;
     destructor Destroy; override;
@@ -44,22 +46,13 @@ begin
   DelphiWebScript.OnNeedUnit := OnNeedUnitEventHandler;
   DelphiWebScript.OnInclude := OnIncludeEventHandler;
 
-  // create JS lib modume
-  FJSLib := TdwsJSLibModule.Create(nil);
-  FJSLib.Script := FDelphiWebScript;
-
-  FCodeGen := TdwsJSCodeGen.Create;
-  FCodeGen.Options := [cgoNoRangeChecks, cgoNoCheckInstantiated,
-    cgoNoCheckLoopStep, cgoNoConditions, cgoNoInlineMagics, cgoDeVirtualize,
-    cgoNoRTTI, cgoNoFinalizations, cgoIgnorePublishedInImplementation];
-  FCodeGen.Verbosity := cgovNone;
-  FCodeGen.MainBodyName := '';
+  InstanciateCodeGen;
 end;
 
 destructor THopeBaseCompiler.Destroy;
 begin
   FDelphiWebScript.Free;
-  FJSLib.Free;
+  FCodeGenLib.Free;
   FCodeGen.Free;
 
   inherited;

@@ -28,6 +28,8 @@ object FormEditor: TFormEditor
     Font.Name = 'Courier New'
     Font.Style = []
     TabOrder = 0
+    OnClick = EditorClick
+    OnEnter = EditorEnter
     BorderStyle = bsNone
     Gutter.Font.Charset = DEFAULT_CHARSET
     Gutter.Font.Color = clWindowText
@@ -37,6 +39,7 @@ object FormEditor: TFormEditor
     SearchEngine = DataModuleCommon.SynEditSearch
     OnChange = EditorChange
     OnGutterPaint = EditorGutterPaint
+    OnProcessUserCommand = EditorProcessUserCommand
     OnStatusChange = EditorStatusChange
     FontSmoothing = fsmNone
   end

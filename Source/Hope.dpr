@@ -11,6 +11,7 @@ uses
   Hope.ColorPicker in 'Forms\Hope.ColorPicker.pas' {FormColorPicker},
   Hope.Common.Constants in 'Common\Hope.Common.Constants.pas',
   Hope.Common.DirectoryMonitor in 'Common\Hope.Common.DirectoryMonitor.pas',
+  Hope.Common.DWS in 'Common\Hope.Common.DWS.pas',
   Hope.Common.FileUtilities in 'Common\Hope.Common.FileUtilities.pas',
   Hope.Common.History in 'Common\Hope.Common.History.pas',
   Hope.Common.IDE in 'Common\Hope.Common.IDE.pas',

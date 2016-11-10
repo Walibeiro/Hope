@@ -36,6 +36,10 @@ type
     SynObjectPascal: TSynMultiSyn;
     SynParameters: TSynCompletionProposal;
     procedure SynMacroRecorderStateChange(Sender: TObject);
+    procedure SynParametersClose(Sender: TObject);
+    procedure SynParametersShow(Sender: TObject);
+    procedure SynParametersExecute(Kind: SynCompletionType; Sender: TObject;
+      var CurrentInput: string; var x, y: Integer; var CanExecute: Boolean);
   private
     FHistory: THopeHistory;
     FPositions: THopePositions;
@@ -75,7 +79,9 @@ implementation
 {$R *.dfm}
 
 uses
-  ceflib, Hope.Main;
+  ceflib, dwsUtils, dwsExprs, dwsUnitSymbols, dwsSymbols, dwsErrors,
+  dwsCompiler, Hope.Common.DWS, Hope.Common.FileUtilities,
+  Hope.Main, Hope.Editor;
 
 { TDataModuleCommon }
 
@@ -167,6 +173,179 @@ begin
     ActionMacroStop.Enabled := SynMacroRecorder.State in [msRecording, msPlaying];
     ActionMacroPlay.Enabled := (SynMacroRecorder.State = msStopped) and not SynMacroRecorder.IsEmpty;
     ActionMacroRecord.Enabled := (SynMacroRecorder.State = msStopped);
+  end;
+end;
+
+procedure TDataModuleCommon.SynParametersClose(Sender: TObject);
+begin
+  // info is not visible
+  SynParameters.Tag := 0;
+end;
+
+procedure TDataModuleCommon.SynParametersShow(Sender: TObject);
+begin
+  // info is visible
+  SynParameters.Tag := 1;
+end;
+
+procedure GetParametersForCursor(const AProgram: IdwsProgram; AUnitName: string;
+  Pos: TBufferCoord; var ParameterInfos: TStrings; InfoPosition: Integer = 0);
+var
+  Overloads : TFuncSymbolList;
+  ItemIndex: Integer;
+  FuncSymbol: TFuncSymbol;
+  SymbolDictionary: TdwsSymbolDictionary;
+  Symbol, TestSymbol: TSymbol;
+begin
+  // make sure the string list is present
+  Assert(Assigned(ParameterInfos));
+
+  // ensure a compiled program is assigned
+  if not Assigned(AProgram) then
+    Exit;
+
+  SymbolDictionary := AProgram.SymbolDictionary;
+  Symbol := SymbolDictionary.FindSymbolAtPosition(Pos.Char, Pos.Line, AUnitName);
+
+  if (Symbol is TSourceMethodSymbol) then
+  begin
+    // collect overloaded methods
+    Overloads := CollectMethodOverloads(TSourceMethodSymbol(Symbol));
+    try
+      // add parameters for all overloads
+      for ItemIndex := 0 to Overloads.Count - 1 do
+      begin
+        FuncSymbol := Overloads[ItemIndex];
+        AddParametersToParameterInfo(FuncSymbol.Params, ParameterInfos, InfoPosition);
+      end;
+    finally
+      Overloads.Free;
+    end;
+  end else
+  if (Symbol is TFuncSymbol) then
+  begin
+    AddParametersToParameterInfo(TFuncSymbol(Symbol).Params, ParameterInfos, InfoPosition);
+
+    if TFuncSymbol(Symbol).IsOverloaded then
+    begin
+      for ItemIndex := 0 to SymbolDictionary.Count - 1 do
+      begin
+        TestSymbol := SymbolDictionary.Items[ItemIndex].Symbol;
+        FuncSymbol := TFuncSymbol(TestSymbol);
+
+        if (TestSymbol <> Symbol) and (TestSymbol.ClassType = Symbol.ClassType) and
+          UnicodeSameText(TFuncSymbol(Symbol).Name, FuncSymbol.Name) then
+          AddParametersToParameterInfo(FuncSymbol.Params, ParameterInfos, InfoPosition);
+      end;
+    end
+  end;
+
+  // check if no parameters at all is an option, if so: replace and move to top
+  ItemIndex := ParameterInfos.IndexOf('');
+  if ItemIndex >= 0 then
+  begin
+    ParameterInfos.Delete(ItemIndex);
+    ParameterInfos.Insert(0, '"<no parameters required>"');
+  end;
+end;
+
+procedure TDataModuleCommon.SynParametersExecute(Kind: SynCompletionType;
+  Sender: TObject; var CurrentInput: string; var x, y: Integer;
+  var CanExecute: Boolean);
+var
+  CompiledProject: IdwsProgram;
+  CurrentLineText: string;
+  Pos: TBufferCoord;
+  ParameterInfo: TSynCompletionProposal;
+  ParameterInfos: TStrings;
+  TmpLocation, StartX, ParenCounter: Integer;
+  EditorForm: TFormEditor;
+begin
+  CanExecute := False;
+
+  // eventually exit if code suggestions is disabled
+  if not Preferences.CodeInsight.CodeSuggestions.Enabled then
+    Exit;
+
+  ParameterInfo := TSynCompletionProposal(Sender);
+  ParameterInfo.InsertList.Clear;
+  ParameterInfo.ItemList.Clear;
+  ParameterInfos := TStrings(ParameterInfo.ItemList);
+
+  // get text @ current line
+  with TSynCompletionProposal(Sender).Editor do
+  begin
+    EditorForm := FormMain.FocusedEditorForm;
+    if not Assigned(EditorForm) then
+      Exit;
+
+    // get current compiled program
+    CompiledProject := DataModuleCommon.BackgroundCompiler.GetCompiledProgram(SynParameters.Tag = 0);
+    if not Assigned(CompiledProject) then
+      Exit;
+
+    CurrentLineText := LineText;
+
+    //go back from the cursor and find the first open paren
+    Pos := CaretXY;
+    if Pos.Char > Length(CurrentLineText) then
+      Pos.Char := Length(CurrentLineText)
+    else
+      Dec(Pos.Char);
+    TmpLocation := 0;
+
+    while (Pos.Char > 0) and not CanExecute do
+    begin
+      if CurrentLineText[Pos.Char] = ',' then
+      begin
+        Inc(TmpLocation);
+        Dec(Pos.Char);
+      end
+      else if CurrentLineText[Pos.Char] = ')' then
+      begin
+        // we found a close, go till it's opening paren
+        ParenCounter := 1;
+        Dec(Pos.Char);
+        while (Pos.Char > 0) and (ParenCounter > 0) do
+        begin
+          if CurrentLineText[Pos.Char] = ')' then
+            Inc(ParenCounter)
+          else if CurrentLineText[Pos.Char] = '(' then
+            Dec(ParenCounter);
+          Dec(Pos.Char);
+        end;
+        // eventually eat the open paren
+        if Pos.Char > 0 then
+          Dec(Pos.Char);
+      end
+      else if CurrentLineText[Pos.Char] = '(' then
+      begin
+        // we have a valid open paren, lets see what the word before it is
+        StartX := Pos.Char;
+        while (Pos.Char > 0) and not IsIdentChar(CurrentLineText[Pos.Char])do
+          Dec(Pos.Char);
+        if Pos.Char > 0 then
+        begin
+          while (Pos.Char > 0) and IsIdentChar(CurrentLineText[Pos.Char]) do
+            Dec(Pos.Char);
+          Inc(Pos.Char);
+
+          GetParametersForCursor(CompiledProject,
+            ExtractUnitName(EditorForm.FileName), Pos, ParameterInfos,
+            TmpLocation);
+
+          CanExecute := ParameterInfos.Count > 0;
+
+          if not (CanExecute) then
+          begin
+            Pos.Char := StartX;
+            Dec(Pos.Char);
+          end
+          else
+            TSynCompletionProposal(Sender).Form.CurrentIndex := TmpLocation;
+        end;
+      end else Dec(Pos.Char)
+    end;
   end;
 end;
 

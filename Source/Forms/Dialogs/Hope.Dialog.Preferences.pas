@@ -6,9 +6,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
-  Vcl.ComCtrls, Vcl.ExtCtrls, VirtualTrees, Hope.Dialog, Hope.DataModule,
-  System.Actions, Vcl.ActnList, SynEdit;
+  System.Actions, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.ActnList, Vcl.Samples.Spin,
+  VirtualTrees, SynEdit, Hope.Dialog, Hope.DataModule;
 
 type
   TTabSheetItem = record
@@ -103,6 +103,30 @@ type
     TabSheetRecentFiles: TTabSheet;
     TabSheetVersionControl: TTabSheet;
     TreeCategory: TVirtualStringTree;
+    GroupBoxAutomaticFeatures: TGroupBox;
+    LabelDelay: TLabel;
+    LabelNone: TLabel;
+    LabelOff: TLabel;
+    LabelValue: TLabel;
+    CheckBoxCodeSuggestions: TCheckBox;
+    CheckBoxAutoParenthesis: TCheckBox;
+    CheckBoxShowReservedWords: TCheckBox;
+    CheckBoxCodeParameters: TCheckBox;
+    TrackBarDelay: TTrackBar;
+    CheckBoxTooltipSymbol: TCheckBox;
+    CheckBoxBlockCompletion: TCheckBox;
+    ComboBoxBlockCompletion: TComboBox;
+    CheckBoxErrorInsight: TCheckBox;
+    CheckBoxCodeTemplateCompletion: TCheckBox;
+    LabelIndention: TLabel;
+    SpinEditIndent: TSpinEdit;
+    SpinEditIndentMax: TSpinEdit;
+    LabelIndentMax: TLabel;
+    GroupBoxColors: TGroupBox;
+    LabelConflicts: TLabel;
+    ColorBoxConflicted: TColorBox;
+    Label1: TLabel;
+    ColorBoxAdded: TColorBox;
     procedure TreeCategoryChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure TreeCategoryGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
@@ -113,6 +137,7 @@ type
       Node: PVirtualNode; const SearchText: string; var Result: Integer);
     procedure ButtonProjectPathClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure TrackBarDelayChange(Sender: TObject);
   private
     procedure UpdateTree;
   public
@@ -160,6 +185,27 @@ procedure TFormPreferences.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   if ModalResult = mrOk then
     Store;
+end;
+
+function TrackBarToDelay(Value: Integer): Integer;
+begin
+  if Value < 10 then
+    Result := 10 * Value
+  else if Value < 20 then
+    Result := 100 + 100 * (Value - 10)
+  else
+    Result := 1500 + 500 * (Value - 20);
+end;
+
+procedure TFormPreferences.TrackBarDelayChange(Sender: TObject);
+begin
+  if TrackBarDelay.Position = 0 then
+    LabelValue.Caption := 'Invoked immediately'
+  else
+  if TrackBarDelay.Position = TrackBarDelay.Max then
+    LabelValue.Caption := 'Never invoked automatically'
+  else
+    LabelValue.Caption := IntToStr(TrackBarToDelay(TrackBarDelay.Position)) + 'ms';
 end;
 
 procedure TFormPreferences.TreeCategoryChange(Sender: TBaseVirtualTree;
@@ -258,6 +304,48 @@ begin
   Preferences := DataModuleCommon.Preferences;
 
   ComboBoxProjectPath.Text := Preferences.Environment.DefaultProjectPath;
+
+  CheckBoxAltSetsColumnMode.Checked := Preferences.Editor.AltSetsColumnMode;
+  CheckBoxAutoIndent.Checked := Preferences.Editor.AutoIndent;
+  CheckBoxAutoSizeMaxWidth.Checked := Preferences.Editor.AutoSizeMaxScrollWidth;
+  CheckBoxDisableScrollArrows.Checked := Preferences.Editor.DisableScrollArrows;
+  CheckBoxDragAndDropEditing.Checked := Preferences.Editor.DragDropEditing;
+//  CheckBoxDropFiles.Checked := Preferences.Editor.DropFiles;
+  CheckBoxEnhanceHomeKey.Checked := Preferences.Editor.EnhanceHomeKey;
+  CheckBoxEnhanceEndKey.Checked := Preferences.Editor.EnhanceEndKey;
+  CheckBoxGroupUndo.Checked := Preferences.Editor.GroupUndo;
+  CheckBoxHalfPageScroll.Checked := Preferences.Editor.HalfPageScroll;
+  CheckBoxHideShowScrollbars.Checked := Preferences.Editor.HideShowScrollbars;
+  CheckBoxKeepCaretX.Checked := Preferences.Editor.KeepCaretX;
+//  CheckBoxNoCaret.Checked := Preferences.Editor.NoCaret;
+//  CheckBoxNoSelection.Checked := Preferences.Editor.NoSelection;
+  CheckBoxRightMouseMoves.Checked := Preferences.Editor.RightMouseMovesCursor;
+  CheckBoxScrollByOneLess.Checked := Preferences.Editor.ScrollByOneLess;
+  CheckBoxScrollHintFollows.Checked := Preferences.Editor.ScrollHintFollows;
+  CheckBoxScrollPastEof.Checked := Preferences.Editor.ScrollPastEof;
+  CheckBoxScrollPastEol.Checked := Preferences.Editor.ScrollPastEol;
+  CheckBoxShowScrollHint.Checked := Preferences.Editor.ShowScrollHint;
+  CheckBoxShowSpecialChars.Checked := Preferences.Editor.ShowSpecialChars;
+  CheckBoxSmartTabDelete.Checked := Preferences.Editor.SmartTabDelete;
+  CheckBoxSmartTabs.Checked := Preferences.Editor.SmartTabs;
+//  CheckBoxSpecialLineDefaultFg.Checked := Preferences.Editor.SpecialLineDefaultFg;
+  CheckBoxTabIndent.Checked := Preferences.Editor.TabIndent;
+  CheckBoxTabsToSpaces.Checked := Preferences.Editor.TabsToSpaces;
+  CheckBoxTrimTrailingSpaces.Checked := Preferences.Editor.TrimTrailingSpace;
+
+  CheckBoxCodeSuggestions.Checked := Preferences.CodeInsight.CodeSuggestions.Enabled;
+  CheckBoxAutoParenthesis.Checked := Preferences.CodeInsight.CodeSuggestions.AutoParenthesis;
+  CheckBoxShowReservedWords.Checked := Preferences.CodeInsight.CodeSuggestions.ShowReservedWords;
+  CheckBoxCodeParameters.Checked := Preferences.CodeInsight.CodeParametes;
+  CheckBoxTooltipSymbol.Checked := Preferences.CodeInsight.TooltipSymbolInsight;
+  CheckBoxBlockCompletion.Checked := Preferences.CodeInsight.BlockCompletion;
+  CheckBoxErrorInsight.Checked := Preferences.CodeInsight.ErrorInsight;
+  CheckBoxCodeTemplateCompletion.Checked := Preferences.CodeInsight.CodeTemplateCompletion;
+
+  SpinEditIndent.Value := Preferences.Formating.Indention;
+
+  ColorBoxConflicted.Color := Preferences.Versioning.Colors.Conflicted;
+  ColorBoxAdded.Color := Preferences.Versioning.Colors.Added;
 end;
 
 procedure TFormPreferences.Store;
@@ -295,6 +383,20 @@ begin
   Preferences.Editor.TabIndent := CheckBoxTabIndent.Checked;
   Preferences.Editor.TabsToSpaces := CheckBoxTabsToSpaces.Checked;
   Preferences.Editor.TrimTrailingSpace := CheckBoxTrimTrailingSpaces.Checked;
+
+  Preferences.CodeInsight.CodeSuggestions.Enabled := CheckBoxCodeSuggestions.Checked;
+  Preferences.CodeInsight.CodeSuggestions.AutoParenthesis := CheckBoxAutoParenthesis.Checked;
+  Preferences.CodeInsight.CodeSuggestions.ShowReservedWords := CheckBoxShowReservedWords.Checked;
+  Preferences.CodeInsight.CodeParametes := CheckBoxCodeParameters.Checked;
+  Preferences.CodeInsight.TooltipSymbolInsight := CheckBoxTooltipSymbol.Checked;
+  Preferences.CodeInsight.BlockCompletion := CheckBoxBlockCompletion.Checked;
+  Preferences.CodeInsight.ErrorInsight := CheckBoxErrorInsight.Checked;
+  Preferences.CodeInsight.CodeTemplateCompletion := CheckBoxCodeTemplateCompletion.Checked;
+
+  Preferences.Formating.Indention := SpinEditIndent.Value;
+
+  Preferences.Versioning.Colors.Conflicted := ColorBoxConflicted.Color;
+  Preferences.Versioning.Colors.Added := ColorBoxAdded.Color;
 end;
 
 end.

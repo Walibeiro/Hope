@@ -7,8 +7,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls,
-  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ToolWin, SynEdit, SynEditTypes,
-  Hope.DataModule, Hope.Project.Local;
+  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ToolWin,
+  SynEdit, SynEditTypes, SynEditKeyCmds, Hope.DataModule, Hope.Project.Local;
 
 type
   TStatusBar = class(Vcl.ComCtrls.TStatusBar)
@@ -16,7 +16,16 @@ type
     constructor Create(AOwner: TComponent); override;
   end;
 
-  TFormEditor = class(TForm)
+  IEditorService = interface
+    procedure InvokeCodeSuggestions;
+    procedure InvokeParameterInformation;
+    procedure GotoInterface;
+    procedure GotoImplementation;
+    procedure MoveLines(MoveUp: Boolean);
+    procedure SetupEditorFromPreferences;
+  end;
+
+  TFormEditor = class(TForm, IEditorService)
     Editor: TSynEdit;
     StatusBar: TStatusBar;
     ToolBarMacro: TToolBar;
@@ -26,6 +35,10 @@ type
     procedure EditorGutterPaint(Sender: TObject; aLine, X, Y: Integer);
     procedure EditorStatusChange(Sender: TObject; Changes: TSynStatusChanges);
     procedure EditorChange(Sender: TObject);
+    procedure EditorProcessUserCommand(Sender: TObject;
+      var Command: TSynEditorCommand; var AChar: Char; Data: Pointer);
+    procedure EditorEnter(Sender: TObject);
+    procedure EditorClick(Sender: TObject);
   private
     FFileName: TFileName;
     FShortFileName: TFileName;
@@ -33,15 +46,23 @@ type
     FNeedsSync: Boolean;
     procedure SetFileName(const Value: TFileName);
     procedure FileNameChanged;
+    procedure AddCustomEditorKeystrokes;
   protected
-    procedure Assign(Source: TPersistent); override;
     procedure AssignTo(Dest: TPersistent); override;
   public
     procedure AfterConstruction; override;
+    procedure Assign(Source: TPersistent); override;
 
     procedure EditorToBuffer;
     procedure BufferToEditor; overload;
     procedure BufferToEditor(Text: string); overload;
+
+    procedure InvokeCodeSuggestions;
+    procedure InvokeParameterInformation;
+    procedure GotoInterface;
+    procedure GotoImplementation;
+    procedure MoveLines(MoveUp: Boolean);
+    procedure SetupEditorFromPreferences;
 
     property FileName: TFileName read FFileName write SetFileName;
   end;
@@ -49,7 +70,9 @@ type
 implementation
 
 uses
-  dwsUtils, dwsXPlatform, Hope.Main;
+  System.Contnrs, dwsExprs, dwsSymbols, dwsTokenizer, dwsUtils, dwsXPlatform,
+  Hope.Main, Hope.Common.FileUtilities, Hope.Common.MonitoredBuffer,
+  Hope.Common.Preferences;
 
 {$R *.dfm}
 
@@ -76,11 +99,30 @@ begin
   ToolBarMacro.Left := 1;
   ToolBarMacro.Top := 3;
   ToolBarMacro.Images := DataModuleCommon.ImageList12;
+
+  AddCustomEditorKeystrokes;
+  SetupEditorFromPreferences;
 end;
 
 procedure TFormEditor.EditorChange(Sender: TObject);
 begin
+  FNeedsSync := True;
   DataModuleCommon.BackgroundCompiler.Invalidate;
+end;
+
+procedure TFormEditor.EditorClick(Sender: TObject);
+var
+  ShiftState: TShiftState;
+begin
+  ShiftState := KeyboardStateToShiftState;
+  if (ssCtrl in ShiftState) then
+    // goto definition
+end;
+
+procedure TFormEditor.EditorEnter(Sender: TObject);
+begin
+  DataModuleCommon.SynCodeSuggestions.Editor := Editor;
+  DataModuleCommon.SynParameters.Editor := Editor;
 end;
 
 procedure TFormEditor.EditorGutterPaint(Sender: TObject; aLine, X, Y: Integer);
@@ -123,6 +165,45 @@ begin
   end;
 end;
 
+procedure TFormEditor.EditorProcessUserCommand(Sender: TObject;
+  var Command: TSynEditorCommand; var AChar: Char; Data: Pointer);
+begin
+  inherited;
+
+  case Command of
+    ecUserFirst:
+      begin
+        FormMain.ActionCodeSuggestions.Execute;
+        AChar := #0;
+      end;
+    ecUserFirst + 1:
+      begin
+        FormMain.ActionParameterInfo.Execute;
+        AChar := #0;
+      end;
+    ecUserFirst + 2:
+      begin
+        FormMain.ActionGotoInterface.Execute;
+        AChar := #0;
+      end;
+    ecUserFirst + 3:
+      begin
+        FormMain.ActionGotoImplementation.Execute;
+        AChar := #0;
+      end;
+    ecUserFirst + 4:
+      begin
+        FormMain.ActionMoveUp.Execute;
+        AChar := #0;
+      end;
+    ecUserFirst + 5:
+      begin
+        FormMain.ActionMoveDown.Execute;
+        AChar := #0;
+      end;
+  end;
+end;
+
 procedure TFormEditor.EditorStatusChange(Sender: TObject;
   Changes: TSynStatusChanges);
 begin
@@ -156,10 +237,31 @@ begin
   Caption := FShortFileName;
 end;
 
+procedure TFormEditor.AddCustomEditorKeystrokes;
+
+  procedure AddKeystroke(ACommand: TSynEditorCommand; AKey: Word; AShift: TShiftState);
+  begin
+    with Editor.Keystrokes.Add do
+    begin
+      Command := ACommand;
+      Key := AKey;
+      Shift := AShift;
+    end;
+  end;
+
+begin
+  AddKeystroke(ecUserFirst    , VK_SPACE, [ssCTRL]);
+  AddKeystroke(ecUserFirst + 1, VK_SPACE, [ssCTRL, ssShift]);
+  AddKeystroke(ecUserFirst + 2, VK_UP, [ssCTRL, ssShift]);
+  AddKeystroke(ecUserFirst + 3, VK_DOWN, [ssCTRL, ssShift]);
+  AddKeystroke(ecUserFirst + 4, VK_UP, [ssAlt, ssShift]);
+  AddKeystroke(ecUserFirst + 5, VK_DOWN, [ssAlt, ssShift]);
+end;
+
 procedure TFormEditor.Assign(Source: TPersistent);
 var
   Bookmark: THopeBookmark;
-  Index, X, Y: Integer;
+  Index: Integer;
 begin
   if Source is THopeOpenedFile then
   begin
@@ -180,7 +282,6 @@ end;
 
 procedure TFormEditor.AssignTo(Dest: TPersistent);
 var
-  Bookmark: THopeBookmark;
   Index, X, Y: Integer;
 begin
   if Dest is THopeOpenedFile then
@@ -214,8 +315,130 @@ begin
   if FNeedsSync then
   begin
     FNeedsSync := False;
-    DataModuleCommon.MonitoredBuffer[FileName] := Editor.Text;;
+    DataModuleCommon.MonitoredBuffer[FileName] := Editor.Text;
   end;
+end;
+
+procedure TFormEditor.GotoImplementation;
+var
+  CurrentProgram: IdwsProgram;
+  Symbol: TSymbol;
+  SymbolPosition: TSymbolPosition;
+begin
+  // get the current program
+  CurrentProgram := DataModuleCommon.BackgroundCompiler.GetCompiledProgram;
+  if not Assigned(CurrentProgram) then
+    Exit;
+
+  // find current symbol
+  Symbol := CurrentProgram.SymbolDictionary.FindSymbolAtPosition(Editor.CaretX, Editor.CaretY,
+    ExtractUnitName(FileName));
+
+  // find according implementation symbol
+  SymbolPosition := CurrentProgram.SymbolDictionary.FindSymbolUsage(Symbol, suImplementation);
+  if Assigned(SymbolPosition) then
+  begin
+    Editor.CaretXY := BufferCoord(
+      SymbolPosition.ScriptPos.Col,
+      SymbolPosition.ScriptPos.Line);
+  end;
+end;
+
+procedure TFormEditor.GotoInterface;
+var
+  CurrentProgram: IdwsProgram;
+begin
+  // get recent program
+  CurrentProgram := DataModuleCommon.BackgroundCompiler.GetCompiledProgram;
+end;
+
+procedure TFormEditor.InvokeCodeSuggestions;
+begin
+  DataModuleCommon.SynCodeSuggestions.Editor := Editor;
+  DataModuleCommon.SynCodeSuggestions.ActivateCompletion;
+end;
+
+procedure TFormEditor.InvokeParameterInformation;
+begin
+  DataModuleCommon.SynParameters.Editor := Editor;
+  DataModuleCommon.SynParameters.ActivateCompletion;
+end;
+
+procedure TFormEditor.MoveLines(MoveUp: Boolean);
+var
+  LineStr: string;
+begin
+  Editor.BeginUpdate;
+  try
+    if MoveUp then
+    begin
+      // get line before/after block
+      LineStr := Editor.Lines[Editor.BlockBegin.Line - 2];
+
+      Editor.Lines.Delete(Editor.BlockBegin.Line - 2);
+      Editor.Lines.Insert(Editor.BlockEnd.Line - 1, LineStr);
+    end
+    else
+    begin
+      // get line before/after block
+      LineStr := Editor.Lines[Editor.BlockEnd.Line];
+
+      Editor.Lines.Delete(Editor.BlockEnd.Line);
+      Editor.Lines.Insert(Editor.BlockBegin.Line - 1, LineStr);
+    end;
+  finally
+    Editor.EndUpdate;
+  end;
+end;
+
+procedure TFormEditor.SetupEditorFromPreferences;
+var
+  Options: TSynEditorOptions;
+
+  procedure SwitchSet(Value: Boolean; Option: TSynEditorOption);
+  begin
+    if Value then
+      Include(Options, Option)
+    else
+      Exclude(Options, Option);
+  end;
+
+var
+  EditorPreferences: THopePreferencesEditor;
+begin
+  EditorPreferences := DataModuleCommon.Preferences.Editor;
+
+  Options := Editor.Options;
+
+  SwitchSet(EditorPreferences.AltSetsColumnMode, eoAltSetsColumnMode);
+  SwitchSet(EditorPreferences.AutoIndent, eoAutoIndent);
+  SwitchSet(EditorPreferences.AutoSizeMaxScrollWidth, eoAutoSizeMaxScrollWidth);
+  SwitchSet(EditorPreferences.DisableScrollArrows, eoDisableScrollArrows);
+  SwitchSet(EditorPreferences.DragDropEditing, eoDragDropEditing);
+  SwitchSet(EditorPreferences.DropFiles, eoDropFiles);
+  SwitchSet(EditorPreferences.EnhanceHomeKey, eoEnhanceHomeKey);
+  SwitchSet(EditorPreferences.EnhanceHomeKey, eoEnhanceEndKey);
+  SwitchSet(EditorPreferences.GroupUndo, eoGroupUndo);
+  SwitchSet(EditorPreferences.HalfPageScroll, eoHalfPageScroll);
+  SwitchSet(EditorPreferences.HideShowScrollbars, eoHideShowScrollbars);
+  SwitchSet(EditorPreferences.KeepCaretX, eoKeepCaretX);
+  SwitchSet(EditorPreferences.NoCaret, eoNoCaret);
+  SwitchSet(EditorPreferences.NoSelection, eoNoSelection);
+  SwitchSet(EditorPreferences.RightMouseMovesCursor, eoRightMouseMovesCursor);
+  SwitchSet(EditorPreferences.ScrollByOneLess, eoScrollByOneLess);
+  SwitchSet(EditorPreferences.ScrollHintFollows, eoScrollHintFollows);
+  SwitchSet(EditorPreferences.ScrollPastEof, eoScrollPastEof);
+  SwitchSet(EditorPreferences.ScrollPastEol, eoScrollPastEol);
+  SwitchSet(EditorPreferences.ShowScrollHint, eoShowScrollHint);
+  SwitchSet(EditorPreferences.ShowSpecialChars, eoShowSpecialChars);
+  SwitchSet(EditorPreferences.SmartTabDelete, eoSmartTabDelete);
+  SwitchSet(EditorPreferences.SmartTabs, eoSmartTabs);
+  SwitchSet(EditorPreferences.SpecialLineDefaultFg, eoSpecialLineDefaultFg);
+  SwitchSet(EditorPreferences.TabIndent, eoTabIndent);
+  SwitchSet(EditorPreferences.TabsToSpaces, eoTabsToSpaces);
+  SwitchSet(EditorPreferences.TrimTrailingSpace, eoTrimTrailingSpaces);
+
+  Editor.Options := Options;
 end;
 
 procedure TFormEditor.SetFileName(const Value: TFileName);

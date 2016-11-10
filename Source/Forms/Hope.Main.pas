@@ -16,6 +16,7 @@ uses
 
 type
   TFormMain = class(TForm)
+    ActionCodeSuggestions: TAction;
     ActionEditCopy: TEditCopy;
     ActionEditCut: TEditCut;
     ActionEditDelete: TEditDelete;
@@ -38,11 +39,18 @@ type
     ActionFileSaveAs: TFileSaveAs;
     ActionFileSaveProject: TAction;
     ActionFileSaveProjectAs: TFileSaveAs;
+    ActionGotoImplementation: TAction;
+    ActionGotoInterface: TAction;
     ActionHelpAbout: TAction;
     ActionList: TActionList;
     ActionMacroPlay: TAction;
     ActionMacroRecord: TAction;
     ActionMacroStop: TAction;
+    ActionMoveDown: TAction;
+    ActionMoveUp: TAction;
+    ActionPageCloseOthers: TAction;
+    ActionPageClosePage: TAction;
+    ActionParameterInfo: TAction;
     ActionProjectAdd: TAction;
     ActionProjectBuild: TAction;
     ActionProjectBuildAll: TAction;
@@ -71,6 +79,7 @@ type
     ActionViewFileBrowser: TAction;
     ActionViewUnits: TAction;
     ActionViewWelcomePage: TAction;
+    Closeallotherpages1: TMenuItem;
     MainMenu: TMainMenu;
     MenuFileOpenRecentProperties: TMenuItem;
     MenuItemEdit: TMenuItem;
@@ -102,6 +111,7 @@ type
     MenuItemHelp: TMenuItem;
     MenuItemHelpAbout: TMenuItem;
     MenuItemPackages: TMenuItem;
+    MenuItemPageClosePage: TMenuItem;
     MenuItemProject: TMenuItem;
     MenuItemProjectAddToProject: TMenuItem;
     MenuItemProjectBuild: TMenuItem;
@@ -149,22 +159,18 @@ type
     N13: TMenuItem;
     N14: TMenuItem;
     N15: TMenuItem;
+    N2: TMenuItem;
+    Pages1: TMenuItem;
     PanelBottom: TPanel;
     PanelLeft: TPanel;
     PanelMain: TPanel;
     PanelRight: TPanel;
     PanelTabs: TPanel;
+    PopupMenu: TPopupMenu;
     SplitterBottom: TSplitter;
     SplitterLeft: TSplitter;
     SplitterRight: TSplitter;
     TabSet: TTabSet;
-    PopupMenu: TPopupMenu;
-    ActionPageClosePage: TAction;
-    MenuItemPageClosePage: TMenuItem;
-    Pages1: TMenuItem;
-    ActionPageCloseOthers: TAction;
-    N2: TMenuItem;
-    Closeallotherpages1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDockOver(Sender: TObject; Source: TDragDockObject; X,
@@ -204,6 +210,12 @@ type
     procedure ActionViewWelcomePageExecute(Sender: TObject);
     procedure ActionPageClosePageExecute(Sender: TObject);
     procedure ActionPageCloseOthersExecute(Sender: TObject);
+    procedure ActionMoveUpExecute(Sender: TObject);
+    procedure ActionMoveDownExecute(Sender: TObject);
+    procedure ActionCodeSuggestionsExecute(Sender: TObject);
+    procedure ActionParameterInfoExecute(Sender: TObject);
+    procedure ActionGotoInterfaceExecute(Sender: TObject);
+    procedure ActionGotoImplementationExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -222,13 +234,14 @@ type
     procedure CMDockClient(var Message: TCMDockClient); message CM_DOCKCLIENT;
     function ComputeDockingRect(var DockRect: TRect; MousePos: TPoint): TAlign;
 
-    procedure TabChanged;
-
     procedure RegisterNewTab(Form: TForm; Focus: Boolean = True);
     procedure FocusTab(Form: TForm);
     function GetCompiler: THopeInternalCompiler; inline;
     procedure RecentProjectClickHandler(Sender: TObject);
     procedure RecentUnitClickHandler(Sender: TObject);
+  protected
+    procedure PreferencesChanged;
+    procedure TabChanged;
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
@@ -239,6 +252,7 @@ type
 
     procedure ShowDockPanel(APanel: TPanel; MakeVisible: Boolean; Client: TControl);
 
+    procedure SyncEditorToBuffer;
     procedure FocusEditor(FileName: TFileName);
     function RegisterNewEditor(FileName: TFileName): TFormEditor;
 
@@ -514,6 +528,7 @@ end;
 
 procedure TFormMain.LogCompilerMessages(Messages: TdwsMessageList);
 begin
+  FCompilerMessages.Clear;
   FCompilerMessages.LogMessages(Messages);
 end;
 
@@ -550,6 +565,14 @@ begin
   // disallow the undock. DockClientCount is never 0 when called from this event.
   if (Sender as TPanel).DockClientCount = 1 then
     ShowDockPanel(Sender as TPanel, False, nil);
+end;
+
+procedure TFormMain.PreferencesChanged;
+var
+  Index: Integer;
+begin
+  for Index := 0 to FEditors.Count - 1 do
+    FEditors[Index].SetupEditorFromPreferences;
 end;
 
 procedure TFormMain.ShowDockPanel(APanel: TPanel; MakeVisible: Boolean;
@@ -597,7 +620,6 @@ end;
 
 procedure TFormMain.FocusEditor(FileName: TFileName);
 var
-  Index: Integer;
   FormEditor: TFormEditor;
 begin
   FormEditor := FEditors.GetEditorForFileName(FileName);
@@ -632,6 +654,12 @@ begin
       if FEditors[Index] = FFocusedEditorForm then
         TabSet.TabIndex := Index + 1;
     end;
+
+    // eventually focus welcome page
+    if Form = FWelcomePage then
+    begin
+      FWelcomePage.Visible := True;
+    end;
   finally
     TabSet.OnChange := TabSetChange;
   end;
@@ -642,7 +670,6 @@ end;
 
 procedure TFormMain.TabChanged;
 begin
-
 end;
 
 procedure TFormMain.TabSetChange(Sender: TObject; NewTab: Integer;
@@ -668,6 +695,8 @@ begin
   // make control visible
   Control.Visible := True;
 
+  SyncEditorToBuffer;
+
   // focus tab
   FocusTab(TForm(Control));
   TabChanged;
@@ -675,6 +704,13 @@ begin
   // locate active control
   for Index := 0 to PanelTabs.DockClientCount - 1 do
     PanelTabs.DockClients[Index].Visible := Index = NewTab;
+end;
+
+procedure TFormMain.SyncEditorToBuffer;
+begin
+  // eventually sync focused editor
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditorForm.EditorToBuffer;
 end;
 
 procedure TFormMain.UpdateRecentFiles;
@@ -743,6 +779,12 @@ begin
   end;
 end;
 
+procedure TFormMain.ActionCodeSuggestionsExecute(Sender: TObject);
+begin
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditorForm.InvokeCodeSuggestions;
+end;
+
 procedure TFormMain.ActionFileCloseProjectExecute(Sender: TObject);
 begin
   // abort any scheduled background compilation
@@ -781,6 +823,18 @@ begin
   SaveProject;
 end;
 
+procedure TFormMain.ActionGotoImplementationExecute(Sender: TObject);
+begin
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditorForm.GotoImplementation;
+end;
+
+procedure TFormMain.ActionGotoInterfaceExecute(Sender: TObject);
+begin
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditorForm.GotoInterface;
+end;
+
 procedure TFormMain.ActionHelpAboutExecute(Sender: TObject);
 begin
   with TFormAbout.Create(Self) do
@@ -809,6 +863,18 @@ begin
   DataModuleCommon.PerformMacro(FFocusedEditor, maStop);
 end;
 
+procedure TFormMain.ActionMoveDownExecute(Sender: TObject);
+begin
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditorForm.MoveLines(False);
+end;
+
+procedure TFormMain.ActionMoveUpExecute(Sender: TObject);
+begin
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditorForm.MoveLines(True);
+end;
+
 procedure TFormMain.ActionProjectSyntaxCheckExecute(Sender: TObject);
 begin
   Compiler.SyntaxCheck(Projects.ActiveProject);
@@ -831,6 +897,12 @@ begin
     Editors.Delete(TabSet.TabIndex - 1);
     TabSet.Tabs.Delete(TabSet.TabIndex);
   end;
+end;
+
+procedure TFormMain.ActionParameterInfoExecute(Sender: TObject);
+begin
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditorForm.InvokeParameterInformation;
 end;
 
 procedure TFormMain.ActionPageCloseOthersExecute(Sender: TObject);
@@ -956,7 +1028,8 @@ begin
   // show preferences dialog
   with TFormPreferences.Create(Self) do
   try
-    ShowModal;
+    if ShowModal = mrOk then
+      PreferencesChanged;
   finally
     Free;
   end;
@@ -975,7 +1048,7 @@ end;
 
 procedure TFormMain.ActionViewWelcomePageExecute(Sender: TObject);
 begin
-  //
+  FocusTab(FWelcomePage);
 end;
 
 end.

@@ -56,7 +56,7 @@ inherited FormPreferences: TFormPreferences
     Top = 8
     Width = 487
     Height = 484
-    ActivePage = TabSheetLibraryPaths
+    ActivePage = TabSheetEditorOptions
     Anchors = [akLeft, akTop, akRight, akBottom]
     Images = DataModuleCommon.ImageList16
     MultiLine = True
@@ -783,8 +783,8 @@ inherited FormPreferences: TFormPreferences
             AlignWithMargins = True
             Left = 10
             Top = 56
-            Width = 209
-            Height = 47
+            Width = 203
+            Height = 30
             Margins.Left = 8
             Margins.Top = 0
             Margins.Right = 8
@@ -819,14 +819,222 @@ inherited FormPreferences: TFormPreferences
     object TabSheetCodeInsight: TTabSheet
       Caption = 'Code Insight'
       ImageIndex = 35
+      object GroupBoxAutomaticFeatures: TGroupBox
+        Left = 0
+        Top = 0
+        Width = 479
+        Height = 280
+        Align = alTop
+        Caption = 'Automatic features'
+        TabOrder = 0
+        DesignSize = (
+          479
+          280)
+        object LabelDelay: TLabel
+          Left = 24
+          Top = 184
+          Width = 32
+          Height = 15
+          Anchors = [akLeft, akBottom]
+          Caption = '&Delay:'
+        end
+        object LabelNone: TLabel
+          Left = 24
+          Top = 241
+          Width = 29
+          Height = 15
+          Anchors = [akLeft, akBottom]
+          Caption = 'None'
+        end
+        object LabelOff: TLabel
+          Left = 438
+          Top = 241
+          Width = 17
+          Height = 15
+          Anchors = [akRight, akBottom]
+          Caption = 'Off'
+        end
+        object LabelValue: TLabel
+          Left = 234
+          Top = 237
+          Width = 3
+          Height = 15
+          Alignment = taCenter
+          Anchors = [akTop]
+        end
+        object CheckBoxCodeSuggestions: TCheckBox
+          Left = 24
+          Top = 32
+          Width = 161
+          Height = 17
+          Caption = 'Code suggestions'
+          TabOrder = 0
+        end
+        object CheckBoxAutoParenthesis: TCheckBox
+          Left = 48
+          Top = 55
+          Width = 137
+          Height = 17
+          Caption = 'Auto parenthesis'
+          TabOrder = 1
+        end
+        object CheckBoxShowReservedWords: TCheckBox
+          Left = 48
+          Top = 78
+          Width = 137
+          Height = 17
+          Caption = 'Show reserved words'
+          TabOrder = 2
+        end
+        object CheckBoxCodeParameters: TCheckBox
+          Left = 24
+          Top = 108
+          Width = 161
+          Height = 17
+          Caption = 'Code parameters'
+          TabOrder = 3
+        end
+        object TrackBarDelay: TTrackBar
+          Left = 24
+          Top = 206
+          Width = 433
+          Height = 25
+          Anchors = [akLeft, akRight, akBottom]
+          Max = 28
+          ShowSelRange = False
+          TabOrder = 4
+          OnChange = TrackBarDelayChange
+        end
+        object CheckBoxTooltipSymbol: TCheckBox
+          Left = 24
+          Top = 131
+          Width = 161
+          Height = 17
+          Caption = 'Tooltip symbol insight'
+          TabOrder = 5
+        end
+        object CheckBoxBlockCompletion: TCheckBox
+          Left = 288
+          Top = 32
+          Width = 169
+          Height = 17
+          Caption = 'Block completion'
+          TabOrder = 6
+        end
+        object ComboBoxBlockCompletion: TComboBox
+          Left = 312
+          Top = 55
+          Width = 153
+          Height = 23
+          Style = csDropDownList
+          ItemIndex = 0
+          TabOrder = 7
+          Text = 'Without new line'
+          Items.Strings = (
+            'Without new line'
+            'With new line'
+            'New blocks only')
+        end
+        object CheckBoxErrorInsight: TCheckBox
+          Left = 288
+          Top = 108
+          Width = 169
+          Height = 17
+          Caption = 'Error insight'
+          TabOrder = 8
+        end
+        object CheckBoxCodeTemplateCompletion: TCheckBox
+          Left = 288
+          Top = 131
+          Width = 169
+          Height = 17
+          Caption = 'Code template completion'
+          TabOrder = 9
+        end
+      end
     end
     object TabSheetVersionControl: TTabSheet
       Caption = 'Version Control'
       ImageIndex = 35
+      object GroupBoxColors: TGroupBox
+        Left = 0
+        Top = 0
+        Width = 479
+        Height = 169
+        Align = alTop
+        Caption = 'Colors'
+        TabOrder = 0
+        object LabelConflicts: TLabel
+          Left = 16
+          Top = 24
+          Width = 50
+          Height = 15
+          Caption = 'Conflicts:'
+        end
+        object Label1: TLabel
+          Left = 16
+          Top = 52
+          Width = 38
+          Height = 15
+          Caption = 'Added:'
+        end
+        object ColorBoxConflicted: TColorBox
+          Left = 112
+          Top = 21
+          Width = 89
+          Height = 22
+          DefaultColorColor = clRed
+          Selected = clRed
+          TabOrder = 0
+        end
+        object ColorBoxAdded: TColorBox
+          Left = 112
+          Top = 49
+          Width = 89
+          Height = 22
+          DefaultColorColor = clNavy
+          Selected = clNavy
+          TabOrder = 1
+        end
+      end
     end
     object TabSheetFormating: TTabSheet
       Caption = 'Formating'
       ImageIndex = 35
+      object LabelIndention: TLabel
+        Left = 11
+        Top = 16
+        Width = 110
+        Height = 15
+        Caption = 'Continuation indent:'
+      end
+      object LabelIndentMax: TLabel
+        Left = 11
+        Top = 46
+        Width = 149
+        Height = 15
+        Caption = 'Do not indent after position:'
+      end
+      object SpinEditIndent: TSpinEdit
+        Left = 176
+        Top = 13
+        Width = 65
+        Height = 24
+        MaxValue = 0
+        MinValue = 0
+        TabOrder = 0
+        Value = 2
+      end
+      object SpinEditIndentMax: TSpinEdit
+        Left = 176
+        Top = 43
+        Width = 65
+        Height = 24
+        MaxValue = 0
+        MinValue = 0
+        TabOrder = 1
+        Value = 40
+      end
     end
   end
   object ActionList: TActionList

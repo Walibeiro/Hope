@@ -5,9 +5,8 @@ unit Hope.Compiler.Background;
 interface
 
 uses
-  System.Classes, System.SysUtils, System.SyncObjs, dwsUtils, dwsComp,
-  dwsCompiler, dwsExprs, dwsErrors, dwsFunctions, Hope.Project,
-  Hope.Compiler.Base;
+  System.Classes, System.SysUtils, System.SyncObjs, dwsExprs, dwsFunctions,
+  Hope.Project, Hope.Compiler.Base;
 
 type
   THopeCompilationEvent = procedure(Sender: TObject; Prog: IdwsProgram) of object;
@@ -18,11 +17,14 @@ type
 
     function GetMainScript(Project: THopeProject): string;
   protected
+    procedure InstanciateCodeGen; override;
     procedure OnIncludeEventHandler(const ScriptName: string;
       var ScriptSource: string); override;
     function OnNeedUnitEventHandler(const UnitName: string;
       var UnitSource: string) : IdwsUnit; override;
   public
+    procedure AfterConstruction; override;
+
     function CompileProject(Project: THopeProject): IdwsProgram;
 
     property OnCompilation: THopeCompilationEvent read FOnCompilation write FOnCompilation;
@@ -65,14 +67,32 @@ type
 implementation
 
 uses
-  System.Math, dwsXPlatform, dwsExprList, Hope.Common.Constants, Hope.Main,
-  Hope.DataModule, Hope.Common.MonitoredBuffer;
+  System.Math, dwsXPlatform, dwsUtils, dwsComp, dwsCompiler, dwsErrors,
+  dwsJSLibModule, Hope.Common.Constants, Hope.Main, Hope.DataModule,
+  Hope.Common.MonitoredBuffer;
 
 { THopeBackgroundCompiler }
 
+procedure THopeBackgroundCompiler.AfterConstruction;
+begin
+  inherited;
+
+  DelphiWebScript.Config.CompilerOptions := [coAssertions, coAllowClosures,
+    coSymbolDictionary, coContextMap];
+end;
+
+procedure THopeBackgroundCompiler.InstanciateCodeGen;
+begin
+  inherited;
+
+  // create JS lib module (needed for JS asm sections)
+  FCodeGenLib := TdwsJSLibModule.Create(nil);
+  FCodeGenLib.Script := DelphiWebScript;
+end;
+
 function THopeBackgroundCompiler.GetMainScript(Project: THopeProject): string;
 begin
-  Result := DataModuleCommon.GetText(Project.MainScript.FileName);
+  Result := DataModuleCommon.GetText(Project.RootPath + Project.MainScript.FileName);
 end;
 
 procedure THopeBackgroundCompiler.OnIncludeEventHandler(const ScriptName: string;
@@ -88,10 +108,10 @@ begin
 end;
 
 function THopeBackgroundCompiler.CompileProject(Project: THopeProject): IdwsProgram;
-var
-  Prog: IdwsProgram;
 begin
-  Prog := DelphiWebScript.Compile(GetMainScript(Project));
+  FormMain.SyncEditorToBuffer;
+
+  Result := DelphiWebScript.Compile(GetMainScript(Project));
 end;
 
 

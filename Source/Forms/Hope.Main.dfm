@@ -680,6 +680,36 @@ object FormMain: TFormMain
       ShortCut = 24691
       OnExecute = ActionPageCloseOthersExecute
     end
+    object ActionCodeSuggestions: TAction
+      Category = 'Editor'
+      Caption = 'Code Suggestions'
+      OnExecute = ActionCodeSuggestionsExecute
+    end
+    object ActionParameterInfo: TAction
+      Category = 'Editor'
+      Caption = 'Parameter Info'
+      OnExecute = ActionParameterInfoExecute
+    end
+    object ActionGotoInterface: TAction
+      Category = 'Editor'
+      Caption = 'Goto Interface'
+      OnExecute = ActionGotoInterfaceExecute
+    end
+    object ActionGotoImplementation: TAction
+      Category = 'Editor'
+      Caption = 'Goto Implementation'
+      OnExecute = ActionGotoImplementationExecute
+    end
+    object ActionMoveUp: TAction
+      Category = 'Editor'
+      Caption = 'Move Up'
+      OnExecute = ActionMoveUpExecute
+    end
+    object ActionMoveDown: TAction
+      Category = 'Editor'
+      Caption = 'Move Down'
+      OnExecute = ActionMoveDownExecute
+    end
   end
   object PopupMenu: TPopupMenu
     Left = 248

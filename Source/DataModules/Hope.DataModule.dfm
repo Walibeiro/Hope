@@ -2022,9 +2022,10 @@ object DataModuleCommon: TDataModuleCommon
       000000000000}
   end
   object SynCodeSuggestions: TSynCompletionProposal
-    Options = [scoLimitToMatchedText, scoTitleIsCentered, scoUseInsertList, scoEndCharCompletion, scoCompleteWithEnter]
+    Options = [scoLimitToMatchedText, scoTitleIsCentered, scoUseInsertList, scoUsePrettyText, scoUseBuiltInTimer, scoEndCharCompletion, scoCompleteWithEnter]
     EndOfTokenChr = '()[]. '
     TriggerChars = '.'
+    Title = 'Code suggestions'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -2035,8 +2036,15 @@ object DataModuleCommon: TDataModuleCommon
     TitleFont.Height = -11
     TitleFont.Name = 'MS Sans Serif'
     TitleFont.Style = [fsBold]
-    Columns = <>
-    ShortCut = 16416
+    Columns = <
+      item
+        ColumnWidth = 128
+      end>
+    Resizeable = False
+    ItemHeight = 16
+    Images = ImageList16
+    ShortCut = 0
+    TimerInterval = 500
     Left = 264
     Top = 72
   end
@@ -2045,8 +2053,9 @@ object DataModuleCommon: TDataModuleCommon
     Options = [scoLimitToMatchedText, scoUsePrettyText, scoUseBuiltInTimer]
     ClBackground = clInfoBk
     Width = 262
-    EndOfTokenChr = '()[]. '
+    EndOfTokenChr = '()[].,; '
     TriggerChars = '('
+    Title = 'Parameter Information'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -2058,7 +2067,12 @@ object DataModuleCommon: TDataModuleCommon
     TitleFont.Name = 'MS Sans Serif'
     TitleFont.Style = [fsBold]
     Columns = <>
+    Images = ImageList16
+    OnClose = SynParametersClose
+    OnExecute = SynParametersExecute
+    OnShow = SynParametersShow
     ShortCut = 24608
+    TimerInterval = 500
     Left = 264
     Top = 24
   end

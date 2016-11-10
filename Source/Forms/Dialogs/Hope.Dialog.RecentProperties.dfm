@@ -1,49 +1,49 @@
 inherited FormRecentProperties: TFormRecentProperties
   Caption = 'Properties of Recent'
   ClientHeight = 420
-  ClientWidth = 420
+  ClientWidth = 425
   PixelsPerInch = 96
   TextHeight = 15
   inherited ButtonOK: TButton
-    Left = 177
+    Left = 182
     Top = 386
   end
   inherited ButtonCancel: TButton
-    Left = 257
+    Left = 262
     Top = 386
   end
   inherited ButtonHelp: TButton
-    Left = 337
+    Left = 342
     Top = 386
   end
   object GroupBoxCapacity: TGroupBox
     Left = 8
     Top = 8
-    Width = 404
+    Width = 409
     Height = 69
     Anchors = [akLeft, akTop, akRight]
     Caption = 'Capacity'
     TabOrder = 3
     DesignSize = (
-      404
+      409
       69)
     object LabelProjectCount: TLabel
       Left = 16
       Top = 32
-      Width = 74
+      Width = 106
       Height = 15
-      Caption = 'Project count:'
+      Caption = 'Number of Projects:'
     end
     object LabelUnitCount: TLabel
-      Left = 240
+      Left = 226
       Top = 32
-      Width = 59
+      Width = 85
       Height = 15
       Anchors = [akTop, akRight]
-      Caption = 'Unit count:'
+      Caption = 'Number of files:'
     end
     object SpinEditProjectCount: TSpinEdit
-      Left = 112
+      Left = 136
       Top = 29
       Width = 65
       Height = 24
@@ -53,7 +53,7 @@ inherited FormRecentProperties: TFormRecentProperties
       Value = 10
     end
     object SpinEditUnitCOunt: TSpinEdit
-      Left = 320
+      Left = 325
       Top = 29
       Width = 65
       Height = 24
@@ -67,25 +67,25 @@ inherited FormRecentProperties: TFormRecentProperties
   object GroupBoxItems: TGroupBox
     Left = 8
     Top = 83
-    Width = 404
+    Width = 409
     Height = 297
     Anchors = [akLeft, akTop, akRight, akBottom]
-    Caption = 'Items'
+    Caption = 'Recent Items'
     TabOrder = 4
     DesignSize = (
-      404
+      409
       297)
     object ButtonRemoveInvalid: TButton
       Left = 16
       Top = 264
       Width = 161
       Height = 25
-      Action = ActionRemoveInvalid
+      Action = ActionDeleteNonExistingFiles
       Anchors = [akLeft, akBottom]
       TabOrder = 0
     end
     object ButtonDelete: TButton
-      Left = 211
+      Left = 216
       Top = 264
       Width = 84
       Height = 25
@@ -94,7 +94,7 @@ inherited FormRecentProperties: TFormRecentProperties
       TabOrder = 1
     end
     object ButtonClear: TButton
-      Left = 301
+      Left = 306
       Top = 264
       Width = 84
       Height = 25
@@ -106,7 +106,7 @@ inherited FormRecentProperties: TFormRecentProperties
   object TreeItems: TVirtualStringTree
     Left = 24
     Top = 104
-    Width = 369
+    Width = 374
     Height = 237
     Anchors = [akLeft, akTop, akRight, akBottom]
     Header.AutoSizeIndex = 0
@@ -152,8 +152,8 @@ inherited FormRecentProperties: TFormRecentProperties
       ShortCut = 46
       OnExecute = ActionDeleteExecute
     end
-    object ActionRemoveInvalid: TAction
-      Caption = 'Remove &Invalid'
+    object ActionDeleteNonExistingFiles: TAction
+      Caption = 'Delete None&xisting Files'
     end
   end
 end
