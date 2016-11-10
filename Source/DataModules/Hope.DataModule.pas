@@ -7,7 +7,7 @@ interface
 uses
   System.SysUtils, System.Classes, Vcl.ImgList, Vcl.Controls,
 
-  SynEdit, SynEditPlugins, SynMacroRecorder, SynCompletionProposal,
+  SynEdit, SynEditTypes,SynEditPlugins, SynMacroRecorder, SynCompletionProposal,
   SynEditRegexSearch, SynEditHighlighter, SynHighlighterMulti,
   SynEditMiscClasses, SynEditSearch, SynHighlighterCSS, SynHighlighterHtml,
   SynHighlighterJSON, SynHighlighterJScript, SynHighlighterDWS,
@@ -40,6 +40,10 @@ type
     procedure SynParametersShow(Sender: TObject);
     procedure SynParametersExecute(Kind: SynCompletionType; Sender: TObject;
       var CurrentInput: string; var x, y: Integer; var CanExecute: Boolean);
+    procedure SynCodeSuggestionsExecute(Kind: SynCompletionType;
+      Sender: TObject; var CurrentInput: string; var x, y: Integer;
+      var CanExecute: Boolean);
+    procedure SynCodeSuggestionsShow(Sender: TObject);
   private
     FHistory: THopeHistory;
     FPositions: THopePositions;
@@ -81,9 +85,9 @@ implementation
 {$R *.dfm}
 
 uses
-  ceflib, dwsUtils, dwsExprs, dwsUnitSymbols, dwsSymbols, dwsErrors,
-  dwsCompiler, Hope.Common.DWS, Hope.Common.FileUtilities,
-  Hope.Main, Hope.Editor;
+  Vcl.Forms, Vcl.Graphics, ceflib, dwsUtils, dwsExprs, dwsUnitSymbols,
+  dwsSymbols, dwsErrors, dwsCompiler, dwsSuggestions, Hope.Common.DWS,
+  Hope.Common.FileUtilities, Hope.Main, Hope.Editor;
 
 { TDataModuleCommon }
 
@@ -191,6 +195,129 @@ begin
   else
     Exclude(Options, scoUseBuiltInTimer);
   SynParameters.Options := Options;
+end;
+
+procedure TDataModuleCommon.SynCodeSuggestionsShow(Sender: TObject);
+var
+  CompletionProposalForm: TSynBaseCompletionProposalForm;
+begin
+  inherited;
+
+  if (Sender <> nil) and (Sender is TSynBaseCompletionProposalForm) then
+  begin
+    CompletionProposalForm := TSynBaseCompletionProposalForm(Sender);
+    try
+      CompletionProposalForm.DoubleBuffered := True;
+
+      if CompletionProposalForm.Height > 300 then
+        CompletionProposalForm.Height := 300
+    except
+      on Exception do;
+    end;
+  end;
+end;
+
+procedure TDataModuleCommon.SynCodeSuggestionsExecute(Kind: SynCompletionType;
+  Sender: TObject; var CurrentInput: string; var x, y: Integer;
+  var CanExecute: Boolean);
+var
+  SuggestionIndex: Integer;
+  Proposal: TSynCompletionProposal;
+  SourceFile: TSourceFile;
+  ScriptPos: TScriptPos;
+  ScriptProgram: IdwsProgram;
+  Suggestions: IdwsSuggestions;
+  Item, AddOn: string;
+  CurrentEditor: TCustomSynEdit;
+begin
+  CanExecute := False;
+
+  CurrentEditor := TSynCompletionProposal(Sender).Editor;
+
+  // check the proposal type
+  Proposal := TSynCompletionProposal(Sender);
+  Proposal.InsertList.Clear;
+  Proposal.ItemList.Clear;
+
+  if Assigned(Proposal.Form) then
+  begin
+    Proposal.Form.DoubleBuffered := True;
+    Proposal.Resizeable := True;
+    Proposal.Form.Resizeable := True;
+    Proposal.Form.BorderStyle := bsSizeToolWin;
+  end;
+
+  // get script program
+  ScriptProgram := BackgroundCompiler.GetCompiledProgram;
+  if ScriptProgram = nil then
+    Exit;
+
+  // get the compiled "program" from DWS
+  SourceFile := ScriptProgram.SourceList.MainScript.SourceFile;
+  ScriptPos := TScriptPos.Create(SourceFile, CurrentEditor.CaretY,
+    CurrentEditor.CaretX);
+  Suggestions := TDWSSuggestions.Create(ScriptProgram, ScriptPos,
+    [soNoReservedWords]);
+
+  // now populate the suggestion box
+  for SuggestionIndex := 0 to Suggestions.Count - 1 do
+  begin
+    // discard empty suggestions
+    if Suggestions.Caption[SuggestionIndex] = '' then
+      Continue;
+
+    with CurrentEditor.Highlighter.KeywordAttribute do
+      Item := '\color{' + ColorToString(Foreground) + '}';
+
+    case Suggestions.Category[SuggestionIndex] of
+      scUnit:
+        Item := Item + 'unit';
+      scType:
+        Item := Item + 'type';
+      scClass:
+        Item := Item + 'class';
+      scRecord:
+        Item := Item + 'record';
+      scInterface:
+        Item := Item + 'interface';
+      scFunction:
+        Item := Item + 'function';
+      scProcedure:
+        Item := Item + 'procedure';
+      scMethod:
+        Item := Item + 'method';
+      scConstructor:
+        Item := Item + 'constructor';
+      scDestructor:
+        Item := Item + 'destructor';
+      scProperty:
+        Item := Item + 'property';
+      scEnum:
+        Item := Item + 'enum';
+      scElement:
+        Item := Item + 'element';
+      scParameter:
+        Item := Item + 'param';
+      scVariable:
+        Item := Item + 'var';
+      scConst:
+        Item := Item + 'const';
+      scReservedWord:
+        Item := Item + 'reserved';
+    end;
+
+    Item := Item + ' \column{}';
+    with CurrentEditor.Highlighter.IdentifierAttribute do
+      Item := Item + '\color{' + ColorToString(Foreground) + '}';
+    Item := Item + Suggestions.Code[SuggestionIndex];
+    AddOn := Suggestions.Caption[SuggestionIndex];
+    Delete(AddOn, 1, Length(Suggestions.Code[SuggestionIndex]));
+    Item := Item + '\style{-B}' + AddOn;
+    Proposal.ItemList.Add(Item);
+    Proposal.InsertList.Add(Suggestions.Code[SuggestionIndex]);
+  end;
+
+  CanExecute := True;
 end;
 
 procedure TDataModuleCommon.SynMacroRecorderStateChange(Sender: TObject);

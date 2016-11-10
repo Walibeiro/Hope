@@ -2025,7 +2025,6 @@ object DataModuleCommon: TDataModuleCommon
     Options = [scoLimitToMatchedText, scoTitleIsCentered, scoUseInsertList, scoUsePrettyText, scoUseBuiltInTimer, scoEndCharCompletion, scoCompleteWithEnter]
     EndOfTokenChr = '()[]. '
     TriggerChars = '.'
-    Title = 'Code suggestions'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -2038,11 +2037,17 @@ object DataModuleCommon: TDataModuleCommon
     TitleFont.Style = [fsBold]
     Columns = <
       item
-        ColumnWidth = 128
+        ColumnWidth = 50
+      end
+      item
+        ColumnWidth = 196
+        DefaultFontStyle = [fsBold]
       end>
     Resizeable = False
     ItemHeight = 16
     Images = ImageList16
+    OnExecute = SynCodeSuggestionsExecute
+    OnShow = SynCodeSuggestionsShow
     ShortCut = 0
     TimerInterval = 500
     Left = 264
