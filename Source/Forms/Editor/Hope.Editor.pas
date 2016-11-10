@@ -8,7 +8,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ToolWin,
-  SynEdit, SynEditTypes, SynEditKeyCmds, Hope.DataModule, Hope.Project.Local;
+  SynEdit, SynEditTypes, SynEditKeyCmds, Hope.DataModule, Hope.Project.Local,
+  Vcl.Menus;
 
 type
   TStatusBar = class(Vcl.ComCtrls.TStatusBar)
@@ -21,12 +22,56 @@ type
     procedure InvokeParameterInformation;
     procedure GotoInterface;
     procedure GotoImplementation;
+    procedure OpenFileAtCursor;
+    procedure CompleteClassAtCursor;
+    procedure ToggleComment;
+    procedure FormatSource;
     procedure MoveLines(MoveUp: Boolean);
     procedure SetupEditorFromPreferences;
   end;
 
   TFormEditor = class(TForm, IEditorService)
     Editor: TSynEdit;
+    FindDeclaration1: TMenuItem;
+    MenuItemClearBookmarks: TMenuItem;
+    MenuItemClosePage: TMenuItem;
+    MenuItemCompleteClassatCursor: TMenuItem;
+    MenuItemCopy: TMenuItem;
+    MenuItemCut: TMenuItem;
+    MenuItemFind: TMenuItem;
+    MenuItemFormatSource: TMenuItem;
+    MenuItemGotoBookmark0: TMenuItem;
+    MenuItemGotoBookmark1: TMenuItem;
+    MenuItemGotoBookmark2: TMenuItem;
+    MenuItemGotoBookmark3: TMenuItem;
+    MenuItemGotoBookmark4: TMenuItem;
+    MenuItemGotoBookmark5: TMenuItem;
+    MenuItemGotoBookmark6: TMenuItem;
+    MenuItemGotoBookmark7: TMenuItem;
+    MenuItemGotoBookmark8: TMenuItem;
+    MenuItemGotoBookmark9: TMenuItem;
+    MenuItemGotoBookmarks: TMenuItem;
+    MenuItemOpenFileAtCursor: TMenuItem;
+    MenuItemPaste: TMenuItem;
+    MenuItemToggleBookmark0: TMenuItem;
+    MenuItemToggleBookmark1: TMenuItem;
+    MenuItemToggleBookmark2: TMenuItem;
+    MenuItemToggleBookmark3: TMenuItem;
+    MenuItemToggleBookmark4: TMenuItem;
+    MenuItemToggleBookmark5: TMenuItem;
+    MenuItemToggleBookmark6: TMenuItem;
+    MenuItemToggleBookmark7: TMenuItem;
+    MenuItemToggleBookmark8: TMenuItem;
+    MenuItemToggleBookmark9: TMenuItem;
+    MenuItemToggleBookmarks: TMenuItem;
+    MenuItemToggleComment: TMenuItem;
+    MenuItemTopicSearch: TMenuItem;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    PopupMenu: TPopupMenu;
     StatusBar: TStatusBar;
     ToolBarMacro: TToolBar;
     ToolButtonPlay: TToolButton;
@@ -39,6 +84,9 @@ type
       var Command: TSynEditorCommand; var AChar: Char; Data: Pointer);
     procedure EditorEnter(Sender: TObject);
     procedure EditorClick(Sender: TObject);
+    procedure MenuItemGotoBookmarkClick(Sender: TObject);
+    procedure MenuItemToggleBookmarkClick(Sender: TObject);
+    procedure MenuItemClearBookmarksClick(Sender: TObject);
   private
     FFileName: TFileName;
     FShortFileName: TFileName;
@@ -61,6 +109,10 @@ type
     procedure InvokeParameterInformation;
     procedure GotoInterface;
     procedure GotoImplementation;
+    procedure OpenFileAtCursor;
+    procedure CompleteClassAtCursor;
+    procedure ToggleComment;
+    procedure FormatSource;
     procedure MoveLines(MoveUp: Boolean);
     procedure SetupEditorFromPreferences;
 
@@ -173,32 +225,32 @@ begin
   case Command of
     ecUserFirst:
       begin
-        FormMain.ActionCodeSuggestions.Execute;
+        FormMain.ActionEditorCodeSuggestions.Execute;
         AChar := #0;
       end;
     ecUserFirst + 1:
       begin
-        FormMain.ActionParameterInfo.Execute;
+        FormMain.ActionEditorParameterInfo.Execute;
         AChar := #0;
       end;
     ecUserFirst + 2:
       begin
-        FormMain.ActionGotoInterface.Execute;
+        FormMain.ActionEditorGotoInterface.Execute;
         AChar := #0;
       end;
     ecUserFirst + 3:
       begin
-        FormMain.ActionGotoImplementation.Execute;
+        FormMain.ActionEditorGotoImplementation.Execute;
         AChar := #0;
       end;
     ecUserFirst + 4:
       begin
-        FormMain.ActionMoveUp.Execute;
+        FormMain.ActionEditorMoveUp.Execute;
         AChar := #0;
       end;
     ecUserFirst + 5:
       begin
-        FormMain.ActionMoveDown.Execute;
+        FormMain.ActionEditorMoveDown.Execute;
         AChar := #0;
       end;
   end;
@@ -235,6 +287,11 @@ begin
   end;
 
   Caption := FShortFileName;
+end;
+
+procedure TFormEditor.FormatSource;
+begin
+
 end;
 
 procedure TFormEditor.AddCustomEditorKeystrokes;
@@ -304,6 +361,11 @@ begin
   FNeedsSync := False;
 end;
 
+procedure TFormEditor.CompleteClassAtCursor;
+begin
+
+end;
+
 procedure TFormEditor.BufferToEditor;
 begin
   Editor.Text := DataModuleCommon.MonitoredBuffer[FileName];
@@ -347,9 +409,33 @@ end;
 procedure TFormEditor.GotoInterface;
 var
   CurrentProgram: IdwsProgram;
+  Symbol: TSymbol;
+  SymbolPosition: TSymbolPosition;
+  Index: Integer;
+const
+  CUsages: array [0..1] of TSymbolUsage = (suForward, suDeclaration);
 begin
-  // get recent program
+  // get the current program
   CurrentProgram := DataModuleCommon.BackgroundCompiler.GetCompiledProgram;
+  if not Assigned(CurrentProgram) then
+    Exit;
+
+  // find current symbol
+  Symbol := CurrentProgram.SymbolDictionary.FindSymbolAtPosition(Editor.CaretX, Editor.CaretY,
+    ExtractUnitName(FileName));
+
+  // find according implementation symbol
+  for Index := Low(CUsages) to High(CUsages) do
+  begin
+    SymbolPosition := CurrentProgram.SymbolDictionary.FindSymbolUsage(Symbol, CUsages[Index]);
+    if Assigned(SymbolPosition) then
+    begin
+      Editor.CaretXY := BufferCoord(
+        SymbolPosition.ScriptPos.Col,
+        SymbolPosition.ScriptPos.Line);
+      Exit;
+    end;
+  end
 end;
 
 procedure TFormEditor.InvokeCodeSuggestions;
@@ -362,6 +448,29 @@ procedure TFormEditor.InvokeParameterInformation;
 begin
   DataModuleCommon.SynParameters.Editor := Editor;
   DataModuleCommon.SynParameters.ActivateCompletion;
+end;
+
+procedure TFormEditor.MenuItemClearBookmarksClick(Sender: TObject);
+var
+  Bookmark: Integer;
+begin
+  for Bookmark := 0 to 9 do
+    Editor.ClearBookMark(Bookmark);
+end;
+
+procedure TFormEditor.MenuItemGotoBookmarkClick(Sender: TObject);
+begin
+  Editor.GotoBookMark(TComponent(Sender).Tag);
+end;
+
+procedure TFormEditor.MenuItemToggleBookmarkClick(Sender: TObject);
+var
+  X, Y: Integer;
+begin
+  if Editor.GetBookMark(TComponent(Sender).Tag, X, Y) then
+    Editor.ClearBookMark(TComponent(Sender).Tag)
+  else
+    Editor.SetBookMark(TComponent(Sender).Tag, Editor.CaretX, Editor.CaretY);
 end;
 
 procedure TFormEditor.MoveLines(MoveUp: Boolean);
@@ -389,6 +498,11 @@ begin
   finally
     Editor.EndUpdate;
   end;
+end;
+
+procedure TFormEditor.OpenFileAtCursor;
+begin
+
 end;
 
 procedure TFormEditor.SetupEditorFromPreferences;
@@ -439,6 +553,11 @@ begin
   SwitchSet(EditorPreferences.TrimTrailingSpace, eoTrimTrailingSpaces);
 
   Editor.Options := Options;
+end;
+
+procedure TFormEditor.ToggleComment;
+begin
+
 end;
 
 procedure TFormEditor.SetFileName(const Value: TFileName);

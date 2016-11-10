@@ -8,35 +8,57 @@
 	},
 	"Recent" : {
 		"Projects" : 10,
-		"Units" : 10
+		"Units" : 15
 	},
 	"Editor" : {
-		"AltSetsColumnMode" : false,
-		"AutoIndent" : false,
+		"AltSetsColumnMode" : true,
+		"AutoIndent" : true,
 		"AutoSizeMaxScrollWidth" : false,
-		"DisableScrollArrows" : false,
-		"DragDropEditing" : false,
+		"DisableScrollArrows" : true,
+		"DragDropEditing" : true,
 		"DropFiles" : false,
-		"EnhanceHomeKey" : false,
-		"EnhanceEndKey" : false,
-		"GroupUndo" : false,
+		"EnhanceHomeKey" : true,
+		"EnhanceEndKey" : true,
+		"GroupUndo" : true,
 		"HalfPageScroll" : false,
-		"HideShowScrollbars" : false,
+		"HideShowScrollbars" : true,
 		"KeepCaretX" : false,
 		"NoCaret" : false,
 		"NoSelection" : false,
-		"RightMouseMovesCursor" : false,
+		"RightMouseMovesCursor" : true,
 		"ScrollByOneLess" : false,
 		"ScrollHintFollows" : false,
-		"ScrollPastEof" : false,
-		"ScrollPastEol" : false,
-		"ShowScrollHint" : false,
+		"ScrollPastEof" : true,
+		"ScrollPastEol" : true,
+		"ShowScrollHint" : true,
 		"ShowSpecialChars" : false,
-		"SmartTabDelete" : false,
-		"SmartTabs" : false,
+		"SmartTabDelete" : true,
+		"SmartTabs" : true,
 		"SpecialLineDefaultFg" : false,
-		"TabIndent" : false,
-		"TabsToSpaces" : false,
-		"TrimTrailingSpace" : false
+		"TabIndent" : true,
+		"TabsToSpaces" : true,
+		"TrimTrailingSpace" : true
+	},
+	"CodeInsight" : {
+		"ErrorInsight" : false,
+		"CodeParametes" : true,
+		"TooltipSymbolInsight" : false,
+		"CodeTemplateCompletion" : false,
+		"BlockCompletion" : false,
+		"Delay" : 1000,
+		"CodeSuggestions" : {
+			"Enabled" : true,
+			"AutoParenthesis" : true,
+			"ShowReservedWords" : false
+		}
+	},
+	"Versioning" : {
+		"Colors" : {
+			"Conflicted" : 255,
+			"Added" : 8388608
+		}
+	},
+	"Formating" : {
+		"Indent" : null
 	}
 }

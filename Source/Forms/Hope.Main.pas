@@ -16,7 +16,7 @@ uses
 
 type
   TFormMain = class(TForm)
-    ActionCodeSuggestions: TAction;
+    ActionEditorCodeSuggestions: TAction;
     ActionEditCopy: TEditCopy;
     ActionEditCut: TEditCut;
     ActionEditDelete: TEditDelete;
@@ -39,18 +39,18 @@ type
     ActionFileSaveAs: TFileSaveAs;
     ActionFileSaveProject: TAction;
     ActionFileSaveProjectAs: TFileSaveAs;
-    ActionGotoImplementation: TAction;
-    ActionGotoInterface: TAction;
+    ActionEditorGotoImplementation: TAction;
+    ActionEditorGotoInterface: TAction;
     ActionHelpAbout: TAction;
     ActionList: TActionList;
     ActionMacroPlay: TAction;
     ActionMacroRecord: TAction;
     ActionMacroStop: TAction;
-    ActionMoveDown: TAction;
-    ActionMoveUp: TAction;
+    ActionEditorMoveDown: TAction;
+    ActionEditorMoveUp: TAction;
     ActionPageCloseOthers: TAction;
     ActionPageClosePage: TAction;
-    ActionParameterInfo: TAction;
+    ActionEditorParameterInfo: TAction;
     ActionProjectAdd: TAction;
     ActionProjectBuild: TAction;
     ActionProjectBuildAll: TAction;
@@ -171,6 +171,14 @@ type
     SplitterLeft: TSplitter;
     SplitterRight: TSplitter;
     TabSet: TTabSet;
+    ActionEditorOpenFileAtCursor: TAction;
+    ActionEditorFindDeclaration: TAction;
+    ActionEditorFormatSource: TAction;
+    ActionEditorFindUsage: TAction;
+    ActionEditorTopicSearch: TAction;
+    ActionEditorCompleteClassAtCursor: TAction;
+    ActionEditorToggleComment: TAction;
+    ActionEditorAddTodo: TAction;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDockOver(Sender: TObject; Source: TDragDockObject; X,
@@ -210,12 +218,16 @@ type
     procedure ActionViewWelcomePageExecute(Sender: TObject);
     procedure ActionPageClosePageExecute(Sender: TObject);
     procedure ActionPageCloseOthersExecute(Sender: TObject);
-    procedure ActionMoveUpExecute(Sender: TObject);
-    procedure ActionMoveDownExecute(Sender: TObject);
-    procedure ActionCodeSuggestionsExecute(Sender: TObject);
-    procedure ActionParameterInfoExecute(Sender: TObject);
-    procedure ActionGotoInterfaceExecute(Sender: TObject);
-    procedure ActionGotoImplementationExecute(Sender: TObject);
+    procedure ActionEditorMoveUpExecute(Sender: TObject);
+    procedure ActionEditorMoveDownExecute(Sender: TObject);
+    procedure ActionEditorCodeSuggestionsExecute(Sender: TObject);
+    procedure ActionEditorParameterInfoExecute(Sender: TObject);
+    procedure ActionEditorGotoInterfaceExecute(Sender: TObject);
+    procedure ActionEditorGotoImplementationExecute(Sender: TObject);
+    procedure ActionEditorOpenFileAtCursorExecute(Sender: TObject);
+    procedure ActionEditorFormatSourceExecute(Sender: TObject);
+    procedure ActionEditorToggleCommentExecute(Sender: TObject);
+    procedure ActionEditorCompleteClassAtCursorExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -781,7 +793,7 @@ begin
   end;
 end;
 
-procedure TFormMain.ActionCodeSuggestionsExecute(Sender: TObject);
+procedure TFormMain.ActionEditorCodeSuggestionsExecute(Sender: TObject);
 begin
   if Assigned(FFocusedEditorForm) then
     FFocusedEditorForm.InvokeCodeSuggestions;
@@ -825,13 +837,25 @@ begin
   SaveProject;
 end;
 
-procedure TFormMain.ActionGotoImplementationExecute(Sender: TObject);
+procedure TFormMain.ActionEditorCompleteClassAtCursorExecute(Sender: TObject);
+begin
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditorForm.CompleteClassAtCursor;
+end;
+
+procedure TFormMain.ActionEditorFormatSourceExecute(Sender: TObject);
+begin
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditorForm.FormatSource;
+end;
+
+procedure TFormMain.ActionEditorGotoImplementationExecute(Sender: TObject);
 begin
   if Assigned(FFocusedEditorForm) then
     FFocusedEditorForm.GotoImplementation;
 end;
 
-procedure TFormMain.ActionGotoInterfaceExecute(Sender: TObject);
+procedure TFormMain.ActionEditorGotoInterfaceExecute(Sender: TObject);
 begin
   if Assigned(FFocusedEditorForm) then
     FFocusedEditorForm.GotoInterface;
@@ -865,16 +889,22 @@ begin
   DataModuleCommon.PerformMacro(FFocusedEditor, maStop);
 end;
 
-procedure TFormMain.ActionMoveDownExecute(Sender: TObject);
+procedure TFormMain.ActionEditorMoveDownExecute(Sender: TObject);
 begin
   if Assigned(FFocusedEditorForm) then
     FFocusedEditorForm.MoveLines(False);
 end;
 
-procedure TFormMain.ActionMoveUpExecute(Sender: TObject);
+procedure TFormMain.ActionEditorMoveUpExecute(Sender: TObject);
 begin
   if Assigned(FFocusedEditorForm) then
     FFocusedEditorForm.MoveLines(True);
+end;
+
+procedure TFormMain.ActionEditorOpenFileAtCursorExecute(Sender: TObject);
+begin
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditorForm.OpenFileAtCursor;
 end;
 
 procedure TFormMain.ActionProjectSyntaxCheckExecute(Sender: TObject);
@@ -901,10 +931,16 @@ begin
   end;
 end;
 
-procedure TFormMain.ActionParameterInfoExecute(Sender: TObject);
+procedure TFormMain.ActionEditorParameterInfoExecute(Sender: TObject);
 begin
   if Assigned(FFocusedEditorForm) then
     FFocusedEditorForm.InvokeParameterInformation;
+end;
+
+procedure TFormMain.ActionEditorToggleCommentExecute(Sender: TObject);
+begin
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditorForm.ToggleComment;
 end;
 
 procedure TFormMain.ActionPageCloseOthersExecute(Sender: TObject);

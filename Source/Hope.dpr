@@ -25,8 +25,8 @@ uses
   Hope.Compiler.Internal in 'Compiler\Hope.Compiler.Internal.pas' {$R *.res},
   Hope.DataModule in 'DataModules\Hope.DataModule.pas' {DataModuleCommon: TDataModule},
   Hope.Dialog in 'Forms\Dialogs\Hope.Dialog.pas' {FormDialog},
-  Hope.Dialog.FindClass in 'Forms\Dialogs\Hope.Dialog.FindClass.pas' {FormFindClass},
   Hope.Dialog.CodeTemplates in 'Forms\Dialogs\Hope.Dialog.CodeTemplates.pas' {FormCodeTemplates},
+  Hope.Dialog.FindClass in 'Forms\Dialogs\Hope.Dialog.FindClass.pas' {FormFindClass},
   Hope.Dialog.FindInFiles in 'Forms\Dialogs\Hope.Dialog.FindInFiles.pas' {FormFindInFiles},
   Hope.Dialog.FindReplace in 'Forms\Dialogs\Hope.Dialog.FindReplace.pas' {FormFindReplace},
   Hope.Dialog.GotoLineNumber in 'Forms\Dialogs\Hope.Dialog.GotoLineNumber.pas' {FormGotoLineNumber},
@@ -34,6 +34,7 @@ uses
   Hope.Dialog.Preferences in 'Forms\Dialogs\Hope.Dialog.Preferences.pas' {FormPreferences},
   Hope.Dialog.ProjectOptions in 'Forms\Dialogs\Hope.Dialog.ProjectOptions.pas' {FormProjectOptions},
   Hope.Dialog.RecentProperties in 'Forms\Dialogs\Hope.Dialog.RecentProperties.pas' {FormFindReplace},
+  Hope.Dialog.ReloadChangedFiles in 'Forms\Dialogs\Hope.Dialog.ReloadChangedFiles.pas' {FormReloadChanges},
   Hope.Docking.Form in 'Forms\Docking\Hope.Docking.Form.pas' {FormDockable},
   Hope.Docking.Host in 'Forms\Docking\Hope.Docking.Host.pas' {FormDockHost},
   Hope.DockingUtils in 'Utils\Hope.DockingUtils.pas',
@@ -62,6 +63,6 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TDataModuleCommon, DataModuleCommon);
   Application.CreateForm(TFormMain, FormMain);
+  Application.CreateForm(TFormReloadChanges, FormReloadChanges);
   Application.Run;
 end.
-

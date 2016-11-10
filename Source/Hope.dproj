@@ -134,11 +134,11 @@
         <DCCReference Include="Forms\Dialogs\Hope.Dialog.pas">
             <Form>FormDialog</Form>
         </DCCReference>
-        <DCCReference Include="Forms\Dialogs\Hope.Dialog.FindClass.pas">
-            <Form>FormFindClass</Form>
-        </DCCReference>
         <DCCReference Include="Forms\Dialogs\Hope.Dialog.CodeTemplates.pas">
             <Form>FormCodeTemplates</Form>
+        </DCCReference>
+        <DCCReference Include="Forms\Dialogs\Hope.Dialog.FindClass.pas">
+            <Form>FormFindClass</Form>
         </DCCReference>
         <DCCReference Include="Forms\Dialogs\Hope.Dialog.FindInFiles.pas">
             <Form>FormFindInFiles</Form>
@@ -160,6 +160,9 @@
         </DCCReference>
         <DCCReference Include="Forms\Dialogs\Hope.Dialog.RecentProperties.pas">
             <Form>FormFindReplace</Form>
+        </DCCReference>
+        <DCCReference Include="Forms\Dialogs\Hope.Dialog.ReloadChangedFiles.pas">
+            <Form>FormReloadChanges</Form>
         </DCCReference>
         <DCCReference Include="Forms\Docking\Hope.Docking.Form.pas">
             <Form>FormDockable</Form>
@@ -262,7 +265,7 @@
                 </Parameters>
             </Delphi.Personality>
             <Deployment>
-                <DeployFile LocalName="..\Binaries\Hope.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\Binaries\x86\Hope.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Hope.exe</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -280,13 +283,13 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\DCU\Hope.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\Binaries\Hope.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Hope.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\Binaries\x86\Hope.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\DCU\Hope.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Hope.exe</RemoteName>
                         <Overwrite>true</Overwrite>

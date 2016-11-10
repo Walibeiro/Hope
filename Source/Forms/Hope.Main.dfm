@@ -680,35 +680,75 @@ object FormMain: TFormMain
       ShortCut = 24691
       OnExecute = ActionPageCloseOthersExecute
     end
-    object ActionCodeSuggestions: TAction
+    object ActionEditorCodeSuggestions: TAction
       Category = 'Editor'
       Caption = 'Code Suggestions'
-      OnExecute = ActionCodeSuggestionsExecute
+      OnExecute = ActionEditorCodeSuggestionsExecute
     end
-    object ActionParameterInfo: TAction
+    object ActionEditorParameterInfo: TAction
       Category = 'Editor'
       Caption = 'Parameter Info'
-      OnExecute = ActionParameterInfoExecute
+      OnExecute = ActionEditorParameterInfoExecute
     end
-    object ActionGotoInterface: TAction
+    object ActionEditorGotoInterface: TAction
       Category = 'Editor'
       Caption = 'Goto Interface'
-      OnExecute = ActionGotoInterfaceExecute
+      OnExecute = ActionEditorGotoInterfaceExecute
     end
-    object ActionGotoImplementation: TAction
+    object ActionEditorGotoImplementation: TAction
       Category = 'Editor'
       Caption = 'Goto Implementation'
-      OnExecute = ActionGotoImplementationExecute
+      OnExecute = ActionEditorGotoImplementationExecute
     end
-    object ActionMoveUp: TAction
+    object ActionEditorMoveUp: TAction
       Category = 'Editor'
       Caption = 'Move Up'
-      OnExecute = ActionMoveUpExecute
+      OnExecute = ActionEditorMoveUpExecute
     end
-    object ActionMoveDown: TAction
+    object ActionEditorMoveDown: TAction
       Category = 'Editor'
       Caption = 'Move Down'
-      OnExecute = ActionMoveDownExecute
+      OnExecute = ActionEditorMoveDownExecute
+    end
+    object ActionEditorOpenFileAtCursor: TAction
+      Category = 'Editor'
+      Caption = 'Ope&n File At Cursor'
+      ShortCut = 16397
+      OnExecute = ActionEditorOpenFileAtCursorExecute
+    end
+    object ActionEditorFindDeclaration: TAction
+      Category = 'Editor'
+      Caption = 'Find Declaration'
+    end
+    object ActionEditorFindUsage: TAction
+      Category = 'Editor'
+      Caption = 'Find Usage'
+    end
+    object ActionEditorFormatSource: TAction
+      Category = 'Editor'
+      Caption = 'Format Source'
+      ShortCut = 16452
+      OnExecute = ActionEditorFormatSourceExecute
+    end
+    object ActionEditorTopicSearch: TAction
+      Category = 'Editor'
+      Caption = 'Topic &Search'
+      ShortCut = 112
+    end
+    object ActionEditorToggleComment: TAction
+      Category = 'Editor'
+      Caption = 'Toggle &Comment'
+      OnExecute = ActionEditorToggleCommentExecute
+    end
+    object ActionEditorCompleteClassAtCursor: TAction
+      Category = 'Editor'
+      Caption = 'Com&plete Class at Cursor'
+      ShortCut = 24643
+      OnExecute = ActionEditorCompleteClassAtCursorExecute
+    end
+    object ActionEditorAddTodo: TAction
+      Category = 'Editor'
+      Caption = 'Add To-Do Item...'
     end
   end
   object PopupMenu: TPopupMenu
