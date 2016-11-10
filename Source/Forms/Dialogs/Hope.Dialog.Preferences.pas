@@ -187,6 +187,16 @@ begin
     Store;
 end;
 
+function DelayToTrackbar(Value: Integer): Integer;
+begin
+  if Value <= 100 then
+    Result := Value div 10
+  else if Value <= 1000 then
+    Result := 9 + (Value div 100)
+  else
+    Result := 17 + (Value div 500);
+end;
+
 function TrackBarToDelay(Value: Integer): Integer;
 begin
   if Value < 10 then
@@ -287,6 +297,7 @@ begin
 
     ParentNode := Add(TabSheetEditorOptions);
     Add(TabSheetHighlighterOptions, ParentNode);
+    Add(TabSheetCodeInsight, ParentNode);
     TreeCategory.Expanded[ParentNode] := True;
   finally
     TreeCategory.EndUpdate;
@@ -340,6 +351,7 @@ begin
   CheckBoxTooltipSymbol.Checked := Preferences.CodeInsight.TooltipSymbolInsight;
   CheckBoxBlockCompletion.Checked := Preferences.CodeInsight.BlockCompletion;
   CheckBoxErrorInsight.Checked := Preferences.CodeInsight.ErrorInsight;
+  TrackBarDelay.Position := DelayToTrackbar(Preferences.CodeInsight.Delay);
   CheckBoxCodeTemplateCompletion.Checked := Preferences.CodeInsight.CodeTemplateCompletion;
 
   SpinEditIndent.Value := Preferences.Formating.Indention;
@@ -391,6 +403,7 @@ begin
   Preferences.CodeInsight.TooltipSymbolInsight := CheckBoxTooltipSymbol.Checked;
   Preferences.CodeInsight.BlockCompletion := CheckBoxBlockCompletion.Checked;
   Preferences.CodeInsight.ErrorInsight := CheckBoxErrorInsight.Checked;
+  Preferences.CodeInsight.Delay := TrackBarToDelay(TrackBarDelay.Position);
   Preferences.CodeInsight.CodeTemplateCompletion := CheckBoxCodeTemplateCompletion.Checked;
 
   Preferences.Formating.Indention := SpinEditIndent.Value;

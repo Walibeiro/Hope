@@ -140,6 +140,7 @@ type
     FCodeTemplateCompletion: Boolean;
     FBlockCompletion: Boolean;
     FCodeSuggestions: THopePreferencesCodeSuggestions;
+    FDelay: Integer;
   protected
     procedure ReadJson(const JsonValue: TdwsJSONObject); override;
     procedure WriteJson(const JsonValue: TdwsJSONObject); override;
@@ -154,6 +155,7 @@ type
     property ErrorInsight: Boolean read FErrorInsight write FErrorInsight;
     property CodeTemplateCompletion: Boolean read FCodeTemplateCompletion write FCodeTemplateCompletion;
     property CodeSuggestions: THopePreferencesCodeSuggestions read FCodeSuggestions;
+    property Delay: Integer read FDelay write FDelay;
   end;
 
   THopePreferencesVersioningColors = class(THopeJsonBase)
@@ -443,6 +445,8 @@ begin
   FTooltipSymbolInsight := False;
   FCodeTemplateCompletion := False;
   FBlockCompletion := False;
+  FDelay := 1000;
+
   FCodeSuggestions := THopePreferencesCodeSuggestions.Create;
 end;
 
@@ -465,6 +469,7 @@ begin
   FTooltipSymbolInsight := JsonValue.GetValue('TooltipSymbolInsight', FTooltipSymbolInsight);
   FCodeTemplateCompletion := JsonValue.GetValue('CodeTemplateCompletion', FCodeTemplateCompletion);
   FBlockCompletion := JsonValue.GetValue('BlockCompletion', FBlockCompletion);
+  FDelay := JsonValue.GetValue('Delay', FDelay);
 
   FCodeSuggestions.WriteJson(JsonValue);
 end;
@@ -477,6 +482,7 @@ begin
   JsonValue.AddValue('TooltipSymbolInsight', FTooltipSymbolInsight);
   JsonValue.AddValue('CodeTemplateCompletion', FCodeTemplateCompletion);
   JsonValue.AddValue('BlockCompletion', FBlockCompletion);
+  JsonValue.AddValue('Delay', FDelay);
 
   FCodeSuggestions.SaveToJson(JsonValue);
 end;

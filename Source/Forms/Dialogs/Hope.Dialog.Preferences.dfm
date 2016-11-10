@@ -56,7 +56,7 @@ inherited FormPreferences: TFormPreferences
     Top = 8
     Width = 487
     Height = 484
-    ActivePage = TabSheetEditorOptions
+    ActivePage = TabSheetCodeInsight
     Anchors = [akLeft, akTop, akRight, akBottom]
     Images = DataModuleCommon.ImageList16
     MultiLine = True
@@ -783,8 +783,8 @@ inherited FormPreferences: TFormPreferences
             AlignWithMargins = True
             Left = 10
             Top = 56
-            Width = 203
-            Height = 30
+            Width = 209
+            Height = 47
             Margins.Left = 8
             Margins.Top = 0
             Margins.Right = 8

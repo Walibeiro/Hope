@@ -275,7 +275,7 @@ var
 implementation
 
 uses
-  dwsUtils,
+  dwsUtils, SynCompletionProposal,
   Hope.About, Hope.AsciiChart, Hope.ColorPicker, Hope.Common.History,
   Hope.Dialog.CodeTemplates, Hope.Dialog.FindClass, Hope.Dialog.FindInFiles,
   Hope.Dialog.GotoLineNumber, Hope.Dialog.Preferences,
@@ -573,6 +573,8 @@ var
 begin
   for Index := 0 to FEditors.Count - 1 do
     FEditors[Index].SetupEditorFromPreferences;
+
+  DataModuleCommon.SetupFromPreferences;
 end;
 
 procedure TFormMain.ShowDockPanel(APanel: TPanel; MakeVisible: Boolean;
@@ -1028,8 +1030,12 @@ begin
   // show preferences dialog
   with TFormPreferences.Create(Self) do
   try
+    Load;
     if ShowModal = mrOk then
+    begin
       PreferencesChanged;
+      Store;
+    end;
   finally
     Free;
   end;

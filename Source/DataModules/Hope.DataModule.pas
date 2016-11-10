@@ -60,6 +60,8 @@ type
 
     procedure PerformMacro(Editor: TSynEdit; Action: TMacroAction);
 
+    procedure SetupFromPreferences;
+
     property InternalCompiler: THopeInternalCompiler read FInternalCompiler;
     property BackgroundCompiler: THopeBackgroundCompilerThread read FBackgroundCompiler;
     property History: THopeHistory read FHistory;
@@ -164,6 +166,31 @@ begin
     maPlay:
       SynMacroRecorder.PlaybackMacro(Editor);
   end;
+end;
+
+procedure TDataModuleCommon.SetupFromPreferences;
+var
+  Delay: Integer;
+  Options: TSynCompletionOptions;
+begin
+  // update code suggestions
+  Delay := Preferences.CodeInsight.Delay;
+  SynCodeSuggestions.TimerInterval := Delay;
+  Options := SynCodeSuggestions.Options;
+  if Delay < 5000 then
+    Include(Options, scoUseBuiltInTimer)
+  else
+    Exclude(Options, scoUseBuiltInTimer);
+  SynCodeSuggestions.Options := Options;
+
+  // update parameter information
+  SynParameters.TimerInterval := Delay;
+  Options := SynParameters.Options;
+  if Delay < 5000 then
+    Include(Options, scoUseBuiltInTimer)
+  else
+    Exclude(Options, scoUseBuiltInTimer);
+  SynParameters.Options := Options;
 end;
 
 procedure TDataModuleCommon.SynMacroRecorderStateChange(Sender: TObject);
