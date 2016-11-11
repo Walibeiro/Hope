@@ -16,10 +16,17 @@ object FormEditor: TFormEditor
     606)
   PixelsPerInch = 96
   TextHeight = 13
+  object SplitterMiniMap: TSplitter
+    Left = 608
+    Top = 0
+    Height = 584
+    Align = alRight
+    Visible = False
+  end
   object Editor: TSynEdit
     Left = 0
     Top = 0
-    Width = 783
+    Width = 608
     Height = 584
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
@@ -27,7 +34,7 @@ object FormEditor: TFormEditor
     Font.Height = -13
     Font.Name = 'Courier New'
     Font.Style = []
-    PopupMenu = FormMain.PopupMenu
+    PopupMenu = PopupMenu
     TabOrder = 0
     OnClick = EditorClick
     OnEnter = EditorEnter
@@ -92,6 +99,37 @@ object FormEditor: TFormEditor
       Top = 0
       Action = FormMain.ActionMacroStop
     end
+  end
+  object EditorMiniMap: TSynEdit
+    Left = 611
+    Top = 0
+    Width = 172
+    Height = 584
+    Cursor = crArrow
+    Align = alRight
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -4
+    Font.Name = 'Courier New'
+    Font.Style = []
+    TabOrder = 3
+    Visible = False
+    OnEnter = EditorMiniMapEnter
+    OnMouseUp = EditorMiniMapMouseUp
+    BorderStyle = bsNone
+    Gutter.Font.Charset = DEFAULT_CHARSET
+    Gutter.Font.Color = clWindowText
+    Gutter.Font.Height = -11
+    Gutter.Font.Name = 'Courier New'
+    Gutter.Font.Style = []
+    Gutter.Visible = False
+    Gutter.Width = 0
+    MaxUndo = 0
+    Options = [eoAutoIndent, eoNoCaret, eoNoSelection, eoScrollPastEol, eoShowScrollHint, eoSpecialLineDefaultFg]
+    ReadOnly = True
+    RightEdgeColor = clWindow
+    ScrollBars = ssNone
+    FontSmoothing = fsmNone
   end
   object PopupMenu: TPopupMenu
     Left = 384

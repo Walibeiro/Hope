@@ -22,7 +22,7 @@ uses
   Hope.Common.Preferences in 'Common\Hope.Common.Preferences.pas',
   Hope.Compiler.Background in 'Compiler\Hope.Compiler.Background.pas',
   Hope.Compiler.Base in 'Compiler\Hope.Compiler.Base.pas',
-  Hope.Compiler.Internal in 'Compiler\Hope.Compiler.Internal.pas' {$R *.res},
+  Hope.Compiler.Internal in 'Compiler\Hope.Compiler.Internal.pas',
   Hope.DataModule in 'DataModules\Hope.DataModule.pas' {DataModuleCommon: TDataModule},
   Hope.Dialog in 'Forms\Dialogs\Hope.Dialog.pas' {FormDialog},
   Hope.Dialog.CodeTemplates in 'Forms\Dialogs\Hope.Dialog.CodeTemplates.pas' {FormCodeTemplates},

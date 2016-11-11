@@ -268,6 +268,13 @@ object FormMain: TFormMain
       object MenuItemViewWelcomePage: TMenuItem
         Action = ActionViewWelcomePage
       end
+      object N3: TMenuItem
+        Caption = '-'
+      end
+      object ActionViewMiniMap1: TMenuItem
+        Action = ActionViewMiniMap
+        AutoCheck = True
+      end
     end
     object MenuItemRefactor: TMenuItem
       Caption = '&Refactor'
@@ -749,6 +756,12 @@ object FormMain: TFormMain
     object ActionEditorAddTodo: TAction
       Category = 'Editor'
       Caption = 'Add To-Do Item...'
+    end
+    object ActionViewMiniMap: TAction
+      Category = 'View'
+      AutoCheck = True
+      Caption = 'View &Mini Map'
+      OnExecute = ActionViewMiniMapExecute
     end
   end
   object PopupMenu: TPopupMenu

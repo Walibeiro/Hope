@@ -179,6 +179,9 @@ type
     ActionEditorCompleteClassAtCursor: TAction;
     ActionEditorToggleComment: TAction;
     ActionEditorAddTodo: TAction;
+    ActionViewMiniMap: TAction;
+    N3: TMenuItem;
+    ActionViewMiniMap1: TMenuItem;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDockOver(Sender: TObject; Source: TDragDockObject; X,
@@ -228,6 +231,7 @@ type
     procedure ActionEditorFormatSourceExecute(Sender: TObject);
     procedure ActionEditorToggleCommentExecute(Sender: TObject);
     procedure ActionEditorCompleteClassAtCursorExecute(Sender: TObject);
+    procedure ActionViewMiniMapExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -1086,6 +1090,14 @@ begin
   finally
     Free;
   end;
+end;
+
+procedure TFormMain.ActionViewMiniMapExecute(Sender: TObject);
+var
+  Index: Integer;
+begin
+  for Index := 0 to FEditors.Count - 1 do
+    FEditors[Index].MiniMapVisible := ActionViewMiniMap.Checked;
 end;
 
 procedure TFormMain.ActionViewWelcomePageExecute(Sender: TObject);

@@ -77,6 +77,8 @@ type
     ToolButtonPlay: TToolButton;
     ToolButtonRecord: TToolButton;
     ToolButtonStop: TToolButton;
+    EditorMiniMap: TSynEdit;
+    SplitterMiniMap: TSplitter;
     procedure EditorGutterPaint(Sender: TObject; aLine, X, Y: Integer);
     procedure EditorStatusChange(Sender: TObject; Changes: TSynStatusChanges);
     procedure EditorChange(Sender: TObject);
@@ -87,16 +89,25 @@ type
     procedure MenuItemGotoBookmarkClick(Sender: TObject);
     procedure MenuItemToggleBookmarkClick(Sender: TObject);
     procedure MenuItemClearBookmarksClick(Sender: TObject);
+    procedure EditorMiniMapSpecialLineColors(Sender: TObject; Line: Integer;
+      var Special: Boolean; var FG, BG: TColor);
+    procedure EditorMiniMapEnter(Sender: TObject);
+    procedure EditorMiniMapMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     FFileName: TFileName;
     FShortFileName: TFileName;
     FExtension: string;
     FNeedsSync: Boolean;
+    FMiniMapVisible: Boolean;
+    function GetDottedWordAtCursor: string;
     procedure SetFileName(const Value: TFileName);
+    procedure SetMiniMapVisible(const Value: Boolean);
     procedure FileNameChanged;
     procedure AddCustomEditorKeystrokes;
   protected
     procedure AssignTo(Dest: TPersistent); override;
+    procedure MiniMapVisibleChanged;
   public
     procedure AfterConstruction; override;
     procedure Assign(Source: TPersistent); override;
@@ -117,14 +128,15 @@ type
     procedure SetupEditorFromPreferences;
 
     property FileName: TFileName read FFileName write SetFileName;
+    property MiniMapVisible: Boolean read FMiniMapVisible write SetMiniMapVisible;
   end;
 
 implementation
 
 uses
-  System.Contnrs, dwsExprs, dwsSymbols, dwsTokenizer, dwsUtils, dwsXPlatform,
-  Hope.Main, Hope.Common.FileUtilities, Hope.Common.MonitoredBuffer,
-  Hope.Common.Preferences;
+  System.Contnrs, System.Math, dwsExprs, dwsSymbols, dwsTokenizer, dwsUtils,
+  dwsXPlatform, Hope.Main, Hope.Common.FileUtilities,
+  Hope.Common.MonitoredBuffer, Hope.Common.Preferences;
 
 {$R *.dfm}
 
@@ -215,6 +227,45 @@ begin
       Canvas.LineTo(GutterWidth, y);
     end;
   end;
+end;
+
+procedure TFormEditor.EditorMiniMapEnter(Sender: TObject);
+begin
+  Editor.SetFocus;
+end;
+
+procedure TFormEditor.EditorMiniMapMouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+  DisplayCoord: TDisplayCoord;
+begin
+  DisplayCoord := EditorMiniMap.PixelsToNearestRowColumn(X, Y);
+  Editor.CaretXY := Editor.DisplayToBufferPos(DisplayCoord);
+  Editor.TopLine := Max(1, DisplayCoord.Row - (Editor.LinesInWindow div 2));
+  Editor.Invalidate;
+end;
+
+procedure TFormEditor.EditorMiniMapSpecialLineColors(Sender: TObject;
+  Line: Integer; var Special: Boolean; var FG, BG: TColor);
+var
+  CurrentMarks: TSynEditMarkList;
+  MarkIndex: Integer;
+begin
+  CurrentMarks := Editor.Marks;
+  for MarkIndex := 0 to CurrentMarks.Count - 1 do
+  begin
+    Special := (CurrentMarks[MarkIndex].Visible = True) and
+      (Line = CurrentMarks[MarkIndex].Line);
+    if Special then
+    begin
+      BG := $008080C0;
+      Exit;
+    end
+  end;
+
+  Special := (Cardinal(Line - Editor.TopLine) <=
+    Cardinal(Editor.LinesInWindow));
+  BG := Editor.ActiveLineColor;
 end;
 
 procedure TFormEditor.EditorProcessUserCommand(Sender: TObject;
@@ -473,6 +524,12 @@ begin
     Editor.SetBookMark(TComponent(Sender).Tag, Editor.CaretX, Editor.CaretY);
 end;
 
+procedure TFormEditor.MiniMapVisibleChanged;
+begin
+  SplitterMiniMap.Visible := True;
+  EditorMiniMap.Visible := True;
+end;
+
 procedure TFormEditor.MoveLines(MoveUp: Boolean);
 var
   LineStr: string;
@@ -500,9 +557,52 @@ begin
   end;
 end;
 
-procedure TFormEditor.OpenFileAtCursor;
-begin
+function TFormEditor.GetDottedWordAtCursor: string;
 
+  function CharIsDottedWord(AChar: WideChar): Boolean;
+  begin
+    Result := Editor.IsIdentChar(AChar) or (AChar = '.');
+  end;
+
+var
+  Line: UnicodeString;
+  Start, Stop: Integer;
+begin
+// the code below is based on the function TCustomSynEdit.GetWordAtRowCol(...)
+  Result := '';
+  if (Editor.CaretY >= 1) and (Editor.CaretY <= Editor.Lines.Count) then
+  begin
+    Line := Editor.Lines[Editor.CaretY - 1];
+    if (Length(Line) > 0) and
+       ((Editor.CaretX >= 1) and (Editor.CaretX <= High(Line))) and
+       Editor.IsIdentChar(Line[Editor.CaretX]) then
+    begin
+       Start := Editor.CaretX;
+       while (Start > 1) and CharIsDottedWord(Line[Start - 1]) do
+          Dec(Start);
+
+       Stop := Editor.CaretX + 1;
+       while (Stop <= Length(Line)) and CharIsDottedWord(Line[Stop]) do
+          Inc(Stop);
+
+       Result := Copy(Line, Start, Stop - Start);
+    end;
+  end;
+end;
+
+procedure TFormEditor.OpenFileAtCursor;
+var
+  DottedWordAtCursor: UnicodeString;
+  FileName: TFileName;
+begin
+  DottedWordAtCursor := GetDottedWordAtCursor;
+
+  if Length(DottedWordAtCursor) = 0 then
+    Exit;
+
+  FileName := DataModuleCommon.MonitoredBuffer.GetFileName(DottedWordAtCursor);
+  if Length(FileName) > 0 then
+    FormMain.FocusEditor(FileName);
 end;
 
 procedure TFormEditor.SetupEditorFromPreferences;
@@ -566,6 +666,15 @@ begin
   begin
     FFileName := Value;
     FileNameChanged;
+  end;
+end;
+
+procedure TFormEditor.SetMiniMapVisible(const Value: Boolean);
+begin
+  if FMiniMapVisible <> Value then
+  begin
+    FMiniMapVisible := Value;
+    MiniMapVisibleChanged;
   end;
 end;
 

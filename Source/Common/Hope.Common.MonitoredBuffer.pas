@@ -28,6 +28,7 @@ type
     procedure AddPath(Path: TFileName);
 
     function GetSourceCode(UnitName: string): string;
+    function GetFileName(UnitName: string): string;
 
     property BuffferList: THopeBufferList read FBuffferList;
     property DirectoryMonitor: TDirectoryMonitor read FDirectoryMonitor;
@@ -114,6 +115,20 @@ begin
   // eventually return buffered text
   if Index >= 0 then
     FBuffferList[Index].Text := Text;
+end;
+
+function TMonitoredBuffer.GetFileName(UnitName: string): string;
+var
+  Index: Integer;
+begin
+  Result := '';
+
+  // get index of unit name (if buffered)
+  Index := FBuffferList.IndexOfUnit(UnitName);
+
+  // eventually return buffered text
+  if Index >= 0 then
+    Exit(FBuffferList[Index].FileName);
 end;
 
 function TMonitoredBuffer.GetSourceCode(UnitName: string): string;
