@@ -6,6 +6,13 @@
 		"Search" : [ ],
 		"Replace" : [ ]
 	},
+	"FindInFiles" : {
+		"CaseSensitive" : false,
+		"RegularExpressions" : false,
+		"WholeWordsOnly" : false,
+		"ConfirmReplace" : false,
+		"Scope" : 0
+	},
 	"Recent" : {
 		"Projects" : 10,
 		"Units" : 15

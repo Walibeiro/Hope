@@ -1,7 +1,7 @@
 {
 	"Projects" : [
-		"..\\Common\\Projects\\Cards\\Source\\Cards.hproj",
-		"..\\Common\\Projects\\Test\\Test.hproj"
+		"..\\Common\\Projects\\Test\\Test.hproj",
+		"..\\Common\\Projects\\Cards\\Source\\Cards.hproj"
 	],
 	"Units" : [
 		"..\\Common\\Projects\\Test\\Test.Unit.pas"

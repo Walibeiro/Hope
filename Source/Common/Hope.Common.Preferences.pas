@@ -71,6 +71,236 @@ type
     property TrimTrailingSpace: Boolean read FTrimTrailingSpace write FTrimTrailingSpace;
   end;
 
+  THopePreferencesFontAttributes = class(THopeJsonBase)
+  strict private
+    FBackground: TColor;
+    FForeground: TColor;
+    FStyle: TFontStyles;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJsonObject); override;
+    procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure SetColors(Foreground, Background: TColor);
+    procedure SetValues(Foreground, Background: TColor; Style: TFontStyles);
+
+    property Background: TColor read FBackground write FBackground;
+    property Foreground: TColor read FForeground write FForeground;
+    property Style: TFontStyles read FStyle write FStyle;
+  end;
+
+  THopePreferencesHighlighterPascal = class(THopeJsonBase)
+  strict private
+    FAsmAttr: THopePreferencesFontAttributes;
+    FCharAttr: THopePreferencesFontAttributes;
+    FCommentAttr: THopePreferencesFontAttributes;
+    FDirectiveAttr: THopePreferencesFontAttributes;
+    FFloatAttr: THopePreferencesFontAttributes;
+    FHexAttr: THopePreferencesFontAttributes;
+    FIdentifierAttr: THopePreferencesFontAttributes;
+    FKeywordAttr: THopePreferencesFontAttributes;
+    FNumberAttr: THopePreferencesFontAttributes;
+    FSpaceAttr: THopePreferencesFontAttributes;
+    FStringAttr: THopePreferencesFontAttributes;
+    FSymbolAttr: THopePreferencesFontAttributes;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJsonObject); override;
+    procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
+
+    property AsmAttr: THopePreferencesFontAttributes read FAsmAttr;
+    property CharAttr: THopePreferencesFontAttributes read FCharAttr;
+    property CommentAttr: THopePreferencesFontAttributes read FCommentAttr;
+    property DirectiveAttr: THopePreferencesFontAttributes read FDirectiveAttr;
+    property FloatAttr: THopePreferencesFontAttributes read FFloatAttr;
+    property HexAttr: THopePreferencesFontAttributes read FHexAttr;
+    property IdentifierAttr: THopePreferencesFontAttributes read FIdentifierAttr;
+    property KeywordAttr: THopePreferencesFontAttributes read FKeywordAttr;
+    property NumberAttr: THopePreferencesFontAttributes read FNumberAttr;
+    property SpaceAttr: THopePreferencesFontAttributes read FSpaceAttr;
+    property StringAttr: THopePreferencesFontAttributes read FStringAttr;
+    property SymbolAttr: THopePreferencesFontAttributes read FSymbolAttr;
+  end;
+
+  THopePreferencesHighlighterJS = class(THopeJsonBase)
+  strict private
+    FCommentAttr: THopePreferencesFontAttributes;
+    FEventAttr: THopePreferencesFontAttributes;
+    FIdentifierAttr: THopePreferencesFontAttributes;
+    FKeywordAttr: THopePreferencesFontAttributes;
+    FNonReservedKeyAttr: THopePreferencesFontAttributes;
+    FNumberAttr: THopePreferencesFontAttributes;
+    FSpaceAttr: THopePreferencesFontAttributes;
+    FStringAttr: THopePreferencesFontAttributes;
+    FSymbolAttr: THopePreferencesFontAttributes;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJsonObject); override;
+    procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
+
+    property CommentAttr: THopePreferencesFontAttributes read FCommentAttr;
+    property EventAttr: THopePreferencesFontAttributes read FEventAttr;
+    property IdentifierAttr: THopePreferencesFontAttributes read FIdentifierAttr;
+    property KeywordAttr: THopePreferencesFontAttributes read FKeywordAttr;
+    property NonReservedKeyAttr: THopePreferencesFontAttributes read FNonReservedKeyAttr;
+    property NumberAttr: THopePreferencesFontAttributes read FNumberAttr;
+    property SpaceAttr: THopePreferencesFontAttributes read FSpaceAttr;
+    property StringAttr: THopePreferencesFontAttributes read FStringAttr;
+    property SymbolAttr: THopePreferencesFontAttributes read FSymbolAttr;
+  end;
+
+  THopePreferencesHighlighterJson = class(THopeJsonBase)
+  strict private
+    FAttributeAttr: THopePreferencesFontAttributes;
+    FNumberAttr: THopePreferencesFontAttributes;
+    FReservedAttr: THopePreferencesFontAttributes;
+    FSpaceAttr: THopePreferencesFontAttributes;
+    FSymbolAttr: THopePreferencesFontAttributes;
+    FValueAttr: THopePreferencesFontAttributes;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJsonObject); override;
+    procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
+
+    property AttributeAttr: THopePreferencesFontAttributes read FAttributeAttr;
+    property ReservedAttr: THopePreferencesFontAttributes read FReservedAttr;
+    property NumberAttr: THopePreferencesFontAttributes read FNumberAttr;
+    property SpaceAttr: THopePreferencesFontAttributes read FSpaceAttr;
+    property SymbolAttr: THopePreferencesFontAttributes read FSymbolAttr;
+    property ValueAttr: THopePreferencesFontAttributes read FValueAttr;
+  end;
+
+  THopePreferencesHighlighterHTML = class(THopeJsonBase)
+  strict private
+    FAndAttr: THopePreferencesFontAttributes;
+    FCommentAttr: THopePreferencesFontAttributes;
+    FIdentifierAttr: THopePreferencesFontAttributes;
+    FKeywordAttr: THopePreferencesFontAttributes;
+    FSpaceAttr: THopePreferencesFontAttributes;
+    FSymbolAttr: THopePreferencesFontAttributes;
+    FTextAttr: THopePreferencesFontAttributes;
+    FUndefKeyAttr: THopePreferencesFontAttributes;
+    FValueAttr: THopePreferencesFontAttributes;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJsonObject); override;
+    procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
+
+    property AndAttr: THopePreferencesFontAttributes read FAndAttr;
+    property CommentAttr: THopePreferencesFontAttributes read FCommentAttr;
+    property IdentifierAttr: THopePreferencesFontAttributes read FIdentifierAttr;
+    property KeywordAttr: THopePreferencesFontAttributes read FKeywordAttr;
+    property SpaceAttr: THopePreferencesFontAttributes read FSpaceAttr;
+    property SymbolAttr: THopePreferencesFontAttributes read FSymbolAttr;
+    property TextAttr: THopePreferencesFontAttributes read FTextAttr;
+    property UndefKeyAttr: THopePreferencesFontAttributes read FUndefKeyAttr;
+    property ValueAttr: THopePreferencesFontAttributes read FValueAttr;
+  end;
+
+  THopePreferencesHighlighterCSS = class(THopeJsonBase)
+  strict private
+    FAtRuleAttr: THopePreferencesFontAttributes;
+    FColorAttr: THopePreferencesFontAttributes;
+    FCommentAttr: THopePreferencesFontAttributes;
+    FKeywordAttr: THopePreferencesFontAttributes;
+    FNumberAttr: THopePreferencesFontAttributes;
+    FPropertyAttr: THopePreferencesFontAttributes;
+    FSelectorAttr: THopePreferencesFontAttributes;
+    FSpaceAttr: THopePreferencesFontAttributes;
+    FStringAttr: THopePreferencesFontAttributes;
+    FSymbolAttr: THopePreferencesFontAttributes;
+    FTextAttr: THopePreferencesFontAttributes;
+    FUndefPropertyAttr: THopePreferencesFontAttributes;
+    FValueAttr: THopePreferencesFontAttributes;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJsonObject); override;
+    procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
+
+    property AtRuleAttr: THopePreferencesFontAttributes read FAtRuleAttr;
+    property ColorAttr: THopePreferencesFontAttributes read FColorAttr;
+    property CommentAttr: THopePreferencesFontAttributes read FCommentAttr;
+    property KeywordAttr: THopePreferencesFontAttributes read FKeywordAttr;
+    property NumberAttr: THopePreferencesFontAttributes read FNumberAttr;
+    property PropertyAttr: THopePreferencesFontAttributes read FPropertyAttr;
+    property SelectorAttr: THopePreferencesFontAttributes read FSelectorAttr;
+    property SpaceAttr: THopePreferencesFontAttributes read FSpaceAttr;
+    property StringAttr: THopePreferencesFontAttributes read FStringAttr;
+    property SymbolAttr: THopePreferencesFontAttributes read FSymbolAttr;
+    property TextAttr: THopePreferencesFontAttributes read FTextAttr;
+    property UndefPropertyAttr: THopePreferencesFontAttributes read FUndefPropertyAttr;
+    property ValueAttr: THopePreferencesFontAttributes read FValueAttr;
+  end;
+
+  THopePreferencesHighlighter = class(THopeJsonBase)
+  strict private
+    FCommentAttr: THopePreferencesFontAttributes;
+    FErrorAttr: THopePreferencesFontAttributes;
+    FErrorWordAttr: THopePreferencesFontAttributes;
+    FFontAttr: THopePreferencesFontAttributes;
+    FHighlighterCSS: THopePreferencesHighlighterCSS;
+    FHighlighterHTML: THopePreferencesHighlighterHTML;
+    FHighlighterJS: THopePreferencesHighlighterJS;
+    FHighlighterJSON: THopePreferencesHighlighterJson;
+    FHighlighterPascal: THopePreferencesHighlighterPascal;
+    FHintAttr: THopePreferencesFontAttributes;
+    FHintWordAttr: THopePreferencesFontAttributes;
+    FIdentifierAttr: THopePreferencesFontAttributes;
+    FKeywordAttr: THopePreferencesFontAttributes;
+    FLinkAttr: THopePreferencesFontAttributes;
+    FMarkerAttr: THopePreferencesFontAttributes;
+    FSearchWordAttr: THopePreferencesFontAttributes;
+    FStringAttr: THopePreferencesFontAttributes;
+    FSymbolAttr: THopePreferencesFontAttributes;
+    FWarningAttr: THopePreferencesFontAttributes;
+    FWarningWordAttr: THopePreferencesFontAttributes;
+    FWhitespaceAttr: THopePreferencesFontAttributes;
+  protected
+    procedure ReadJson(const JsonValue: TdwsJsonObject); override;
+    procedure WriteJson(const JsonValue: TdwsJsonObject); override;
+    class function GetPreferredName: string; override;
+  public
+    procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
+
+    property CommentAttr: THopePreferencesFontAttributes read FCommentAttr write FCommentAttr;
+    property ErrorAttr: THopePreferencesFontAttributes read FErrorAttr write FErrorAttr;
+    property ErrorWordAttr: THopePreferencesFontAttributes read FErrorWordAttr write FErrorWordAttr;
+    property FontAttr: THopePreferencesFontAttributes read FFontAttr write FFontAttr;
+    property HighlighterCSS: THopePreferencesHighlighterCSS read FHighlighterCSS;
+    property HighlighterHTML: THopePreferencesHighlighterHTML read FHighlighterHTML;
+    property HighlighterJS: THopePreferencesHighlighterJS read FHighlighterJS;
+    property HighlighterJSON: THopePreferencesHighlighterJson read FHighlighterJSON;
+    property HighlighterPascal: THopePreferencesHighlighterPascal read FHighlighterPascal;
+    property HintAttr: THopePreferencesFontAttributes read FHintAttr write FHintAttr;
+    property HintWordAttr: THopePreferencesFontAttributes read FHintWordAttr write FHintWordAttr;
+    property IdentifierAttr: THopePreferencesFontAttributes read FIdentifierAttr write FIdentifierAttr;
+    property KeywordAttr: THopePreferencesFontAttributes read FKeywordAttr write FKeywordAttr;
+    property LinkAttr: THopePreferencesFontAttributes read FLinkAttr write FLinkAttr;
+    property MarkerAttr: THopePreferencesFontAttributes read FMarkerAttr write FMarkerAttr;
+    property SearchWordAttr: THopePreferencesFontAttributes read FSearchWordAttr write FSearchWordAttr;
+    property StringAttr: THopePreferencesFontAttributes read FStringAttr write FStringAttr;
+    property SymbolAttr: THopePreferencesFontAttributes read FSymbolAttr write FSymbolAttr;
+    property WarningAttr: THopePreferencesFontAttributes read FWarningAttr write FWarningAttr;
+    property WarningWordAttr: THopePreferencesFontAttributes read FWarningWordAttr write FWarningWordAttr;
+    property WhitespaceAttr: THopePreferencesFontAttributes read FWhitespaceAttr write FWhitespaceAttr;
+  end;
+
   THopePreferencesEnvironment = class(THopeJsonBase)
   private
     FDefaultProjectPath: string;
@@ -230,6 +460,7 @@ type
     FFindInFiles: THopePreferencesFindInFiles;
     FSearch: THopePreferencesSearch;
     FEditor: THopePreferencesEditor;
+    FHighlighter: THopePreferencesHighlighter;
     FRecent: THopePreferencesRecent;
     FCodeInsight: THopePreferencesCodeInsight;
     FVersioning: THopePreferencesVersioning;
@@ -252,6 +483,9 @@ type
   end;
 
 implementation
+
+uses
+  System.UIConsts, System.TypInfo, VCL.Graphics;
 
 { THopePreferencesEditor }
 
@@ -320,6 +554,508 @@ begin
   JsonValue.AddValue('TabIndent', FTabIndent);
   JsonValue.AddValue('TabsToSpaces', FTabsToSpaces);
   JsonValue.AddValue('TrimTrailingSpace', FTrimTrailingSpace);
+end;
+
+
+{ THopePreferencesFontAttributes }
+
+class function THopePreferencesFontAttributes.GetPreferredName: string;
+begin
+  Result := 'FontAttributes';
+end;
+
+procedure THopePreferencesFontAttributes.SetColors(Foreground, Background: TColor);
+begin
+  FBackground := Background;
+  FForeground := Foreground;
+end;
+
+procedure THopePreferencesFontAttributes.SetValues(Foreground, Background: TColor;
+  Style: TFontStyles);
+begin
+  FBackground := Background;
+  FForeground := Foreground;
+  FStyle := Style;
+end;
+
+procedure THopePreferencesFontAttributes.ReadJson(const JsonValue: TdwsJsonObject);
+begin
+  Background := StringToColor(JsonValue.GetValue('Background', ColorToString(clBlack)));
+  Foreground := StringToColor(JsonValue.GetValue('Foreground', ColorToString(clWhite)));
+  Byte(FStyle) := StringToSet(PTypeInfo(TypeInfo(TFontStyles)), JsonValue.GetValue('Style', ''));
+end;
+
+procedure THopePreferencesFontAttributes.WriteJson(const JsonValue: TdwsJsonObject);
+begin
+  JsonValue.AddValue('Background', ColorToString(Background));
+  JsonValue.AddValue('Foreground', ColorToString(Foreground));
+  JsonValue.AddValue('Style', SetToString(PTypeInfo(TypeInfo(TFontStyles)), Byte(Style)));
+end;
+
+
+{ THopePreferencesHighlighterPascal }
+
+procedure THopePreferencesHighlighterPascal.AfterConstruction;
+begin
+  inherited;
+
+  FAsmAttr := THopePreferencesFontAttributes.Create;
+  FCharAttr := THopePreferencesFontAttributes.Create;
+  FCommentAttr := THopePreferencesFontAttributes.Create;
+  FDirectiveAttr := THopePreferencesFontAttributes.Create;
+  FFloatAttr := THopePreferencesFontAttributes.Create;
+  FHexAttr := THopePreferencesFontAttributes.Create;
+  FIdentifierAttr := THopePreferencesFontAttributes.Create;
+  FKeywordAttr := THopePreferencesFontAttributes.Create;
+  FNumberAttr := THopePreferencesFontAttributes.Create;
+  FSpaceAttr := THopePreferencesFontAttributes.Create;
+  FStringAttr := THopePreferencesFontAttributes.Create;
+  FSymbolAttr := THopePreferencesFontAttributes.Create;
+end;
+
+procedure THopePreferencesHighlighterPascal.BeforeDestruction;
+begin
+  FAsmAttr.Free;
+  FCharAttr.Free;
+  FCommentAttr.Free;
+  FDirectiveAttr.Free;
+  FFloatAttr.Free;
+  FHexAttr.Free;
+  FIdentifierAttr.Free;
+  FKeywordAttr.Free;
+  FNumberAttr.Free;
+  FSpaceAttr.Free;
+  FStringAttr.Free;
+  FSymbolAttr.Free;
+
+  inherited;
+end;
+
+class function THopePreferencesHighlighterPascal.GetPreferredName: string;
+begin
+  Result := 'Pascal';
+end;
+
+procedure THopePreferencesHighlighterPascal.ReadJson(const JsonValue: TdwsJsonObject);
+begin
+  AsmAttr.LoadFromJson('Asm', JsonValue, True);
+  CharAttr.LoadFromJson('Char', JsonValue, True);
+  CommentAttr.LoadFromJson('Comment', JsonValue, True);
+  DirectiveAttr.LoadFromJson('Directive', JsonValue, True);
+  FloatAttr.LoadFromJson('Float', JsonValue, True);
+  HexAttr.LoadFromJson('Hex', JsonValue, True);
+  IdentifierAttr.LoadFromJson('Identifier', JsonValue, True);
+  KeywordAttr.LoadFromJson('Keyword', JsonValue, True);
+  NumberAttr.LoadFromJson('Number', JsonValue, True);
+  SpaceAttr.LoadFromJson('Space', JsonValue, True);
+  StringAttr.LoadFromJson('String', JsonValue, True);
+  SymbolAttr.LoadFromJson('Symbol', JsonValue, True);
+end;
+
+procedure THopePreferencesHighlighterPascal.WriteJson(const JsonValue: TdwsJsonObject);
+begin
+  AsmAttr.SaveToJson('Asm', JsonValue);
+  CharAttr.SaveToJson('Char', JsonValue);
+  CommentAttr.SaveToJson('Comment', JsonValue);
+  DirectiveAttr.SaveToJson('Directive', JsonValue);
+  FloatAttr.SaveToJson('Float', JsonValue);
+  HexAttr.SaveToJson('Hex', JsonValue);
+  IdentifierAttr.SaveToJson('Identifier', JsonValue);
+  KeywordAttr.SaveToJson('Keyword', JsonValue);
+  NumberAttr.SaveToJson('Number', JsonValue);
+  SpaceAttr.SaveToJson('Space', JsonValue);
+  StringAttr.SaveToJson('String', JsonValue);
+  SymbolAttr.SaveToJson('Symbol', JsonValue);
+end;
+
+
+{ THopePreferencesHighlighterJS }
+
+procedure THopePreferencesHighlighterJS.AfterConstruction;
+begin
+  inherited;
+
+  FIdentifierAttr := THopePreferencesFontAttributes.Create;
+  FKeywordAttr := THopePreferencesFontAttributes.Create;
+  FCommentAttr := THopePreferencesFontAttributes.Create;
+  FEventAttr := THopePreferencesFontAttributes.Create;
+  FNonReservedKeyAttr := THopePreferencesFontAttributes.Create;
+  FStringAttr := THopePreferencesFontAttributes.Create;
+  FSymbolAttr := THopePreferencesFontAttributes.Create;
+  FNumberAttr := THopePreferencesFontAttributes.Create;
+  FSpaceAttr := THopePreferencesFontAttributes.Create;
+end;
+
+procedure THopePreferencesHighlighterJS.BeforeDestruction;
+begin
+  FSpaceAttr.Free;
+  FNumberAttr.Free;
+  FSymbolAttr.Free;
+  FStringAttr.Free;
+  FNonReservedKeyAttr.Free;
+  FEventAttr.Free;
+  FCommentAttr.Free;
+  FKeywordAttr.Free;
+  FIdentifierAttr.Free;
+
+  inherited;
+end;
+
+class function THopePreferencesHighlighterJS.GetPreferredName: string;
+begin
+  Result := 'JS';
+end;
+
+procedure THopePreferencesHighlighterJS.ReadJson(const JsonValue: TdwsJsonObject);
+begin
+  CommentAttr.LoadFromJson('Comment', JsonValue, True);
+  EventAttr.LoadFromJson('Event', JsonValue, True);
+  IdentifierAttr.LoadFromJson('Identifier', JsonValue, True);
+  KeywordAttr.LoadFromJson('Keyword', JsonValue, True);
+  NonReservedKeyAttr.LoadFromJson('NonReservedKeyword', JsonValue, True);
+  NumberAttr.LoadFromJson('Number', JsonValue, True);
+  SpaceAttr.LoadFromJson('Space', JsonValue, True);
+  StringAttr.LoadFromJson('String', JsonValue, True);
+  SymbolAttr.LoadFromJson('Symbol', JsonValue, True);
+end;
+
+procedure THopePreferencesHighlighterJS.WriteJson(const JsonValue: TdwsJsonObject);
+begin
+  CommentAttr.SaveToJson('Comment', JsonValue);
+  EventAttr.SaveToJson('Event', JsonValue);
+  IdentifierAttr.SaveToJson('Identifier', JsonValue);
+  KeywordAttr.SaveToJson('Keyword', JsonValue);
+  NonReservedKeyAttr.SaveToJson('NonReservedKeyword', JsonValue);
+  NumberAttr.SaveToJson('Number', JsonValue);
+  SpaceAttr.SaveToJson('Space', JsonValue);
+  StringAttr.SaveToJson('String', JsonValue);
+  SymbolAttr.SaveToJson('Symbol', JsonValue);
+end;
+
+
+{ THopePreferencesHighlighterJson }
+
+procedure THopePreferencesHighlighterJson.AfterConstruction;
+begin
+  inherited;
+
+  FAttributeAttr := THopePreferencesFontAttributes.Create;
+  FReservedAttr := THopePreferencesFontAttributes.Create;
+  FNumberAttr := THopePreferencesFontAttributes.Create;
+  FSpaceAttr := THopePreferencesFontAttributes.Create;
+  FSymbolAttr := THopePreferencesFontAttributes.Create;
+  FValueAttr := THopePreferencesFontAttributes.Create;
+end;
+
+procedure THopePreferencesHighlighterJson.BeforeDestruction;
+begin
+  FAttributeAttr.Free;
+  FReservedAttr.Free;
+  FNumberAttr.Free;
+  FSpaceAttr.Free;
+  FSymbolAttr.Free;
+  FValueAttr.Free;
+
+  inherited;
+end;
+
+class function THopePreferencesHighlighterJson.GetPreferredName: string;
+begin
+  Result := 'JSON';
+end;
+
+procedure THopePreferencesHighlighterJson.ReadJson(const JsonValue: TdwsJsonObject);
+begin
+  AttributeAttr.LoadFromJson('Attribute', JsonValue, True);
+  ReservedAttr.LoadFromJson('Reserved', JsonValue, True);
+  NumberAttr.LoadFromJson('Number', JsonValue, True);
+  SpaceAttr.LoadFromJson('Space', JsonValue, True);
+  SymbolAttr.LoadFromJson('Symbol', JsonValue, True);
+  ValueAttr.LoadFromJson('Value', JsonValue, True);
+end;
+
+procedure THopePreferencesHighlighterJson.WriteJson(const JsonValue: TdwsJsonObject);
+begin
+  AttributeAttr.SaveToJson('Attribute', JsonValue);
+  ReservedAttr.SaveToJson('Reserved', JsonValue);
+  NumberAttr.SaveToJson('Number', JsonValue);
+  SpaceAttr.SaveToJson('Space', JsonValue);
+  SymbolAttr.SaveToJson('Symbol', JsonValue);
+  ValueAttr.SaveToJson('Value', JsonValue);
+end;
+
+
+{ THopePreferencesHighlighterHTML }
+
+procedure THopePreferencesHighlighterHTML.AfterConstruction;
+begin
+  inherited;
+
+  FIdentifierAttr := THopePreferencesFontAttributes.Create;
+  FKeywordAttr := THopePreferencesFontAttributes.Create;
+  FAndAttr := THopePreferencesFontAttributes.Create;
+  FCommentAttr := THopePreferencesFontAttributes.Create;
+  FSpaceAttr := THopePreferencesFontAttributes.Create;
+  FUndefKeyAttr := THopePreferencesFontAttributes.Create;
+  FValueAttr := THopePreferencesFontAttributes.Create;
+  FSymbolAttr := THopePreferencesFontAttributes.Create;
+  FTextAttr := THopePreferencesFontAttributes.Create;
+end;
+
+procedure THopePreferencesHighlighterHTML.BeforeDestruction;
+begin
+  FTextAttr.Free;
+  FSymbolAttr.Free;
+  FValueAttr.Free;
+  FUndefKeyAttr.Free;
+  FSpaceAttr.Free;
+  FCommentAttr.Free;
+  FAndAttr.Free;
+  FKeywordAttr.Free;
+  FIdentifierAttr.Free;
+
+  inherited;
+end;
+
+class function THopePreferencesHighlighterHTML.GetPreferredName: string;
+begin
+  Result := 'HTML';
+end;
+
+procedure THopePreferencesHighlighterHTML.ReadJson(const JsonValue: TdwsJsonObject);
+begin
+  AndAttr.LoadFromJson('And', JsonValue, True);
+  CommentAttr.LoadFromJson('Comment', JsonValue, True);
+  IdentifierAttr.LoadFromJson('Identifier', JsonValue, True);
+  KeywordAttr.LoadFromJson('Keyword', JsonValue, True);
+  SpaceAttr.LoadFromJson('Space', JsonValue, True);
+  SymbolAttr.LoadFromJson('Symbol', JsonValue, True);
+  TextAttr.LoadFromJson('Text', JsonValue, True);
+  UndefKeyAttr.LoadFromJson('UndefKey', JsonValue, True);
+  ValueAttr.LoadFromJson('Value', JsonValue, True);
+end;
+
+procedure THopePreferencesHighlighterHTML.WriteJson(const JsonValue: TdwsJsonObject);
+begin
+  AndAttr.SaveToJson('And', JsonValue);
+  CommentAttr.SaveToJson('Comment', JsonValue);
+  IdentifierAttr.SaveToJson('Identifier', JsonValue);
+  KeywordAttr.SaveToJson('Keyword', JsonValue);
+  SpaceAttr.SaveToJson('Space', JsonValue);
+  SymbolAttr.SaveToJson('Symbol', JsonValue);
+  TextAttr.SaveToJson('Text', JsonValue);
+  UndefKeyAttr.SaveToJson('UndefKey', JsonValue);
+  ValueAttr.SaveToJson('Value', JsonValue);
+end;
+
+
+{ THopePreferencesHighlighterCSS }
+
+procedure THopePreferencesHighlighterCSS.AfterConstruction;
+begin
+  inherited;
+
+  FNumberAttr := THopePreferencesFontAttributes.Create;
+  FPropertyAttr := THopePreferencesFontAttributes.Create;
+  FKeywordAttr := THopePreferencesFontAttributes.Create;
+  FColorAttr := THopePreferencesFontAttributes.Create;
+  FCommentAttr := THopePreferencesFontAttributes.Create;
+  FSpaceAttr := THopePreferencesFontAttributes.Create;
+  FUndefPropertyAttr := THopePreferencesFontAttributes.Create;
+  FValueAttr := THopePreferencesFontAttributes.Create;
+  FTextAttr := THopePreferencesFontAttributes.Create;
+  FStringAttr := THopePreferencesFontAttributes.Create;
+  FSymbolAttr := THopePreferencesFontAttributes.Create;
+end;
+
+procedure THopePreferencesHighlighterCSS.BeforeDestruction;
+begin
+  FSymbolAttr.Free;
+  FStringAttr.Free;
+  FTextAttr.Free;
+  FValueAttr.Free;
+  FUndefPropertyAttr.Free;
+  FSpaceAttr.Free;
+  FCommentAttr.Free;
+  FColorAttr.Free;
+  FKeywordAttr.Free;
+  FPropertyAttr.Free;
+  FNumberAttr.Free;
+
+  inherited;
+end;
+
+class function THopePreferencesHighlighterCSS.GetPreferredName: string;
+begin
+  Result := 'CSS';
+end;
+
+procedure THopePreferencesHighlighterCSS.ReadJson(const JsonValue: TdwsJsonObject);
+begin
+  AtRuleAttr.LoadFromJson('AtRule', JsonValue, True);
+  ColorAttr.LoadFromJson('Color', JsonValue, True);
+  CommentAttr.LoadFromJson('Comment', JsonValue, True);
+  KeywordAttr.LoadFromJson('Keyword', JsonValue, True);
+  NumberAttr.LoadFromJson('Number', JsonValue, True);
+  PropertyAttr.LoadFromJson('Property', JsonValue, True);
+  SelectorAttr.LoadFromJson('Selector', JsonValue, True);
+  SpaceAttr.LoadFromJson('Space', JsonValue, True);
+  StringAttr.LoadFromJson('String', JsonValue, True);
+  SymbolAttr.LoadFromJson('Symbol', JsonValue, True);
+  TextAttr.LoadFromJson('Text', JsonValue, True);
+  UndefPropertyAttr.LoadFromJson('UndefProperty', JsonValue, True);
+  ValueAttr.LoadFromJson('Value', JsonValue, True);
+end;
+
+procedure THopePreferencesHighlighterCSS.WriteJson(const JsonValue: TdwsJsonObject);
+begin
+  AtRuleAttr.SaveToJson('AtRule', JsonValue);
+  ColorAttr.SaveToJson('Color', JsonValue);
+  CommentAttr.SaveToJson('Comment', JsonValue);
+  KeywordAttr.SaveToJson('Keyword', JsonValue);
+  NumberAttr.SaveToJson('Number', JsonValue);
+  PropertyAttr.SaveToJson('Property', JsonValue);
+  SelectorAttr.SaveToJson('Selector', JsonValue);
+  SpaceAttr.SaveToJson('Space', JsonValue);
+  StringAttr.SaveToJson('String', JsonValue);
+  SymbolAttr.SaveToJson('Symbol', JsonValue);
+  TextAttr.SaveToJson('Text', JsonValue);
+  UndefPropertyAttr.SaveToJson('UndefProperty', JsonValue);
+  ValueAttr.SaveToJson('Value', JsonValue);
+end;
+
+
+{ THopePreferencesHighlighter }
+
+procedure THopePreferencesHighlighter.AfterConstruction;
+begin
+  inherited;
+
+  // create attributes
+  FCommentAttr := THopePreferencesFontAttributes.Create;
+  FErrorAttr := THopePreferencesFontAttributes.Create;
+  FErrorWordAttr := THopePreferencesFontAttributes.Create;
+  FFontAttr := THopePreferencesFontAttributes.Create;
+  FHintAttr := THopePreferencesFontAttributes.Create;
+  FHintWordAttr := THopePreferencesFontAttributes.Create;
+  FIdentifierAttr := THopePreferencesFontAttributes.Create;
+  FKeywordAttr := THopePreferencesFontAttributes.Create;
+  FLinkAttr := THopePreferencesFontAttributes.Create;
+  FMarkerAttr := THopePreferencesFontAttributes.Create;
+  FSearchWordAttr := THopePreferencesFontAttributes.Create;
+  FStringAttr := THopePreferencesFontAttributes.Create;
+  FSymbolAttr := THopePreferencesFontAttributes.Create;
+  FWarningAttr := THopePreferencesFontAttributes.Create;
+  FWarningWordAttr := THopePreferencesFontAttributes.Create;
+  FWhitespaceAttr := THopePreferencesFontAttributes.Create;
+
+  // create highlighter
+  FHighlighterCSS := THopePreferencesHighlighterCSS.Create;
+  FHighlighterHTML := THopePreferencesHighlighterHTML.Create;
+  FHighlighterJS := THopePreferencesHighlighterJS.Create;
+  FHighlighterJSON := THopePreferencesHighlighterJson.Create;
+  FHighlighterPascal := THopePreferencesHighlighterPascal.Create;
+
+  // preset colors
+  FHintAttr.SetColors(clNone, $00FFD8C0);
+  FHintWordAttr.SetColors(clNone, $00FFC080);
+  FWarningAttr.SetColors(clNone, $00C0FFFF);
+  FWarningWordAttr.SetColors(clNone, $0080FFFF);
+  FErrorAttr.SetColors(clNone, $00C0C0FF);
+  FErrorWordAttr.SetColors(clNone, $008080FF);
+  FSearchWordAttr.SetColors(clNone, $0078AAFF);
+  FLinkAttr.SetColors(clBlue, clNone);
+  FLinkAttr.Style := [fsUnderline];
+end;
+
+procedure THopePreferencesHighlighter.BeforeDestruction;
+begin
+  // free highlighter
+  FHighlighterPascal.Free;
+  FHighlighterJSON.Free;
+  FHighlighterJS.Free;
+  FHighlighterHTML.Free;
+  FHighlighterCSS.Free;
+
+  // free attributes
+  FWhitespaceAttr.Free;
+  FWarningWordAttr.Free;
+  FWarningAttr.Free;
+  FSymbolAttr.Free;
+  FStringAttr.Free;
+  FSearchWordAttr.Free;
+  FSearchWordAttr.Free;
+  FMarkerAttr.Free;
+  FLinkAttr.Free;
+  FKeywordAttr.Free;
+  FIdentifierAttr.Free;
+  FHintWordAttr.Free;
+  FHintAttr.Free;
+  FFontAttr.Free;
+  FErrorWordAttr.Free;
+  FErrorAttr.Free;
+  FCommentAttr.Free;
+
+  inherited Destroy;
+end;
+
+class function THopePreferencesHighlighter.GetPreferredName: string;
+begin
+  Result := 'Highlighter';
+end;
+
+procedure THopePreferencesHighlighter.ReadJson(const JsonValue: TdwsJsonObject);
+begin
+  // read highlighter settings
+  HighlighterPascal.LoadFromJson(JsonValue, True);
+  HighlighterJS.LoadFromJson(JsonValue, True);
+  HighlighterJSON.LoadFromJson(JsonValue, True);
+  HighlighterHTML.LoadFromJson(JsonValue, True);
+  HighlighterCSS.LoadFromJson(JsonValue, True);
+
+  // read other attributes
+  CommentAttr.LoadFromJson('Comment', JsonValue, True);
+  FontAttr.LoadFromJson('Font', JsonValue, True);
+  IdentifierAttr.LoadFromJson('Identifier', JsonValue, True);
+  KeywordAttr.LoadFromJson('Keyword', JsonValue, True);
+  HintAttr.LoadFromJson('Hint', JsonValue, True);
+  HintWordAttr.LoadFromJson('HintWord', JsonValue, True);
+  WarningAttr.LoadFromJson('Warning', JsonValue, True);
+  WarningWordAttr.LoadFromJson('WarningWord', JsonValue, True);
+  ErrorAttr.LoadFromJson('Error', JsonValue, True);
+  ErrorWordAttr.LoadFromJson('ErrorWord', JsonValue, True);
+  LinkAttr.LoadFromJson('Link', JsonValue, True);
+  MarkerAttr.LoadFromJson('Marker', JsonValue, True);
+  StringAttr.LoadFromJson('String', JsonValue, True);
+  SymbolAttr.LoadFromJson('Symbol', JsonValue, True);
+  WhitespaceAttr.LoadFromJson('Whitespace', JsonValue, True);
+end;
+
+procedure THopePreferencesHighlighter.WriteJson(const JsonValue: TdwsJsonObject);
+begin
+  // write highlighter settings
+  HighlighterPascal.SaveToJson(JsonValue);
+  HighlighterJS.SaveToJson(JsonValue);
+  HighlighterJSON.SaveToJson(JsonValue);
+  HighlighterHTML.SaveToJson(JsonValue);
+  HighlighterCSS.SaveToJson(JsonValue);
+
+  // write other attributes
+  CommentAttr.SaveToJson('Comment', JsonValue);
+  FontAttr.SaveToJson('Font', JsonValue);
+  IdentifierAttr.SaveToJson('Identifier', JsonValue);
+  KeywordAttr.SaveToJson('Keyword', JsonValue);
+  HintAttr.SaveToJson('Hint', JsonValue);
+  HintWordAttr.SaveToJson('HintWord', JsonValue);
+  WarningAttr.SaveToJson('Warning', JsonValue);
+  WarningWordAttr.SaveToJson('WarningWord', JsonValue);
+  ErrorAttr.SaveToJson('Error', JsonValue);
+  ErrorWordAttr.SaveToJson('ErrorWord', JsonValue);
+  LinkAttr.SaveToJson('Link', JsonValue);
+  MarkerAttr.SaveToJson('Marker', JsonValue);
+  StringAttr.SaveToJson('String', JsonValue);
+  SymbolAttr.SaveToJson('Symbol', JsonValue);
+  WhitespaceAttr.SaveToJson('Whitespace', JsonValue);
 end;
 
 
@@ -557,8 +1293,8 @@ procedure THopePreferencesVersioningColors.AfterConstruction;
 begin
   inherited;
 
-  FConflicted := TColorRec.Red;
-  FAdded := TColorRec.Navy;
+  FConflicted := clRed;
+  FAdded := clNavy;
 end;
 
 class function THopePreferencesVersioningColors.GetPreferredName: string;
@@ -648,6 +1384,7 @@ begin
   FSearch := THopePreferencesSearch.Create;
   FFindInFiles := THopePreferencesFindInFiles.Create;
   FEditor := THopePreferencesEditor.Create;
+  FHighlighter := THopePreferencesHighlighter.Create;
   FRecent := THopePreferencesRecent.Create;
   FCodeInsight := THopePreferencesCodeInsight.Create;
   FVersioning := THopePreferencesVersioning.Create;
@@ -660,6 +1397,7 @@ begin
   FVersioning.Free;
   FCodeInsight.Free;
   FRecent.Free;
+  FHighlighter.Free;
   FEditor.Free;
   FFindInFiles.Free;
   FSearch.Free;
@@ -677,6 +1415,7 @@ begin
   FFindInFiles.LoadFromJson(JsonValue, True);
   FRecent.LoadFromJson(JsonValue, True);
   FEditor.LoadFromJson(JsonValue, True);
+  FHighlighter.LoadFromJson(JsonValue, True);
   FCodeInsight.LoadFromJson(JsonValue, True);
   FVersioning.LoadFromJson(JsonValue, True);
   FFormating.LoadFromJson(JsonValue, True);
@@ -691,6 +1430,7 @@ begin
   FFindInFiles.SaveToJson(JsonValue);
   FRecent.SaveToJson(JsonValue);
   FEditor.SaveToJson(JsonValue);
+  FHighlighter.SaveToJson(JsonValue);
   FCodeInsight.SaveToJson(JsonValue);
   FVersioning.SaveToJson(JsonValue);
   FFormating.SaveToJson(JsonValue);

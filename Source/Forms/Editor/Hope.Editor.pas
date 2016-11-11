@@ -94,6 +94,10 @@ type
     procedure EditorMiniMapEnter(Sender: TObject);
     procedure EditorMiniMapMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure EditorProcessCommand(Sender: TObject;
+      var Command: TSynEditorCommand; var AChar: Char; Data: Pointer);
+    procedure EditorSpecialLineColors(Sender: TObject; Line: Integer;
+      var Special: Boolean; var FG, BG: TColor);
   private
     FFileName: TFileName;
     FShortFileName: TFileName;
@@ -268,43 +272,64 @@ begin
   BG := Editor.ActiveLineColor;
 end;
 
-procedure TFormEditor.EditorProcessUserCommand(Sender: TObject;
+procedure TFormEditor.EditorProcessCommand(Sender: TObject;
   var Command: TSynEditorCommand; var AChar: Char; Data: Pointer);
 begin
-  inherited;
-
   case Command of
-    ecUserFirst:
+    ecAutoCompletion:
       begin
         FormMain.ActionEditorCodeSuggestions.Execute;
         AChar := #0;
       end;
-    ecUserFirst + 1:
+    ecCommentBlock:
+      begin
+        FormMain.ActionEditorToggleComment.Execute;
+        AChar := #0;
+      end;
+    ecGotoXY:
+      begin
+        FormMain.ActionSearchGotoLineNumber.Execute;
+        AChar := #0;
+      end;
+  end;
+end;
+
+procedure TFormEditor.EditorProcessUserCommand(Sender: TObject;
+  var Command: TSynEditorCommand; var AChar: Char; Data: Pointer);
+begin
+  case Command of
+    ecUserFirst:
       begin
         FormMain.ActionEditorParameterInfo.Execute;
         AChar := #0;
       end;
-    ecUserFirst + 2:
+    ecUserFirst + 1:
       begin
         FormMain.ActionEditorGotoInterface.Execute;
         AChar := #0;
       end;
-    ecUserFirst + 3:
+    ecUserFirst + 2:
       begin
         FormMain.ActionEditorGotoImplementation.Execute;
         AChar := #0;
       end;
-    ecUserFirst + 4:
+    ecUserFirst + 3:
       begin
         FormMain.ActionEditorMoveUp.Execute;
         AChar := #0;
       end;
-    ecUserFirst + 5:
+    ecUserFirst + 4:
       begin
         FormMain.ActionEditorMoveDown.Execute;
         AChar := #0;
       end;
   end;
+end;
+
+procedure TFormEditor.EditorSpecialLineColors(Sender: TObject; Line: Integer;
+  var Special: Boolean; var FG, BG: TColor);
+begin
+  //
 end;
 
 procedure TFormEditor.EditorStatusChange(Sender: TObject;
@@ -342,7 +367,7 @@ end;
 
 procedure TFormEditor.FormatSource;
 begin
-
+  ShowMessage('not implemented yet');
 end;
 
 procedure TFormEditor.AddCustomEditorKeystrokes;
@@ -358,12 +383,11 @@ procedure TFormEditor.AddCustomEditorKeystrokes;
   end;
 
 begin
-  AddKeystroke(ecUserFirst    , VK_SPACE, [ssCTRL]);
-  AddKeystroke(ecUserFirst + 1, VK_SPACE, [ssCTRL, ssShift]);
-  AddKeystroke(ecUserFirst + 2, VK_UP, [ssCTRL, ssShift]);
-  AddKeystroke(ecUserFirst + 3, VK_DOWN, [ssCTRL, ssShift]);
-  AddKeystroke(ecUserFirst + 4, VK_UP, [ssAlt, ssShift]);
-  AddKeystroke(ecUserFirst + 5, VK_DOWN, [ssAlt, ssShift]);
+  AddKeystroke(ecUserFirst    , VK_SPACE, [ssCTRL, ssShift]);
+  AddKeystroke(ecUserFirst + 1, VK_UP, [ssCTRL, ssShift]);
+  AddKeystroke(ecUserFirst + 2, VK_DOWN, [ssCTRL, ssShift]);
+  AddKeystroke(ecUserFirst + 3, VK_UP, [ssAlt, ssShift]);
+  AddKeystroke(ecUserFirst + 4, VK_DOWN, [ssAlt, ssShift]);
 end;
 
 procedure TFormEditor.Assign(Source: TPersistent);
@@ -414,7 +438,7 @@ end;
 
 procedure TFormEditor.CompleteClassAtCursor;
 begin
-
+  ShowMessage('not implemented yet');
 end;
 
 procedure TFormEditor.BufferToEditor;

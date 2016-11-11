@@ -47,9 +47,25 @@ object FormEditor: TFormEditor
     SearchEngine = DataModuleCommon.SynEditSearch
     OnChange = EditorChange
     OnGutterPaint = EditorGutterPaint
+    OnProcessCommand = EditorProcessCommand
     OnProcessUserCommand = EditorProcessUserCommand
+    OnSpecialLineColors = EditorSpecialLineColors
     OnStatusChange = EditorStatusChange
     FontSmoothing = fsmNone
+    RemovedKeystrokes = <>
+    AddedKeystrokes = <
+      item
+        Command = ecAutoCompletion
+        ShortCut = 16416
+      end
+      item
+        Command = ecGotoXY
+        ShortCut = 32839
+      end
+      item
+        Command = ecCommentBlock
+        ShortCut = 16575
+      end>
   end
   object StatusBar: TStatusBar
     Left = 0

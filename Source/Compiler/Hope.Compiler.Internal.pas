@@ -39,6 +39,7 @@ uses
   dwsJSCodeGen, Hope.Common.Constants, Hope.Main, Hope.DataModule,
   Hope.Common.MonitoredBuffer;
 
+
 { THopeInternalCompiler }
 
 function THopeInternalCompiler.GetMainScript(Project: THopeProject): string;
@@ -158,6 +159,8 @@ var
 begin
   SetupCompiler(Project.Options);
 
+  FormMain.LogCompilerMessage('Compiling ' + Project.Name + '...');
+
   CompiledProgram := DelphiWebScript.Compile(GetMainScript(Project));
 
   // log compiler messages
@@ -173,6 +176,8 @@ var
   OutputFileName: string;
 begin
   SetupCompiler(Project.Options);
+
+  FormMain.LogCompilerMessage('Compiling ' + Project.Name + '...');
 
   CompiledProgram := DelphiWebScript.Compile(GetMainScript(Project));
 
@@ -193,6 +198,8 @@ begin
       Project.Options.Output.FileName;
     OutputFileName := ExpandFileName(OutputFileName);
 
+    FormMain.LogCompilerMessage('Generating Code...');
+
     CodeGen.Clear;
     CodeGen.CompileProgram(CompiledProgram);
     CodeJS := CodeGen.CompiledOutput(CompiledProgram);
@@ -209,6 +216,8 @@ var
   OutputFileName: string;
 begin
   SetupCompiler(Project.Options);
+
+  FormMain.LogCompilerMessage('Compiling ' + Project.Name + '...');
 
   CompiledProgram := DelphiWebScript.Compile(GetMainScript(Project));
 
@@ -227,6 +236,9 @@ begin
   begin
     OutputFileName := Project.RootPath + Project.Options.Output.Path +
       Project.Options.Output.FileName;
+    OutputFileName := ExpandFileName(OutputFileName);
+
+    FormMain.LogCompilerMessage('Generating Code...');
 
     CodeGen.Clear;
     CodeGen.CompileProgram(CompiledProgram);

@@ -252,6 +252,7 @@ type
 
     procedure RegisterNewTab(Form: TForm; Focus: Boolean = True);
     procedure FocusTab(Form: TForm);
+    procedure PrepareCompilation;
     function GetCompiler: THopeInternalCompiler; inline;
     procedure RecentProjectClickHandler(Sender: TObject);
     procedure RecentUnitClickHandler(Sender: TObject);
@@ -269,12 +270,14 @@ type
     procedure ShowDockPanel(APanel: TPanel; MakeVisible: Boolean; Client: TControl);
 
     procedure SyncEditorToBuffer;
-    procedure FocusEditor(FileName: TFileName);
+    function FocusEditor(FileName: TFileName): TFormEditor;
+    function FocusUnitEditor(AUnitName: string): TFormEditor;
     function RegisterNewEditor(FileName: TFileName): TFormEditor;
 
     procedure UpdateUnitMap(CompiledProgran: IdwsProgram);
     procedure UpdateRecentFiles;
 
+    procedure LogCompilerMessage(const MessageText: string; Update: Boolean = False);
     procedure LogCompilerMessages(Messages: TdwsMessageList);
 
     property Projects: THopeProjectListIDE read FProjects;
@@ -544,9 +547,14 @@ begin
   DataModuleCommon.AddProjectToHistory(ProjectFileName);
 end;
 
+procedure TFormMain.LogCompilerMessage(const MessageText: string;
+  Update: Boolean = False);
+begin
+  FCompilerMessages.LogMessage(MessageText, Update);
+end;
+
 procedure TFormMain.LogCompilerMessages(Messages: TdwsMessageList);
 begin
-  FCompilerMessages.Clear;
   FCompilerMessages.LogMessages(Messages);
 end;
 
@@ -595,6 +603,16 @@ begin
   DataModuleCommon.SetupFromPreferences;
 end;
 
+procedure TFormMain.PrepareCompilation;
+begin
+  // eventually sync focused editor
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditorForm.EditorToBuffer;
+
+  // clear compiler messages
+  FCompilerMessages.Clear;
+end;
+
 procedure TFormMain.ShowDockPanel(APanel: TPanel; MakeVisible: Boolean;
   Client: TControl);
 begin
@@ -638,13 +656,19 @@ begin
     Client.Show;
 end;
 
-procedure TFormMain.FocusEditor(FileName: TFileName);
+function TFormMain.FocusUnitEditor(AUnitName: string): TFormEditor;
 var
-  FormEditor: TFormEditor;
+  FileName: TFileName;
 begin
-  FormEditor := FEditors.GetEditorForFileName(FileName);
-  if Assigned(FormEditor) then
-    FocusTab(FormEditor)
+  FileName := DataModuleCommon.MonitoredBuffer.GetFileName(AUnitName);
+  Result := FocusEditor(FileName);
+end;
+
+function TFormMain.FocusEditor(FileName: TFileName): TFormEditor;
+begin
+  Result := FEditors.GetEditorForFileName(FileName);
+  if Assigned(Result) then
+    FocusTab(Result)
   else
     RegisterNewEditor(FileName);
 end;
@@ -915,14 +939,15 @@ end;
 
 procedure TFormMain.ActionProjectSyntaxCheckExecute(Sender: TObject);
 begin
+  PrepareCompilation;
+
+  // syntax check project
   Compiler.SyntaxCheck(Projects.ActiveProject);
 end;
 
 procedure TFormMain.ActionProjectCompileExecute(Sender: TObject);
 begin
-  // eventually sync focused editor
-  if Assigned(FFocusedEditorForm) then
-    FFocusedEditorForm.EditorToBuffer;
+  PrepareCompilation;
 
   // compile project
   Compiler.CompileProject(Projects.ActiveProject);
@@ -965,7 +990,7 @@ end;
 
 procedure TFormMain.ActionProjectBuildExecute(Sender: TObject);
 begin
-  FOutputMessages.Clear;
+  PrepareCompilation;
 
   // build project
   Compiler.BuildProject(Projects.ActiveProject);

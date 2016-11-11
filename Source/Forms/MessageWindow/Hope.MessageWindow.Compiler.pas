@@ -53,8 +53,7 @@ type
       out State: TCompilerMessageItem.TCompilerMessageType): Boolean;
 
     procedure LogMessages(const MessageList: TdwsMessageList);
-    procedure LogMessage(const AText: string;
-      Update: Boolean);
+    procedure LogMessage(const AText: string; Update: Boolean);
   end;
 
 implementation
@@ -62,7 +61,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Vcl.ClipBrd, dwsUtils, Hope.Main;
+  Vcl.ClipBrd, dwsUtils, Hope.Main, Hope.DataModule, Hope.Editor;
 
 { TFormCompilerMessages }
 
@@ -124,8 +123,15 @@ begin
 end;
 
 procedure TFormCompilerMessages.LocateNode(MessageItem: TCompilerMessageItem);
+var
+  FormEditor: TFormEditor;
 begin
-  // TODO
+  FormEditor := FormMain.FocusUnitEditor(MessageItem.SourceName);
+  if not Assigned(FormEditor) then
+    Exit;
+
+  FormEditor.Editor.GotoLineAndCenter(MessageItem.Line);
+  FormEditor.Editor.CaretX := MessageItem.Col;
 end;
 
 procedure TFormCompilerMessages.LocateError(Direction: TLocateDirection);
