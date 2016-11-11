@@ -656,8 +656,64 @@ begin
 end;
 
 procedure TFormEditor.ToggleComment;
-begin
 
+  function IsCommented(Line: string; out Pos: Integer): Boolean;
+  begin
+    Pos := 0;
+    while Pos < Length(Line) do
+      if Editor.IsWhiteChar(Line[Pos + 1]) then
+        Inc(Pos)
+      else
+        Break;
+    Result := (Pos < Length(Line) - 1) and
+      (Line[Pos + 1] = '/') and (Line[Pos + 2] = '/');
+  end;
+
+  function NeedsCommenting: Boolean;
+  var
+    Index: Integer;
+    Line: string;
+    Start: Integer;
+    CommentedLines: Integer;
+  begin
+    CommentedLines := 0;
+    for Index := Editor.BlockBegin.Line to Editor.BlockEnd.Line do
+    begin
+      Line := Editor.Lines[Index - 1];
+      if IsCommented(Line, Start) then
+        Inc(CommentedLines);
+    end;
+    Result := Max(1, Editor.BlockEnd.Line - Editor.BlockBegin.Line) <> CommentedLines;
+  end;
+
+var
+  Index: Integer;
+  Line: string;
+  Start: Integer;
+  CommentLines: Boolean;
+begin
+  CommentLines := NeedsCommenting;
+
+  Editor.BeginUpdate;
+  try
+    if CommentLines then
+      for Index := Editor.BlockBegin.Line to Editor.BlockEnd.Line do
+        Editor.Lines[Index - 1] := '//' + Editor.Lines[Index - 1]
+    else
+      for Index := Editor.BlockBegin.Line to Editor.BlockEnd.Line do
+      begin
+        Line := Editor.Lines[Index - 1];
+        IsCommented(Line, Start);
+        Delete(Line, Start + 1, 2);
+        Editor.Lines[Index - 1] := Line;
+      end;
+
+    Editor.CaretY := Editor.CaretY + 1;
+  finally
+    Editor.EndUpdate;
+  end;
+
+  EditorChange(Self);
 end;
 
 procedure TFormEditor.SetFileName(const Value: TFileName);

@@ -314,6 +314,8 @@ begin
   FProjectManager := TFormProjectManager.Create(nil);
   FCompilerMessages := TFormCompilerMessages.Create(nil);
   FOutputMessages := TFormOutputMessages.Create(nil);
+
+  ActionEditorToggleComment.ShortCut := scCtrl + 191;
 end;
 
 procedure TFormMain.BeforeDestruction;
