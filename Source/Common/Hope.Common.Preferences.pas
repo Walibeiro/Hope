@@ -476,6 +476,7 @@ type
     property Search: THopePreferencesSearch read FSearch;
     property FindInFiles: THopePreferencesFindInFiles read FFindInFiles;
     property Editor: THopePreferencesEditor read FEditor;
+    property Highlighter: THopePreferencesHighlighter read FHighlighter;
     property Recent: THopePreferencesRecent read FRecent;
     property CodeInsight: THopePreferencesCodeInsight read FCodeInsight;
     property Versioning: THopePreferencesVersioning read FVersioning;
@@ -749,12 +750,12 @@ end;
 
 procedure THopePreferencesHighlighterJson.BeforeDestruction;
 begin
-  FAttributeAttr.Free;
-  FReservedAttr.Free;
-  FNumberAttr.Free;
-  FSpaceAttr.Free;
-  FSymbolAttr.Free;
   FValueAttr.Free;
+  FSymbolAttr.Free;
+  FSpaceAttr.Free;
+  FNumberAttr.Free;
+  FReservedAttr.Free;
+  FAttributeAttr.Free;
 
   inherited;
 end;
@@ -791,28 +792,28 @@ procedure THopePreferencesHighlighterHTML.AfterConstruction;
 begin
   inherited;
 
-  FIdentifierAttr := THopePreferencesFontAttributes.Create;
-  FKeywordAttr := THopePreferencesFontAttributes.Create;
   FAndAttr := THopePreferencesFontAttributes.Create;
   FCommentAttr := THopePreferencesFontAttributes.Create;
+  FIdentifierAttr := THopePreferencesFontAttributes.Create;
+  FKeywordAttr := THopePreferencesFontAttributes.Create;
   FSpaceAttr := THopePreferencesFontAttributes.Create;
-  FUndefKeyAttr := THopePreferencesFontAttributes.Create;
-  FValueAttr := THopePreferencesFontAttributes.Create;
   FSymbolAttr := THopePreferencesFontAttributes.Create;
   FTextAttr := THopePreferencesFontAttributes.Create;
+  FUndefKeyAttr := THopePreferencesFontAttributes.Create;
+  FValueAttr := THopePreferencesFontAttributes.Create;
 end;
 
 procedure THopePreferencesHighlighterHTML.BeforeDestruction;
 begin
-  FTextAttr.Free;
-  FSymbolAttr.Free;
   FValueAttr.Free;
   FUndefKeyAttr.Free;
+  FTextAttr.Free;
+  FSymbolAttr.Free;
   FSpaceAttr.Free;
-  FCommentAttr.Free;
-  FAndAttr.Free;
   FKeywordAttr.Free;
   FIdentifierAttr.Free;
+  FCommentAttr.Free;
+  FAndAttr.Free;
 
   inherited;
 end;
@@ -855,32 +856,36 @@ procedure THopePreferencesHighlighterCSS.AfterConstruction;
 begin
   inherited;
 
-  FNumberAttr := THopePreferencesFontAttributes.Create;
-  FPropertyAttr := THopePreferencesFontAttributes.Create;
-  FKeywordAttr := THopePreferencesFontAttributes.Create;
+  FAtRuleAttr := THopePreferencesFontAttributes.Create;
   FColorAttr := THopePreferencesFontAttributes.Create;
   FCommentAttr := THopePreferencesFontAttributes.Create;
+  FKeywordAttr := THopePreferencesFontAttributes.Create;
+  FNumberAttr := THopePreferencesFontAttributes.Create;
+  FPropertyAttr := THopePreferencesFontAttributes.Create;
+  FSelectorAttr := THopePreferencesFontAttributes.Create;
   FSpaceAttr := THopePreferencesFontAttributes.Create;
-  FUndefPropertyAttr := THopePreferencesFontAttributes.Create;
-  FValueAttr := THopePreferencesFontAttributes.Create;
-  FTextAttr := THopePreferencesFontAttributes.Create;
   FStringAttr := THopePreferencesFontAttributes.Create;
   FSymbolAttr := THopePreferencesFontAttributes.Create;
+  FTextAttr := THopePreferencesFontAttributes.Create;
+  FUndefPropertyAttr := THopePreferencesFontAttributes.Create;
+  FValueAttr := THopePreferencesFontAttributes.Create;
 end;
 
 procedure THopePreferencesHighlighterCSS.BeforeDestruction;
 begin
-  FSymbolAttr.Free;
-  FStringAttr.Free;
-  FTextAttr.Free;
   FValueAttr.Free;
   FUndefPropertyAttr.Free;
+  FTextAttr.Free;
+  FSymbolAttr.Free;
+  FStringAttr.Free;
   FSpaceAttr.Free;
-  FCommentAttr.Free;
-  FColorAttr.Free;
-  FKeywordAttr.Free;
+  FSelectorAttr.Free;
   FPropertyAttr.Free;
   FNumberAttr.Free;
+  FKeywordAttr.Free;
+  FCommentAttr.Free;
+  FColorAttr.Free;
+  FAtRuleAttr.Free;
 
   inherited;
 end;
@@ -983,7 +988,6 @@ begin
   FWarningAttr.Free;
   FSymbolAttr.Free;
   FStringAttr.Free;
-  FSearchWordAttr.Free;
   FSearchWordAttr.Free;
   FMarkerAttr.Free;
   FLinkAttr.Free;

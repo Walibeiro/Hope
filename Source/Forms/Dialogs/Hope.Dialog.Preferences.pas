@@ -8,7 +8,9 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   System.Actions, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.ActnList, Vcl.Samples.Spin,
-  VirtualTrees, SynEdit, Hope.Dialog, Hope.DataModule;
+  VirtualTrees, SynEdit, Hope.Dialog, Hope.DataModule, SynHighlighterHtml,
+  SynHighlighterCSS, SynHighlighterJSON, SynHighlighterJScript,
+  SynEditHighlighter, SynHighlighterDWS;
 
 type
   TTabSheetItem = record
@@ -40,12 +42,18 @@ type
     ButtonUp: TButton;
     CheckBoxAltSetsColumnMode: TCheckBox;
     CheckBoxAutoIndent: TCheckBox;
+    CheckBoxAutoParenthesis: TCheckBox;
     CheckBoxAutoSizeMaxWidth: TCheckBox;
+    CheckBoxBlockCompletion: TCheckBox;
     CheckBoxBold: TCheckBox;
+    CheckBoxCodeParameters: TCheckBox;
+    CheckBoxCodeSuggestions: TCheckBox;
+    CheckBoxCodeTemplateCompletion: TCheckBox;
     CheckBoxDisableScrollArrows: TCheckBox;
     CheckBoxDragAndDropEditing: TCheckBox;
     CheckBoxEnhanceEndKey: TCheckBox;
     CheckBoxEnhanceHomeKey: TCheckBox;
+    CheckBoxErrorInsight: TCheckBox;
     CheckBoxGroupUndo: TCheckBox;
     CheckBoxHalfPageScroll: TCheckBox;
     CheckBoxHideShowScrollbars: TCheckBox;
@@ -56,42 +64,64 @@ type
     CheckBoxScrollHintFollows: TCheckBox;
     CheckBoxScrollPastEOF: TCheckBox;
     CheckBoxScrollPastEOL: TCheckBox;
+    CheckBoxShowReservedWords: TCheckBox;
     CheckBoxShowScrollHint: TCheckBox;
     CheckBoxShowSpecialChars: TCheckBox;
     CheckBoxSmartTabDelete: TCheckBox;
     CheckBoxSmartTabs: TCheckBox;
     CheckBoxTabIndent: TCheckBox;
     CheckBoxTabsToSpaces: TCheckBox;
+    CheckBoxTooltipSymbol: TCheckBox;
     CheckBoxTrimTrailingSpaces: TCheckBox;
     CheckBoxUnderlined: TCheckBox;
     CheckBoxWantTabs: TCheckBox;
+    ColorBoxAdded: TColorBox;
     ColorBoxBackground: TColorBox;
+    ColorBoxConflicted: TColorBox;
     ColorBoxForeground: TColorBox;
+    ComboBoxBlockCompletion: TComboBox;
     ComboBoxElement: TComboBox;
     ComboBoxInsertCaret: TComboBox;
     ComboBoxLanguage: TComboBox;
     ComboBoxOverwriteCaret: TComboBox;
     ComboBoxProjectPath: TComboBox;
+    EditorPreview: TSynEdit;
     EditPath: TEdit;
+    GroupBoxAutomaticFeatures: TGroupBox;
     GroupBoxCaret: TGroupBox;
+    GroupBoxColors: TGroupBox;
     GroupBoxElement: TGroupBox;
     GroupBoxLibraryPaths: TGroupBox;
     GroupBoxOptions: TGroupBox;
     GroupBoxPaths: TGroupBox;
     GroupBoxPreview: TGroupBox;
     GroupBoxSettings: TGroupBox;
+    LabelAdded: TLabel;
     LabelBackground: TLabel;
+    LabelConflicts: TLabel;
+    LabelDelay: TLabel;
     LabelElement: TLabel;
     LabelForeground: TLabel;
+    LabelIndention: TLabel;
+    LabelIndentMax: TLabel;
     LabelInsertCaret: TLabel;
     LabelLanguage: TLabel;
+    LabelNone: TLabel;
+    LabelOff: TLabel;
     LabelOverwriteCaret: TLabel;
     LabelProjectPath: TLabel;
+    LabelValue: TLabel;
     ListBoxLibraryPaths: TListBox;
     PageControl: TPageControl;
     PanelElementSettings: TPanel;
     PanelTop: TPanel;
-    SynEditPreview: TSynEdit;
+    SpinEditIndent: TSpinEdit;
+    SpinEditIndentMax: TSpinEdit;
+    SynCSS: TSynCssSyn;
+    SynDWS: TSynDWSSyn;
+    SynHTML: TSynHTMLSyn;
+    SynJS: TSynJScriptSyn;
+    SynJSON: TSynJSONSyn;
     TabSheetCodeInsight: TTabSheet;
     TabSheetDeployment: TTabSheet;
     TabSheetDesigner: TTabSheet;
@@ -102,44 +132,30 @@ type
     TabSheetLibraryPaths: TTabSheet;
     TabSheetRecentFiles: TTabSheet;
     TabSheetVersionControl: TTabSheet;
-    TreeCategory: TVirtualStringTree;
-    GroupBoxAutomaticFeatures: TGroupBox;
-    LabelDelay: TLabel;
-    LabelNone: TLabel;
-    LabelOff: TLabel;
-    LabelValue: TLabel;
-    CheckBoxCodeSuggestions: TCheckBox;
-    CheckBoxAutoParenthesis: TCheckBox;
-    CheckBoxShowReservedWords: TCheckBox;
-    CheckBoxCodeParameters: TCheckBox;
     TrackBarDelay: TTrackBar;
-    CheckBoxTooltipSymbol: TCheckBox;
-    CheckBoxBlockCompletion: TCheckBox;
-    ComboBoxBlockCompletion: TComboBox;
-    CheckBoxErrorInsight: TCheckBox;
-    CheckBoxCodeTemplateCompletion: TCheckBox;
-    LabelIndention: TLabel;
-    SpinEditIndent: TSpinEdit;
-    SpinEditIndentMax: TSpinEdit;
-    LabelIndentMax: TLabel;
-    GroupBoxColors: TGroupBox;
-    LabelConflicts: TLabel;
-    ColorBoxConflicted: TColorBox;
-    Label1: TLabel;
-    ColorBoxAdded: TColorBox;
+    TreeCategory: TVirtualStringTree;
+    procedure ButtonProjectPathClick(Sender: TObject);
+    procedure ComboBoxLanguageChange(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure TrackBarDelayChange(Sender: TObject);
     procedure TreeCategoryChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
-    procedure TreeCategoryGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
-      Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure TreeCategoryGetImageIndex(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
       var Ghosted: Boolean; var ImageIndex: Integer);
+    procedure TreeCategoryGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
+      Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure TreeCategoryIncrementalSearch(Sender: TBaseVirtualTree;
       Node: PVirtualNode; const SearchText: string; var Result: Integer);
-    procedure ButtonProjectPathClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure TrackBarDelayChange(Sender: TObject);
+    procedure ComboBoxElementChange(Sender: TObject);
   private
     procedure UpdateTree;
+    procedure UpdateElements;
+
+    procedure HighlightDWS;
+    procedure HighlightJS;
+    procedure HighlightJSON;
+    procedure HighlightHTML;
+    procedure HighlightCSS;
   public
     procedure AfterConstruction; override;
 
@@ -163,6 +179,7 @@ begin
   TreeCategory.NodeDataSize := SizeOf(TTabSheetItem);
 
   UpdateTree;
+  UpdateElements;
 end;
 
 procedure TFormPreferences.ButtonProjectPathClick(Sender: TObject);
@@ -181,10 +198,91 @@ begin
     ComboBoxProjectPath.Text := Directory;
 end;
 
+procedure TFormPreferences.ComboBoxElementChange(Sender: TObject);
+begin
+  //
+end;
+
+procedure TFormPreferences.ComboBoxLanguageChange(Sender: TObject);
+begin
+  case TComboBox(Sender).ItemIndex of
+    0:
+      HighlightDWS;
+    1:
+      HighlightJS;
+    2:
+      HighlightJSON;
+    3:
+      HighlightHTML;
+    4:
+      HighlightCSS;
+  end;
+
+  UpdateElements;
+end;
+
 procedure TFormPreferences.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   if ModalResult = mrOk then
     Store;
+end;
+
+procedure TFormPreferences.HighlightCSS;
+begin
+  EditorPreview.Highlighter := SynCSS;
+  EditorPreview.Lines.Text := EditorPreview.Highlighter.SampleSource;
+end;
+
+procedure TFormPreferences.HighlightDWS;
+begin
+  EditorPreview.Highlighter := SynDWS;
+
+  EditorPreview.Lines.Text :=
+    '  {$DEFINE FOO}' + #10 +
+    'function Foo(Bar: Integer): Float;' + #10 +
+    'var Index: Integer; // Hint: unused variable' + #10 +
+    'begin' + #10 +
+    '  // some bogus calculations' + #10 +
+    '  asm @Bar += 4 end;' + #10 +
+    '  Result := Sqrt(Bar + 1.2) - Bar + 3 + $A;' + #10#10 +
+    '  PrintLn(''Calculation:'' + #10 + ''Done!'')' + #10 +
+    '  Exit;' + #10 +
+    '  PrintLn(''Warning: Unreachable line!'');' + #10 +
+    '  Error: Invalid Code!' + #10 +
+    'end;';
+end;
+
+procedure TFormPreferences.HighlightHTML;
+begin
+  EditorPreview.Highlighter := SynHTML;
+
+  EditorPreview.Lines.Text :=
+    '<!DOCTYPE html>' + #10 +
+    '<html lang="en">' + #10 +
+    '  <head>' + #10 +
+    '    <meta charset="utf-8">' + #10 +
+    '    <title>title</title>' + #10 +
+    '    <link rel="stylesheet" href="style.css">' + #10 +
+    '    <script src="script.js"></script>' + #10 +
+    '  </head>' + #10 +
+    '  <body>' + #10 +
+    '    <!-- page content -->' + #10 +
+    '  </body>' + #10 +
+    '</html>';
+end;
+
+procedure TFormPreferences.HighlightJS;
+begin
+  EditorPreview.Highlighter := SynJS;
+
+  EditorPreview.Lines.Text := EditorPreview.Highlighter.SampleSource;
+end;
+
+procedure TFormPreferences.HighlightJSON;
+begin
+  EditorPreview.Highlighter := SynJSON;
+
+  EditorPreview.Lines.Text := EditorPreview.Highlighter.SampleSource;
 end;
 
 function DelayToTrackbar(Value: Integer): Integer;
@@ -265,6 +363,15 @@ begin
   S[1] := LowerCase(NodeData^.TabSheet.Caption);
 
   Result := StrLIComp(PChar(S[0]), PChar(S[1]), Min(Length(S[0]), Length(S[1])));
+end;
+
+procedure TFormPreferences.UpdateElements;
+var
+  Index: Integer;
+begin
+  ComboBoxElement.Clear;
+  for Index := 0 to EditorPreview.Highlighter.AttrCount - 1 do
+    ComboBoxElement.Items.Add(EditorPreview.Highlighter.Attribute[Index].Name);
 end;
 
 procedure TFormPreferences.UpdateTree;

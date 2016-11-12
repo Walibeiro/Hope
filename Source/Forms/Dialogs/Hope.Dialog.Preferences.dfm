@@ -56,7 +56,7 @@ inherited FormPreferences: TFormPreferences
     Top = 8
     Width = 487
     Height = 484
-    ActivePage = TabSheetCodeInsight
+    ActivePage = TabSheetHighlighterOptions
     Anchors = [akLeft, akTop, akRight, akBottom]
     Images = DataModuleCommon.ImageList16
     MultiLine = True
@@ -593,9 +593,9 @@ inherited FormPreferences: TFormPreferences
       object GroupBoxPreview: TGroupBox
         AlignWithMargins = True
         Left = 4
-        Top = 158
+        Top = 151
         Width = 471
-        Height = 237
+        Height = 244
         Margins.Left = 4
         Margins.Top = 4
         Margins.Right = 4
@@ -603,12 +603,12 @@ inherited FormPreferences: TFormPreferences
         Align = alClient
         Caption = 'Preview'
         TabOrder = 0
-        object SynEditPreview: TSynEdit
+        object EditorPreview: TSynEdit
           AlignWithMargins = True
           Left = 10
           Top = 25
           Width = 451
-          Height = 202
+          Height = 209
           Margins.Left = 8
           Margins.Top = 8
           Margins.Right = 8
@@ -625,7 +625,7 @@ inherited FormPreferences: TFormPreferences
           Gutter.Font.Height = -11
           Gutter.Font.Name = 'Courier New'
           Gutter.Font.Style = []
-          Highlighter = DataModuleCommon.SynObjectPascal
+          Highlighter = DataModuleCommon.SynDWS
           Lines.Strings = (
             '{$DEFINE FOO}'
             'function Foo(Bar: Integer): Float;'
@@ -635,7 +635,7 @@ inherited FormPreferences: TFormPreferences
             '  asm @Bar += 4 end;'
             '  Result := Sqrt(Bar + 1.2) - Bar + 3 + $A;'
             ''
-            '  WriteLn('#39'Calculation:'#39' + #10 + '#39'Done!'#39')'
+            '  PrintLn('#39'Calculation:'#39' + #10 + '#39'Done!'#39')'
             '  Exit;'
             '  PrintLn('#39'Warning: Unreachable line!'#39');'
             '  Error: Invalid Code!'
@@ -668,12 +668,13 @@ inherited FormPreferences: TFormPreferences
           ItemIndex = 0
           TabOrder = 0
           Text = 'DWScript Pascal'
+          OnChange = ComboBoxLanguageChange
           Items.Strings = (
             'DWScript Pascal'
-            'HTML'
-            'CSS'
             'JavaScript'
-            'JSON')
+            'JSON'
+            'HTML'
+            'CSS')
         end
         object ButtonLoad: TButton
           Left = 316
@@ -700,7 +701,7 @@ inherited FormPreferences: TFormPreferences
         Left = 0
         Top = 33
         Width = 479
-        Height = 121
+        Height = 114
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 2
@@ -709,7 +710,7 @@ inherited FormPreferences: TFormPreferences
           Left = 240
           Top = 3
           Width = 236
-          Height = 115
+          Height = 108
           Align = alRight
           Caption = 'Settings'
           TabOrder = 0
@@ -771,7 +772,7 @@ inherited FormPreferences: TFormPreferences
           Left = 4
           Top = 4
           Width = 229
-          Height = 113
+          Height = 106
           Margins.Left = 4
           Margins.Top = 4
           Margins.Right = 4
@@ -784,7 +785,7 @@ inherited FormPreferences: TFormPreferences
             Left = 10
             Top = 56
             Width = 209
-            Height = 47
+            Height = 40
             Margins.Left = 8
             Margins.Top = 0
             Margins.Right = 8
@@ -808,6 +809,7 @@ inherited FormPreferences: TFormPreferences
             Align = alTop
             Style = csDropDownList
             TabOrder = 0
+            OnChange = ComboBoxElementChange
           end
         end
       end
@@ -971,7 +973,7 @@ inherited FormPreferences: TFormPreferences
           Height = 15
           Caption = 'Conflicts:'
         end
-        object Label1: TLabel
+        object LabelAdded: TLabel
           Left = 16
           Top = 52
           Width = 38
@@ -1083,5 +1085,41 @@ inherited FormPreferences: TFormPreferences
       Caption = 'Save...'
       ImageIndex = 3
     end
+  end
+  object SynDWS: TSynDWSSyn
+    DefaultFilter = 'DWScript Files (*.dws;*.pas;*.inc)|*.dws;*.pas;*.inc'
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.Visible = False
+    Left = 24
+    Top = 480
+  end
+  object SynJS: TSynJScriptSyn
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.Visible = False
+    Left = 72
+    Top = 480
+  end
+  object SynJSON: TSynJSONSyn
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.Visible = False
+    Left = 120
+    Top = 480
+  end
+  object SynCSS: TSynCssSyn
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.Visible = False
+    Left = 216
+    Top = 480
+  end
+  object SynHTML: TSynHTMLSyn
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.Visible = False
+    Left = 168
+    Top = 480
   end
 end

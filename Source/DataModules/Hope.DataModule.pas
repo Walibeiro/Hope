@@ -5,7 +5,8 @@ unit Hope.DataModule;
 interface
 
 uses
-  System.SysUtils, System.Classes, Vcl.ImgList, Vcl.Controls,
+  System.SysUtils, System.Classes, Vcl.ImgList, Vcl.Imaging.PngImage,
+  Vcl.Controls,
 
   SynEdit, SynEditTypes,SynEditPlugins, SynMacroRecorder, SynCompletionProposal,
   SynEditRegexSearch, SynEditHighlighter, SynHighlighterMulti,
@@ -23,13 +24,13 @@ type
     ImageList12: TImageList;
     ImageList16: TImageList;
     SynCodeSuggestions: TSynCompletionProposal;
-    SynCssSyn: TSynCssSyn;
-    SynDWSSyn: TSynDWSSyn;
+    SynCSS: TSynCssSyn;
+    SynDWS: TSynDWSSyn;
     SynEditRegexSearch: TSynEditRegexSearch;
     SynEditSearch: TSynEditSearch;
-    SynHTMLSyn: TSynHTMLSyn;
-    SynJScriptSyn: TSynJScriptSyn;
-    SynJSONSyn: TSynJSONSyn;
+    SynHTML: TSynHTMLSyn;
+    SynJS: TSynJScriptSyn;
+    SynJSON: TSynJSONSyn;
     SynMacroRecorder: TSynMacroRecorder;
     SynMultiCSS: TSynMultiSyn;
     SynMultiHTML: TSynMultiSyn;
@@ -133,6 +134,7 @@ begin
   FHistory.Free;
   FPositions.Free;
   FPreferences.Free;
+  FPaths.Free;
 
   inherited;
 end;

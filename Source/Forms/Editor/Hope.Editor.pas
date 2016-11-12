@@ -139,7 +139,7 @@ implementation
 
 uses
   System.Contnrs, System.Math, dwsExprs, dwsSymbols, dwsTokenizer, dwsUtils,
-  dwsXPlatform, Hope.Main, Hope.Common.FileUtilities,
+  dwsXPlatform, Hope.Main, Hope.Common.Constants, Hope.Common.FileUtilities,
   Hope.Common.MonitoredBuffer, Hope.Common.Preferences;
 
 {$R *.dfm}
@@ -348,16 +348,30 @@ begin
     Editor.Text := DataModuleCommon.GetText(FileName);
 
   FShortFileName := ExtractFileName(FileName);
-  if StrEndsWith(LowerCase(FShortFileName), '.pas') then
+  if StrEndsWith(LowerCase(FShortFileName), CExtensionHtml) then
   begin
-    FExtension := '.pas';
+    FExtension := CExtensionHtml;
+    Delete(FShortFileName, Length(FShortFileName) - 4, 5);
+    Editor.Highlighter := DataModuleCommon.SynMultiHTML;
+  end
+  else
+  if StrEndsWith(LowerCase(FShortFileName), CExtensionCss) then
+  begin
+    FExtension := CExtensionCss;
+    Delete(FShortFileName, Length(FShortFileName) - 3, 4);
+    Editor.Highlighter := DataModuleCommon.SynMultiCSS;
+  end
+  else
+  if StrEndsWith(LowerCase(FShortFileName), CExtensionPascal) then
+  begin
+    FExtension := CExtensionPascal;
     Delete(FShortFileName, Length(FShortFileName) - 3, 4);
     Editor.Highlighter := DataModuleCommon.SynObjectPascal;
   end
   else
-  if StrEndsWith(LowerCase(FShortFileName), '.hpr') then
+  if StrEndsWith(LowerCase(FShortFileName), CExtensionProgram) then
   begin
-    FExtension := '.hpr';
+    FExtension := CExtensionProgram;
     Delete(FShortFileName, Length(FShortFileName) - 3, 4);
     Editor.Highlighter := DataModuleCommon.SynObjectPascal;
   end;

@@ -17,6 +17,7 @@ type
     procedure WriteJson(const JsonValue: TdwsJSONObject); override;
   public
     procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
 
     procedure AddProject(FileName: string);
     procedure AddUnit(FileName: string);
@@ -42,6 +43,14 @@ begin
   FProjectsHistory.CaseSensitive := False;
   FUnitsHistory := TStringList.Create;
   FUnitsHistory.CaseSensitive := False;
+end;
+
+procedure THopeHistory.BeforeDestruction;
+begin
+  FUnitsHistory.Free;
+  FProjectsHistory.Free;
+
+  inherited;
 end;
 
 procedure THopeHistory.AddProject(FileName: string);

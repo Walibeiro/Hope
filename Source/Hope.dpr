@@ -3,6 +3,7 @@ program Hope;
 {$R 'dwsJSRTL.res' '..\..\DWScript\Libraries\JSCodeGen\dwsJSRTL.rc'}
 
 uses
+  FastMM4,
   Vcl.Forms,
   Hope.About in 'Forms\Hope.About.pas' {FormAbout},
   Hope.AsciiChart in 'Forms\Hope.AsciiChart.pas' {FormAsciiChart},

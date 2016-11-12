@@ -37,6 +37,7 @@ type
     procedure WriteJson(const JsonValue: TdwsJSONObject); override;
   public
     procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
 
     property Main: THopePositionMain read FMain;
   end;
@@ -104,6 +105,13 @@ begin
   inherited;
 
   FMain := THopePositionMain.Create;
+end;
+
+procedure THopePositions.BeforeDestruction;
+begin
+  FMain.Free;
+
+  inherited;
 end;
 
 procedure THopePositions.ReadJson(const JsonValue: TdwsJSONObject);

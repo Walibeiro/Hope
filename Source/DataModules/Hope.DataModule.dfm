@@ -17,10 +17,10 @@ object DataModuleCommon: TDataModuleCommon
       item
         StartExpr = 'asm'
         EndExpr = 'end;'
-        Highlighter = SynJScriptSyn
+        Highlighter = SynJS
         SchemeName = 'Assembler'
       end>
-    DefaultHighlighter = SynDWSSyn
+    DefaultHighlighter = SynDWS
     DefaultLanguageName = 'DWScript'
     Left = 160
     Top = 264
@@ -36,7 +36,7 @@ object DataModuleCommon: TDataModuleCommon
     Left = 48
     Top = 168
   end
-  object SynDWSSyn: TSynDWSSyn
+  object SynDWS: TSynDWSSyn
     DefaultFilter = 'DWScript Files (*.dws;*.pas;*.inc)|*.dws;*.pas;*.inc'
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
@@ -44,28 +44,28 @@ object DataModuleCommon: TDataModuleCommon
     Left = 160
     Top = 24
   end
-  object SynJScriptSyn: TSynJScriptSyn
+  object SynJS: TSynJScriptSyn
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
     Left = 160
     Top = 72
   end
-  object SynJSONSyn: TSynJSONSyn
+  object SynJSON: TSynJSONSyn
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
     Left = 160
     Top = 120
   end
-  object SynHTMLSyn: TSynHTMLSyn
+  object SynHTML: TSynHTMLSyn
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
     Left = 160
     Top = 216
   end
-  object SynCssSyn: TSynCssSyn
+  object SynCSS: TSynCssSyn
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
@@ -2103,7 +2103,7 @@ object DataModuleCommon: TDataModuleCommon
         Highlighter = SynObjectPascal
         SchemeName = 'Object Pascal (direct)'
       end>
-    DefaultHighlighter = SynCssSyn
+    DefaultHighlighter = SynCSS
     DefaultLanguageName = 'CSS'
     Left = 160
     Top = 312
@@ -2139,10 +2139,10 @@ object DataModuleCommon: TDataModuleCommon
       item
         StartExpr = '<script(.*?)>'
         EndExpr = '</script>'
-        Highlighter = SynJScriptSyn
+        Highlighter = SynJS
         SchemeName = 'JavaScript'
       end>
-    DefaultHighlighter = SynHTMLSyn
+    DefaultHighlighter = SynHTML
     DefaultLanguageName = 'HTML'
     Left = 160
     Top = 360
