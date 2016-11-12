@@ -56,7 +56,7 @@ inherited FormPreferences: TFormPreferences
     Top = 8
     Width = 487
     Height = 484
-    ActivePage = TabSheetHighlighterOptions
+    ActivePage = TabSheetAppearance
     Anchors = [akLeft, akTop, akRight, akBottom]
     Images = DataModuleCommon.ImageList16
     MultiLine = True
@@ -111,6 +111,119 @@ inherited FormPreferences: TFormPreferences
     object TabSheetRecentFiles: TTabSheet
       Caption = 'Recent Files'
       ImageIndex = 35
+      object GroupBoxCapacity: TGroupBox
+        Left = 0
+        Top = 0
+        Width = 479
+        Height = 69
+        Align = alTop
+        Caption = 'Capacity'
+        TabOrder = 0
+        DesignSize = (
+          479
+          69)
+        object LabelProjectCount: TLabel
+          Left = 16
+          Top = 32
+          Width = 106
+          Height = 15
+          Caption = 'Number of Projects:'
+        end
+        object LabelUnitCount: TLabel
+          Left = 296
+          Top = 32
+          Width = 85
+          Height = 15
+          Anchors = [akTop, akRight]
+          Caption = 'Number of files:'
+        end
+        object SpinEditProjectCount: TSpinEdit
+          Left = 136
+          Top = 29
+          Width = 65
+          Height = 24
+          MaxValue = 0
+          MinValue = 0
+          TabOrder = 0
+          Value = 10
+        end
+        object SpinEditUnitCOunt: TSpinEdit
+          Left = 395
+          Top = 29
+          Width = 65
+          Height = 24
+          Anchors = [akTop, akRight]
+          MaxValue = 0
+          MinValue = 0
+          TabOrder = 1
+          Value = 10
+        end
+      end
+      object GroupBoxItems: TGroupBox
+        Left = 0
+        Top = 69
+        Width = 479
+        Height = 330
+        Align = alClient
+        Caption = 'Recent Items'
+        TabOrder = 1
+        DesignSize = (
+          479
+          330)
+        object ButtonRemoveInvalid: TButton
+          Left = 16
+          Top = 289
+          Width = 161
+          Height = 25
+          Action = ActionDeleteNonexistingFiles
+          Anchors = [akLeft, akBottom]
+          TabOrder = 0
+        end
+        object Button1: TButton
+          Left = 286
+          Top = 289
+          Width = 84
+          Height = 25
+          Action = ActionDelete
+          Anchors = [akRight, akBottom]
+          TabOrder = 1
+        end
+        object ButtonClear: TButton
+          Left = 376
+          Top = 289
+          Width = 84
+          Height = 25
+          Action = ActionClear
+          Anchors = [akRight, akBottom]
+          TabOrder = 2
+        end
+        object TreeItems: TVirtualStringTree
+          Left = 16
+          Top = 21
+          Width = 444
+          Height = 262
+          Anchors = [akLeft, akTop, akRight, akBottom]
+          Header.AutoSizeIndex = 0
+          Header.Font.Charset = DEFAULT_CHARSET
+          Header.Font.Color = clWindowText
+          Header.Font.Height = -11
+          Header.Font.Name = 'Tahoma'
+          Header.Font.Style = []
+          Header.MainColumn = -1
+          Images = DataModuleCommon.ImageList16
+          Indent = 0
+          StateImages = DataModuleCommon.ImageList16
+          TabOrder = 3
+          TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
+          TreeOptions.PaintOptions = [toThemeAware, toUseBlendedImages]
+          TreeOptions.SelectionOptions = [toFullRowSelect]
+          OnCollapsing = TreeItemsCollapsing
+          OnDrawText = TreeItemsDrawText
+          OnFreeNode = TreeItemsFreeNode
+          OnGetText = TreeItemsGetText
+          Columns = <>
+        end
+      end
     end
     object TabSheetLibraryPaths: TTabSheet
       Caption = 'Paths'
@@ -620,12 +733,13 @@ inherited FormPreferences: TFormPreferences
           Font.Name = 'Courier New'
           Font.Style = []
           TabOrder = 0
+          OnClick = EditorPreviewClick
           Gutter.Font.Charset = DEFAULT_CHARSET
           Gutter.Font.Color = clWindowText
           Gutter.Font.Height = -11
           Gutter.Font.Name = 'Courier New'
           Gutter.Font.Style = []
-          Highlighter = DataModuleCommon.SynDWS
+          Highlighter = SynDWS
           Lines.Strings = (
             '{$DEFINE FOO}'
             'function Foo(Bar: Integer): Float;'
@@ -640,6 +754,11 @@ inherited FormPreferences: TFormPreferences
             '  PrintLn('#39'Warning: Unreachable line!'#39');'
             '  Error: Invalid Code!'
             'end;')
+          ScrollBars = ssVertical
+          OnChange = EditorPreviewChange
+          OnCommandProcessed = EditorPreviewCommandProcessed
+          OnGutterPaint = EditorPreviewGutterPaint
+          OnSpecialLineColors = EditorPreviewSpecialLineColors
           FontSmoothing = fsmNone
         end
       end
@@ -733,14 +852,19 @@ inherited FormPreferences: TFormPreferences
             Top = 24
             Width = 129
             Height = 22
+            Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeNone, cbCustomColor, cbCustomColors]
             TabOrder = 0
+            OnChange = ColorBoxForegroundChange
+            OnGetColors = ColorBoxForegroundGetColors
           end
           object ColorBoxBackground: TColorBox
             Left = 96
             Top = 52
             Width = 129
             Height = 22
+            Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeNone, cbCustomColor, cbCustomColors]
             TabOrder = 1
+            OnChange = ColorBoxBackgroundChange
           end
           object CheckBoxBold: TCheckBox
             Left = 16
@@ -749,6 +873,7 @@ inherited FormPreferences: TFormPreferences
             Height = 17
             Caption = 'Bold'
             TabOrder = 2
+            OnClick = CheckBoxBoldClick
           end
           object CheckBoxItalic: TCheckBox
             Left = 80
@@ -757,6 +882,7 @@ inherited FormPreferences: TFormPreferences
             Height = 17
             Caption = 'Italic'
             TabOrder = 3
+            OnClick = CheckBoxItalicClick
           end
           object CheckBoxUnderlined: TCheckBox
             Left = 144
@@ -765,6 +891,7 @@ inherited FormPreferences: TFormPreferences
             Height = 17
             Caption = 'Underlined'
             TabOrder = 4
+            OnClick = CheckBoxUnderlinedClick
           end
         end
         object GroupBoxElement: TGroupBox
@@ -1038,6 +1165,10 @@ inherited FormPreferences: TFormPreferences
         Value = 40
       end
     end
+    object TabSheetAppearance: TTabSheet
+      Caption = 'Appearance'
+      ImageIndex = 35
+    end
   end
   object ActionList: TActionList
     Images = DataModuleCommon.ImageList16
@@ -1079,11 +1210,27 @@ inherited FormPreferences: TFormPreferences
       Category = 'Highlighter'
       Caption = 'Load...'
       ImageIndex = 1
+      OnExecute = ActionLoadExecute
     end
     object ActionSave: TAction
       Category = 'Highlighter'
       Caption = 'Save...'
       ImageIndex = 3
+      OnExecute = ActionSaveExecute
+    end
+    object ActionDeleteNonexistingFiles: TAction
+      Category = 'Recent Files'
+      Caption = 'Delete None&xisting Files'
+    end
+    object ActionDelete: TAction
+      Category = 'Recent Files'
+      Caption = '&Delete'
+      OnExecute = ActionDeleteExecute
+    end
+    object ActionClear: TAction
+      Category = 'Recent Files'
+      Caption = '&Clear'
+      OnExecute = ActionClearExecute
     end
   end
   object SynDWS: TSynDWSSyn
@@ -1120,6 +1267,91 @@ inherited FormPreferences: TFormPreferences
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
     Left = 168
+    Top = 480
+  end
+  object SynPascal: TSynMultiSyn
+    DefaultFilter = 'DWScript Files (*.dws;*.pas;*.inc)|*.dws;*.pas;*.inc'
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.DefaultExtension = '.dws'
+    Options.Title = 'Object Pascal Syntax Highlighter'
+    Options.Visible = False
+    Schemes = <
+      item
+        StartExpr = 'asm'
+        EndExpr = 'end;'
+        Highlighter = SynJS
+        SchemeName = 'Assembler'
+      end>
+    DefaultHighlighter = SynDWS
+    DefaultLanguageName = 'DWScript'
+    Left = 272
+    Top = 480
+  end
+  object SynMultiCSS: TSynMultiSyn
+    DefaultFilter = 'CSS Files (*.css)|*.css'
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.DefaultExtension = '.css'
+    Options.Title = 'CSS Syntax Highlighter'
+    Options.Visible = False
+    Schemes = <
+      item
+        CaseSensitive = False
+        StartExpr = '</?pas'
+        EndExpr = '/?>'
+        Highlighter = SynPascal
+        SchemeName = 'Object Pascal'
+      end
+      item
+        CaseSensitive = False
+        StartExpr = '</?pas='
+        EndExpr = '/?>'
+        Highlighter = SynPascal
+        SchemeName = 'Object Pascal (direct)'
+      end>
+    DefaultHighlighter = SynCSS
+    DefaultLanguageName = 'CSS'
+    Left = 336
+    Top = 480
+  end
+  object SynMultiHTML: TSynMultiSyn
+    DefaultFilter = 'HTML files (*.html;*,htm)|*.html;*.htm'
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.DefaultExtension = '.html'
+    Options.Title = 'HTML Highlighter'
+    Options.Visible = False
+    Schemes = <
+      item
+        CaseSensitive = False
+        StartExpr = '</?pas'
+        EndExpr = '/?>'
+        Highlighter = SynPascal
+        SchemeName = 'Object Pascal'
+      end
+      item
+        CaseSensitive = False
+        StartExpr = '</?pas='
+        EndExpr = '/?>'
+        Highlighter = SynPascal
+        SchemeName = 'Object Pascal (direct)'
+      end
+      item
+        StartExpr = '<script(.*?)>'
+        EndExpr = '</style>'
+        Highlighter = SynMultiCSS
+        SchemeName = 'CSS'
+      end
+      item
+        StartExpr = '<script(.*?)>'
+        EndExpr = '</script>'
+        Highlighter = SynJS
+        SchemeName = 'JavaScript'
+      end>
+    DefaultHighlighter = SynHTML
+    DefaultLanguageName = 'HTML'
+    Left = 400
     Top = 480
   end
 end

@@ -1,6 +1,7 @@
 program Hope;
 
 {$R 'dwsJSRTL.res' '..\..\DWScript\Libraries\JSCodeGen\dwsJSRTL.rc'}
+{$R *.res}
 
 uses
   FastMM4,
@@ -41,6 +42,7 @@ uses
   Hope.DockingUtils in 'Utils\Hope.DockingUtils.pas',
   Hope.Editor in 'Forms\Editor\Hope.Editor.pas' {FormEditor},
   Hope.EditorList in 'Utils\Hope.EditorList.pas',
+  Hope.InternalBrowser in 'Forms\Hope.InternalBrowser.pas' {FormInternalBrowser},
   Hope.Main in 'Forms\Hope.Main.pas' {FormMain},
   Hope.MessageWindow in 'Forms\MessageWindow\Hope.MessageWindow.pas' {FormMessageWindow},
   Hope.MessageWindow.Compiler in 'Forms\MessageWindow\Hope.MessageWindow.Compiler.pas' {FormCompilerMessages},
@@ -62,6 +64,7 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  Application.Title := 'HOPE Object Pascal Environment';
   Application.CreateForm(TDataModuleCommon, DataModuleCommon);
   Application.CreateForm(TFormMain, FormMain);
   Application.Run;

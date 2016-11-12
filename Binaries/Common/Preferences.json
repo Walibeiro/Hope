@@ -46,6 +46,288 @@
 		"TabsToSpaces" : true,
 		"TrimTrailingSpace" : true
 	},
+	"Highlighter" : {
+		"Pascal" : {
+			"Asm" : {
+				"Background" : "clNone",
+				"Foreground" : "clMaroon",
+				"Style" : ""
+			},
+			"Char" : {
+				"Background" : "clNone",
+				"Foreground" : "clBlue",
+				"Style" : ""
+			},
+			"Comment" : {
+				"Background" : "clNone",
+				"Foreground" : "clGreen",
+				"Style" : "fsItalic"
+			},
+			"Directive" : {
+				"Background" : "clNone",
+				"Foreground" : "clTeal",
+				"Style" : "fsItalic"
+			},
+			"Float" : {
+				"Background" : "clNone",
+				"Foreground" : "clBlue",
+				"Style" : ""
+			},
+			"Hex" : {
+				"Background" : "clNone",
+				"Foreground" : "clBlue",
+				"Style" : ""
+			},
+			"Identifier" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"Keyword" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : "fsBold"
+			},
+			"Number" : {
+				"Background" : "clNone",
+				"Foreground" : "clBlue",
+				"Style" : ""
+			},
+			"Space" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"String" : {
+				"Background" : "clNone",
+				"Foreground" : "clBlue",
+				"Style" : ""
+			},
+			"Symbol" : {
+				"Background" : "clNone",
+				"Foreground" : "clNavy",
+				"Style" : ""
+			}
+		},
+		"JS" : {
+			"Comment" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : "fsItalic"
+			},
+			"Event" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : "fsItalic"
+			},
+			"Identifier" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"Keyword" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : "fsBold"
+			},
+			"NonReservedKeyword" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"Number" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"Space" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"String" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"Symbol" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			}
+		},
+		"JSON" : {
+			"Attribute" : {
+				"Background" : "clNone",
+				"Foreground" : "clNavy",
+				"Style" : ""
+			},
+			"Reserved" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : "fsBold"
+			},
+			"Number" : {
+				"Background" : "clNone",
+				"Foreground" : "clRed",
+				"Style" : ""
+			},
+			"Space" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"Symbol" : {
+				"Background" : "clNone",
+				"Foreground" : "clGreen",
+				"Style" : ""
+			},
+			"Value" : {
+				"Background" : "clNone",
+				"Foreground" : "clBlue",
+				"Style" : ""
+			}
+		},
+		"HTML" : {
+			"And" : {
+				"Background" : "clNone",
+				"Foreground" : "clLime",
+				"Style" : "fsBold"
+			},
+			"Comment" : {
+				"Background" : "clBlack",
+				"Foreground" : "clBlack",
+				"Style" : ""
+			},
+			"Identifier" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : "fsBold"
+			},
+			"Keyword" : {
+				"Background" : "clNone",
+				"Foreground" : "$00FF0080",
+				"Style" : "fsBold"
+			},
+			"Space" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"Symbol" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : "fsBold"
+			},
+			"Text" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"UndefKey" : {
+				"Background" : "clNone",
+				"Foreground" : "clRed",
+				"Style" : "fsBold"
+			},
+			"Value" : {
+				"Background" : "clNone",
+				"Foreground" : "$00FF8000",
+				"Style" : ""
+			}
+		},
+		"CSS" : {
+			"AtRule" : {
+				"Background" : "clNone",
+				"Foreground" : "clTeal",
+				"Style" : ""
+			},
+			"Color" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"Comment" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"Number" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"Property" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : "fsBold"
+			},
+			"Selector" : {
+				"Background" : "clNone",
+				"Foreground" : "$00FF0080",
+				"Style" : "fsBold"
+			},
+			"Space" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"String" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"Symbol" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"Text" : {
+				"Background" : "clNone",
+				"Foreground" : "clNone",
+				"Style" : ""
+			},
+			"UndefProperty" : {
+				"Background" : "clNone",
+				"Foreground" : "$00FF0080",
+				"Style" : "fsBold"
+			},
+			"Value" : {
+				"Background" : "clNone",
+				"Foreground" : "$00FF8000",
+				"Style" : ""
+			}
+		},
+		"Hint" : {
+			"Background" : "$00FFD8C0",
+			"Foreground" : "clNone",
+			"Style" : ""
+		},
+		"Warning" : {
+			"Background" : "$00C0FFFF",
+			"Foreground" : "clNone",
+			"Style" : ""
+		},
+		"Error" : {
+			"Background" : "$00C0C0FF",
+			"Foreground" : "clNone",
+			"Style" : ""
+		},
+		"Link" : {
+			"Background" : "clNone",
+			"Foreground" : "clBlue",
+			"Style" : "fsUnderline"
+		},
+		"SearchWord" : {
+			"Background" : "$0080B0FF",
+			"Foreground" : "clNone",
+			"Style" : ""
+		},
+		"Marker" : {
+			"Background" : "clBlack",
+			"Foreground" : "clBlack",
+			"Style" : ""
+		}
+	},
 	"CodeInsight" : {
 		"ErrorInsight" : false,
 		"CodeParametes" : true,

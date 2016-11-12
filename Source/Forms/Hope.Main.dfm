@@ -126,6 +126,7 @@ object FormMain: TFormMain
     end
   end
   object MainMenu: TMainMenu
+    Images = DataModuleCommon.ImageList16
     Left = 104
     Top = 104
     object MenuItemFile: TMenuItem
@@ -762,6 +763,11 @@ object FormMain: TFormMain
       AutoCheck = True
       Caption = 'View &Mini Map'
       OnExecute = ActionViewMiniMapExecute
+    end
+    object ActionBrowserTakeScreenshot: TAction
+      Category = 'Browser'
+      Caption = 'Take &Screenshot'
+      ImageIndex = 36
     end
   end
   object PopupMenu: TPopupMenu

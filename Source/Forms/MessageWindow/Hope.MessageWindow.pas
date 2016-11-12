@@ -11,13 +11,13 @@ uses
 
 type
   TFormMessageWindow = class(TFormDockable)
-    TreeMessages: TVirtualStringTree;
-    PopupMenu: TPopupMenu;
     MenuItemClearMessages: TMenuItem;
     MenuItemCopy: TMenuItem;
-    MenuItemSelectAll: TMenuItem;
     MenuItemSaveMessagesToFile: TMenuItem;
+    MenuItemSelectAll: TMenuItem;
     N1: TMenuItem;
+    PopupMenu: TPopupMenu;
+    TreeMessages: TVirtualStringTree;
     procedure MenuItemClearMessagesClick(Sender: TObject);
     procedure MenuItemSaveMessagesToFileClick(Sender: TObject);
     procedure MenuItemCopyClick(Sender: TObject);

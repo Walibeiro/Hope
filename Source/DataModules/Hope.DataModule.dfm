@@ -74,6 +74,7 @@ object DataModuleCommon: TDataModuleCommon
   end
   object ImageList16: TImageList
     ColorDepth = cd32Bit
+    DrawingStyle = dsTransparent
     Left = 48
     Top = 216
     Bitmap = {
@@ -1934,6 +1935,7 @@ object DataModuleCommon: TDataModuleCommon
   end
   object ImageList12: TImageList
     ColorDepth = cd32Bit
+    DrawingStyle = dsTransparent
     Height = 12
     Width = 12
     Left = 48

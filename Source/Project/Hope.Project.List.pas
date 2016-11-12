@@ -53,12 +53,15 @@ uses
 procedure THopeProjectList.AfterConstruction;
 begin
   inherited;
+
+  // create object list
   FProjects := TObjectList.Create(True);
 end;
 
 procedure THopeProjectList.BeforeDestruction;
 begin
   FProjects.Free;
+
   inherited;
 end;
 

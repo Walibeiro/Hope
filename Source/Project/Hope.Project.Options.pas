@@ -187,6 +187,7 @@ type
     class function GetPreferredName: string; override;
   public
     procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
 
     property Path: string read FPath write FPath;
     property HtmlOutput: THopeOutputHtmlOptions read FHtmlOutput;
@@ -523,10 +524,18 @@ begin
   inherited;
 
   FHtmlOutput := THopeOutputHtmlOptions.Create;
-  FCssOutput  := THopeOutputCssOptions.Create ;
+  FCssOutput  := THopeOutputCssOptions.Create;
 
   FPath := '..\Output\';
   FFileName := 'main.js';
+end;
+
+procedure THopeOutputOptions.BeforeDestruction;
+begin
+  FHtmlOutput.Free;
+  FCssOutput.Free;
+
+  inherited;
 end;
 
 class function THopeOutputOptions.GetPreferredName: string;

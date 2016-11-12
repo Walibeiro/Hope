@@ -182,6 +182,7 @@ type
     ActionViewMiniMap: TAction;
     N3: TMenuItem;
     ActionViewMiniMap1: TMenuItem;
+    ActionBrowserTakeScreenshot: TAction;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDockOver(Sender: TObject; Source: TDragDockObject; X,
@@ -1101,7 +1102,7 @@ begin
     if ShowModal = mrOk then
     begin
       PreferencesChanged;
-      Store;
+      Save;
     end;
   finally
     Free;

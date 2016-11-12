@@ -102,33 +102,33 @@ inherited FormRecentProperties: TFormRecentProperties
       Anchors = [akRight, akBottom]
       TabOrder = 2
     end
-  end
-  object TreeItems: TVirtualStringTree
-    Left = 24
-    Top = 104
-    Width = 374
-    Height = 237
-    Anchors = [akLeft, akTop, akRight, akBottom]
-    Header.AutoSizeIndex = 0
-    Header.Font.Charset = DEFAULT_CHARSET
-    Header.Font.Color = clWindowText
-    Header.Font.Height = -11
-    Header.Font.Name = 'Tahoma'
-    Header.Font.Style = []
-    Header.MainColumn = -1
-    Images = DataModuleCommon.ImageList16
-    Indent = 0
-    PopupMenu = PopupMenu
-    StateImages = DataModuleCommon.ImageList16
-    TabOrder = 5
-    TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
-    TreeOptions.PaintOptions = [toThemeAware, toUseBlendedImages]
-    TreeOptions.SelectionOptions = [toFullRowSelect]
-    OnCollapsing = TreeItemsCollapsing
-    OnDrawText = TreeItemsDrawText
-    OnFreeNode = TreeItemsFreeNode
-    OnGetText = TreeItemsGetText
-    Columns = <>
+    object TreeItems: TVirtualStringTree
+      Left = 16
+      Top = 21
+      Width = 374
+      Height = 237
+      Anchors = [akLeft, akTop, akRight, akBottom]
+      Header.AutoSizeIndex = 0
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
+      Header.MainColumn = -1
+      Images = DataModuleCommon.ImageList16
+      Indent = 0
+      PopupMenu = PopupMenu
+      StateImages = DataModuleCommon.ImageList16
+      TabOrder = 3
+      TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
+      TreeOptions.PaintOptions = [toThemeAware, toUseBlendedImages]
+      TreeOptions.SelectionOptions = [toFullRowSelect]
+      OnCollapsing = TreeItemsCollapsing
+      OnDrawText = TreeItemsDrawText
+      OnFreeNode = TreeItemsFreeNode
+      OnGetText = TreeItemsGetText
+      Columns = <>
+    end
   end
   object PopupMenu: TPopupMenu
     Left = 200

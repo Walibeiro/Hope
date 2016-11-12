@@ -31,6 +31,7 @@ type
     procedure WriteJson(const JsonValue: TdwsJsonObject); override;
   public
     procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
 
     procedure LoadFromFile(const FileName: TFileName); override;
     procedure SaveToFile(const FileName: TFileName); override;
@@ -66,6 +67,15 @@ begin
   FOptions := THopeProjectOptions.Create;
   FFiles := THopeProjectFiles.Create;
   FMainScript := THopeProjectFile.Create;
+end;
+
+procedure THopeProject.BeforeDestruction;
+begin
+  FOptions.Free;
+  FFiles.Free;
+  FMainScript.Free;
+
+  inherited;
 end;
 
 procedure THopeProject.Clear;
