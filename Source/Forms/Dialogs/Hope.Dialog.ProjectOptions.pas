@@ -6,10 +6,10 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, 
-  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls,
-  VirtualTrees, Hope.Dialog, Hope.DataModule, Hope.Project.Options,
-  Vcl.Samples.Spin;
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.Samples.Spin,
+  VirtualTrees, Hope.Dialog, Hope.DataModule, Hope.Project,
+  Hope.Project.Options;
 
 type
   TTabSheetItem = record
@@ -105,13 +105,15 @@ type
   private
     procedure UpdateTree;
     procedure UpdateFullVersionInformation;
+    procedure LoadOptions(Options: THopeProjectOptions);
+    procedure SaveOptions(Options: THopeProjectOptions);
   public
     procedure AfterConstruction; override;
 
-    class function CreateAndShow(const Options: THopeProjectOptions): Boolean;
+    class function CreateAndShow(const Project: THopeProject): Boolean;
 
-    procedure Load(Options: THopeProjectOptions);
-    procedure Store(Options: THopeProjectOptions);
+    procedure LoadFromProject(Project: THopeProject);
+    procedure SaveToProject(Project: THopeProject);
   end;
 
 implementation
@@ -123,19 +125,19 @@ uses
 
 { TFormProjectOptions }
 
-class function TFormProjectOptions.CreateAndShow(const Options: THopeProjectOptions): Boolean;
+class function TFormProjectOptions.CreateAndShow(const Project: THopeProject): Boolean;
 begin
   Result := False;
 
   // show project options dialog
   with TFormProjectOptions.Create(nil) do
   try
-    Load(Options);
+    LoadFromProject(Project);
 
     Result := (ShowModal = mrOk);
 
     if Result then
-      Store(Options);
+      SaveToProject(Project);
   finally
     Free;
   end;
@@ -289,7 +291,7 @@ begin
     SpinEditVersionBuild.Text;
 end;
 
-procedure TFormProjectOptions.Load(Options: THopeProjectOptions);
+procedure TFormProjectOptions.LoadOptions(Options: THopeProjectOptions);
 begin
   // project information
   EditProjectName.Text := Options.Information.Name;
@@ -332,7 +334,7 @@ begin
   CheckBoxEditorMode.Checked := Options.FilterOptions.EditorMode;
 end;
 
-procedure TFormProjectOptions.Store(Options: THopeProjectOptions);
+procedure TFormProjectOptions.SaveOptions(Options: THopeProjectOptions);
 begin
   // project information
   Options.Information.Name := EditProjectName.Text;
@@ -373,6 +375,28 @@ begin
 
   // Filter
   Options.FilterOptions.EditorMode := CheckBoxEditorMode.Checked;
+end;
+
+procedure TFormProjectOptions.LoadFromProject(Project: THopeProject);
+begin
+(*
+  EditProjectName.Text := Project.Name;
+  MemoDescription.Text := Project.Description;
+  EditAuthorEmail.Text := Project.Author;
+  EditAuthorName.Text := Project.Au;
+*)
+
+  LoadOptions(Project.Options);
+end;
+
+procedure TFormProjectOptions.SaveToProject(Project: THopeProject);
+begin
+(*
+  Project.Name := EditProjectName.Text;
+  Project.Description := MemoDescription.Text;
+*)
+
+  SaveOptions(Project.Options);
 end;
 
 end.

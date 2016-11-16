@@ -427,11 +427,18 @@ object FormMain: TFormMain
       Hint = 'Save As|Saves the active file with a new name'
       ImageIndex = 4
     end
+    object ActionFileSave: TAction
+      Category = 'File'
+      Caption = '&Save'
+      ImageIndex = 3
+      OnExecute = ActionFileSaveExecute
+    end
     object ActionFileSaveAs: TFileSaveAs
       Category = 'File'
       Caption = 'Save &As...'
       Hint = 'Save As|Saves the active file with a new name'
       ImageIndex = 4
+      OnAccept = ActionFileSaveAsAccept
     end
     object ActionSearchFind: TAction
       Category = 'Search'
@@ -513,11 +520,6 @@ object FormMain: TFormMain
       Caption = '&About'
       ImageIndex = 49
       OnExecute = ActionHelpAboutExecute
-    end
-    object ActionFileSave: TAction
-      Category = 'File'
-      Caption = '&Save'
-      ImageIndex = 3
     end
     object ActionFileSaveProject: TAction
       Category = 'File'

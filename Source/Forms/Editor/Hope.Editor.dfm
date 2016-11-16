@@ -293,7 +293,7 @@ object FormEditor: TFormEditor
     end
     object MenuItemFind: TMenuItem
       Caption = 'Find'
-      object FindDeclaration1: TMenuItem
+      object MenuItemFindDeclaration: TMenuItem
         Action = FormMain.ActionEditorFindDeclaration
       end
     end

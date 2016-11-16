@@ -233,6 +233,8 @@ type
     procedure ActionEditorToggleCommentExecute(Sender: TObject);
     procedure ActionEditorCompleteClassAtCursorExecute(Sender: TObject);
     procedure ActionViewMiniMapExecute(Sender: TObject);
+    procedure ActionFileSaveExecute(Sender: TObject);
+    procedure ActionFileSaveAsAccept(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -295,7 +297,7 @@ var
 implementation
 
 uses
-  dwsUtils, SynCompletionProposal,
+  dwsUtils, dwsXPlatform, SynCompletionProposal,
   Hope.About, Hope.AsciiChart, Hope.ColorPicker, Hope.Common.History,
   Hope.Dialog.CodeTemplates, Hope.Dialog.FindClass, Hope.Dialog.FindInFiles,
   Hope.Dialog.GotoLineNumber, Hope.Dialog.Preferences,
@@ -709,6 +711,9 @@ begin
     TabSet.OnChange := TabSetChange;
   end;
 
+  ActionFileSave.Enabled := Assigned(FFocusedEditorForm);
+  ActionFileSaveAs.Enabled := Assigned(FFocusedEditorForm);
+
   if Assigned(FFocusedEditor) then
     FFocusedEditor.SetFocus;
 end;
@@ -863,6 +868,26 @@ begin
   end;
 end;
 
+procedure TFormMain.ActionFileSaveAsAccept(Sender: TObject);
+var
+  FormEditor: TFormEditor;
+begin
+  FormEditor := FFocusedEditorForm;
+  if not Assigned(FormEditor) then
+    Exit;
+
+  FormEditor.FileName := (Sender as TFileSaveAs).Dialog.FileName;
+end;
+
+procedure TFormMain.ActionFileSaveExecute(Sender: TObject);
+var
+  FormEditor: TFormEditor;
+begin
+  FormEditor := FFocusedEditorForm;
+  if not Assigned(FormEditor) then
+    Exit;
+end;
+
 procedure TFormMain.ActionFileSaveProjectExecute(Sender: TObject);
 begin
   SaveProject;
@@ -1009,7 +1034,7 @@ begin
   // local alias for active project
   Project := FProjects.ActiveProjectIDE;
 
-  Modified := TFormProjectOptions.CreateAndShow(Project.Options);
+  Modified := TFormProjectOptions.CreateAndShow(Project);
 end;
 
 procedure TFormMain.ActionSearchFindClassExecute(Sender: TObject);

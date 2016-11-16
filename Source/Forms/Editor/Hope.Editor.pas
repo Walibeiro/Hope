@@ -7,9 +7,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls,
-  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ToolWin,
-  SynEdit, SynEditTypes, SynEditKeyCmds, Hope.DataModule, Hope.Project.Local,
-  Vcl.Menus;
+  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ToolWin, Vcl.Menus,
+  SynEdit, SynEditTypes, SynEditKeyCmds, Hope.DataModule, Hope.Project.Local;
 
 type
   TStatusBar = class(Vcl.ComCtrls.TStatusBar)
@@ -28,11 +27,14 @@ type
     procedure FormatSource;
     procedure MoveLines(MoveUp: Boolean);
     procedure SetupEditorFromPreferences;
+
+    procedure SaveToFile;
+    procedure LoadFromFile;
   end;
 
   TFormEditor = class(TForm, IEditorService)
     Editor: TSynEdit;
-    FindDeclaration1: TMenuItem;
+    MenuItemFindDeclaration: TMenuItem;
     MenuItemClearBookmarks: TMenuItem;
     MenuItemClosePage: TMenuItem;
     MenuItemCompleteClassatCursor: TMenuItem;
@@ -119,6 +121,9 @@ type
     procedure EditorToBuffer;
     procedure BufferToEditor; overload;
     procedure BufferToEditor(Text: string); overload;
+
+    procedure SaveToFile;
+    procedure LoadFromFile;
 
     procedure InvokeCodeSuggestions;
     procedure InvokeParameterInformation;
@@ -537,6 +542,21 @@ procedure TFormEditor.InvokeParameterInformation;
 begin
   DataModuleCommon.SynParameters.Editor := Editor;
   DataModuleCommon.SynParameters.ActivateCompletion;
+end;
+
+procedure TFormEditor.LoadFromFile;
+begin
+  DataModuleCommon.MonitoredBuffer[FileName] := LoadTextFromFile(FileName);
+
+  BufferToEditor;
+end;
+
+procedure TFormEditor.SaveToFile;
+begin
+  EditorToBuffer;
+
+  // save to file
+  SaveTextToUTF8File(FileName, Editor.Text);
 end;
 
 procedure TFormEditor.MenuItemClearBookmarksClick(Sender: TObject);
