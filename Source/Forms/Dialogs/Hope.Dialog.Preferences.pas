@@ -247,7 +247,11 @@ begin
   inherited;
 
   TreeCategory.NodeDataSize := SizeOf(TTabSheetItem);
+  TreeCategory.Images := DataModuleImageLists.ImageList16;
+  TreeCategory.StateImages := DataModuleImageLists.ImageList16;
   TreeItems.NodeDataSize := SizeOf(THistoryItem);
+  TreeItems.Images := DataModuleImageLists.ImageList16;
+  TreeItems.StateImages := DataModuleImageLists.ImageList16;
 
   FHint := TSynHighlighterAttributes.Create('Hint', 'Compiler Hint');
   FHint.Background := $FFFFC0;
