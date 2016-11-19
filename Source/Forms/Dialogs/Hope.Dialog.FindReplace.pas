@@ -7,7 +7,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
-  SynEdit, SynEditTypes, Hope.Dialog, Hope.Datamodule;
+  SynEdit, SynEditTypes, Hope.Dialog, Hope.Datamodule.Common;
 
 type
   TFormFindReplace = class(TFormDialog)

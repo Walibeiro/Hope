@@ -48,7 +48,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Hope.DataModule;
+  Hope.DataModule.Common;
 
 { TFormFindInFiles }
 

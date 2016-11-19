@@ -27,7 +27,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Hope.Main, Hope.DataModule;
+  Hope.Main, Hope.DataModule.Common;
 
 { TFormGotoLineNumber }
 

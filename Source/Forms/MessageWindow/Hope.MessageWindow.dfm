@@ -17,7 +17,6 @@ inherited FormMessageWindow: TFormMessageWindow
     Header.Font.Name = 'Tahoma'
     Header.Font.Style = []
     Header.MainColumn = -1
-    Images = DataModuleCommon.ImageList16
     TabOrder = 0
     Columns = <>
   end

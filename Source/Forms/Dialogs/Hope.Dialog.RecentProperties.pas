@@ -6,9 +6,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
-  Vcl.Samples.Spin,
-  Hope.Dialog, VirtualTrees, System.Actions, Vcl.ActnList, Vcl.Menus;
+  System.Actions, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.StdCtrls, Vcl.Samples.Spin, Vcl.ActnList, Vcl.Menus, VirtualTrees,
+  Hope.Dialog;
 
 type
   THistoryItem = record
@@ -60,7 +60,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Hope.DataModule;
+  Hope.DataModule.ImageLists, Hope.DataModule.Common;
 
 { TFormRecentProperties }
 
@@ -69,6 +69,8 @@ begin
   inherited;
 
   TreeItems.NodeDataSize := SizeOf(THistoryItem);
+  TreeItems.Images := DataModuleImageLists.ImageList16;
+  TreeItems.StateImages := DataModuleImageLists.ImageList16;
 
   UpdateHistoryItems;
 end;

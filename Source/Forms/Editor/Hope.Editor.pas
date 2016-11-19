@@ -8,7 +8,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ToolWin, Vcl.Menus,
-  SynEdit, SynEditTypes, SynEditKeyCmds, Hope.DataModule, Hope.Project.Local;
+  SynEdit, SynEditTypes, SynEditKeyCmds, Hope.Project.Local;
 
 type
   TStatusBar = class(Vcl.ComCtrls.TStatusBar)
@@ -144,8 +144,9 @@ implementation
 
 uses
   System.Contnrs, System.Math, dwsExprs, dwsSymbols, dwsTokenizer, dwsUtils,
-  dwsXPlatform, Hope.Main, Hope.Common.Constants, Hope.Common.FileUtilities,
-  Hope.Common.MonitoredBuffer, Hope.Common.Preferences;
+  dwsXPlatform, Hope.Common.Constants, Hope.Common.FileUtilities,
+  Hope.Common.MonitoredBuffer, Hope.Common.Preferences, Hope.DataModule.Common,
+  Hope.DataModule.ImageLists, Hope.Main;
 
 {$R *.dfm}
 
@@ -171,7 +172,7 @@ begin
   ToolBarMacro.ButtonHeight := 14;
   ToolBarMacro.Left := 1;
   ToolBarMacro.Top := 3;
-  ToolBarMacro.Images := DataModuleCommon.ImageList12;
+  ToolBarMacro.Images := DataModuleImageLists.ImageList12;
 
   AddCustomEditorKeystrokes;
   SetupEditorFromPreferences;

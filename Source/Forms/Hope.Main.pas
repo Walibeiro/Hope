@@ -9,9 +9,9 @@ uses
   System.Types, System.Actions, System.SyncObjs, Vcl.Graphics, Vcl.Controls,
   Vcl.Forms, Vcl.Dialogs, Vcl.ActnList, Vcl.Menus, Vcl.StdActns, Vcl.ExtCtrls,
   Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Tabs, SynEdit, dwsErrors, dwsExprs,
-  Hope.DataModule, Hope.WelcomePage, Hope.ProjectManager, Hope.UnitManager,
-  Hope.MessageWindow.Compiler, Hope.MessageWindow.Output, Hope.Docking.Host,
-  Hope.Project.IDE, Hope.Editor, Hope.EditorList,
+  Hope.DataModule.Common, Hope.WelcomePage, Hope.ProjectManager,
+  Hope.UnitManager, Hope.MessageWindow.Compiler, Hope.MessageWindow.Output,
+  Hope.Docking.Host, Hope.Project.IDE, Hope.Editor, Hope.EditorList,
   Hope.Compiler.Internal, Hope.Dialog.FindReplace;
 
 type

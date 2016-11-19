@@ -7,7 +7,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.Menus,
-  Hope.Docking.Form, Hope.DataModule;
+  Hope.Docking.Form;
 
 type
   TFormMessageWindow = class(TFormDockable)
@@ -32,11 +32,17 @@ implementation
 
 {$R *.dfm}
 
+uses
+  Hope.DataModule.ImageLists;
+
 { TFormMessageWindow }
 
 procedure TFormMessageWindow.AfterConstruction;
 begin
   inherited;
+
+  TreeMessages.Images := DataModuleImageLists.ImageList16;
+  TreeMessages.StateImages := DataModuleImageLists.ImageList16;
 end;
 
 procedure TFormMessageWindow.Clear;

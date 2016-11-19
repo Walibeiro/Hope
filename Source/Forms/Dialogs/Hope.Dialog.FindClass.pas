@@ -16,17 +16,26 @@ type
     LabelSearch: TLabel;
     TreeClasses: TVirtualStringTree;
     procedure EditSearchChange(Sender: TObject);
-  private
-    { Private-Deklarationen }
   public
-    { Public-Deklarationen }
+    procedure AfterConstruction; override;
   end;
 
 implementation
 
 {$R *.dfm}
 
+uses
+  Hope.DataModule.ImageLists;
+
 { TFormFindClass }
+
+procedure TFormFindClass.AfterConstruction;
+begin
+  inherited;
+
+  TreeClasses.Images := DataModuleImageLists.ImageList16;
+  TreeClasses.StateImages := DataModuleImageLists.ImageList16;
+end;
 
 procedure TFormFindClass.EditSearchChange(Sender: TObject);
 begin

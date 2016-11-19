@@ -1,5 +1,6 @@
 {
 	"Projects" : [
+		"..\\Common\\Test Projects\\APIs\\APIs.hproj",
 		"..\\Common\\Projects\\Test\\Test.hproj",
 		"..\\Common\\Projects\\Cards\\Source\\Cards.hproj"
 	],

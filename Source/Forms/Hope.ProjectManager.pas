@@ -49,7 +49,7 @@ type
 implementation
 
 uses
-  Hope.DataModule, Hope.Main, System.Math;
+  Hope.Main, Hope.DataModule.ImageLists, System.Math;
 
 {$R *.dfm}
 
@@ -64,6 +64,8 @@ begin
   TreeProject.RootNodeCount := 0;
   TreeProject.DefaultNodeHeight := 20;
   TreeProject.Enabled := False;
+  TreeProject.Images := DataModuleImageLists.ImageList16;
+  TreeProject.StateImages := DataModuleImageLists.ImageList16;
 end;
 
 procedure TFormProjectManager.TreeProjectCompareNodes(Sender: TBaseVirtualTree;

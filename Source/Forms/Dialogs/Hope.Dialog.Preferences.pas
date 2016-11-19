@@ -10,8 +10,8 @@ uses
   Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.ActnList, Vcl.Samples.Spin,
   VirtualTrees, SynEdit, SynHighlighterHtml, SynHighlighterCSS,
   SynHighlighterJSON, SynHighlighterJScript, SynEditHighlighter,
-  SynHighlighterDWS, SynEditKeyCmds, Hope.Dialog, Hope.DataModule,
-  Hope.Common.Preferences, SynHighlighterMulti;
+  SynHighlighterDWS, SynEditKeyCmds, SynHighlighterMulti, Hope.Dialog,
+  Hope.Common.Preferences;
 
 type
   TTabSheetItem = record
@@ -236,7 +236,7 @@ type
 implementation
 
 uses
-  System.Math, Vcl.FileCtrl;
+  System.Math, Vcl.FileCtrl, Hope.DataModule.ImageLists, Hope.DataModule.Common;
 
 {$R *.dfm}
 

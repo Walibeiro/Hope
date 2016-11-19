@@ -1,12 +1,11 @@
-unit Hope.DataModule;
+unit Hope.DataModule.Common;
 
 {$I Hope.inc}
 
 interface
 
 uses
-  System.SysUtils, System.Classes, Vcl.ImgList, Vcl.Imaging.PngImage,
-  Vcl.Controls,
+  System.SysUtils, System.Classes, Vcl.Controls,
 
   SynEdit, SynEditTypes,SynEditPlugins, SynMacroRecorder, SynCompletionProposal,
   SynEditRegexSearch, SynEditHighlighter, SynHighlighterMulti,
@@ -21,8 +20,6 @@ type
   TMacroAction = (maRecord, maStop, maPlay);
 
   TDataModuleCommon = class(TDataModule)
-    ImageList12: TImageList;
-    ImageList16: TImageList;
     SynCodeSuggestions: TSynCompletionProposal;
     SynCSS: TSynCssSyn;
     SynDWS: TSynDWSSyn;

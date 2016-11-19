@@ -42,8 +42,8 @@ inherited FormPreferences: TFormPreferences
     Header.Font.Name = 'Tahoma'
     Header.Font.Style = []
     Header.MainColumn = -1
-    Images = DataModuleCommon.ImageList16
-    StateImages = DataModuleCommon.ImageList16
+    Images = DataModuleImageLists.ImageList16
+    StateImages = DataModuleImageLists.ImageList16
     TabOrder = 3
     OnChange = TreeCategoryChange
     OnGetText = TreeCategoryGetText
@@ -58,7 +58,7 @@ inherited FormPreferences: TFormPreferences
     Height = 484
     ActivePage = TabSheetAppearance
     Anchors = [akLeft, akTop, akRight, akBottom]
-    Images = DataModuleCommon.ImageList16
+    Images = DataModuleImageLists.ImageList16
     MultiLine = True
     Style = tsButtons
     TabOrder = 4
@@ -210,9 +210,7 @@ inherited FormPreferences: TFormPreferences
           Header.Font.Name = 'Tahoma'
           Header.Font.Style = []
           Header.MainColumn = -1
-          Images = DataModuleCommon.ImageList16
           Indent = 0
-          StateImages = DataModuleCommon.ImageList16
           TabOrder = 3
           TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
           TreeOptions.PaintOptions = [toThemeAware, toUseBlendedImages]
@@ -802,7 +800,6 @@ inherited FormPreferences: TFormPreferences
           Height = 25
           Action = ActionLoad
           ImageMargins.Left = 4
-          Images = DataModuleCommon.ImageList16
           TabOrder = 1
         end
         object ButtonSave: TButton
@@ -812,7 +809,6 @@ inherited FormPreferences: TFormPreferences
           Height = 25
           Action = ActionSave
           ImageMargins.Left = 4
-          Images = DataModuleCommon.ImageList16
           TabOrder = 2
         end
       end
@@ -1171,7 +1167,6 @@ inherited FormPreferences: TFormPreferences
     end
   end
   object ActionList: TActionList
-    Images = DataModuleCommon.ImageList16
     Left = 48
     Top = 40
     object ActionLibraryPathAdd: TAction

@@ -1,82 +1,12 @@
-object DataModuleCommon: TDataModuleCommon
+object DataModuleImageLists: TDataModuleImageLists
   OldCreateOrder = False
   Height = 442
   Width = 547
-  object SynEditSearch: TSynEditSearch
-    Left = 48
-    Top = 72
-  end
-  object SynObjectPascal: TSynMultiSyn
-    DefaultFilter = 'DWScript Files (*.dws;*.pas;*.inc)|*.dws;*.pas;*.inc'
-    Options.AutoDetectEnabled = False
-    Options.AutoDetectLineLimit = 0
-    Options.DefaultExtension = '.dws'
-    Options.Title = 'Object Pascal Syntax Highlighter'
-    Options.Visible = False
-    Schemes = <
-      item
-        StartExpr = 'asm'
-        EndExpr = 'end;'
-        Highlighter = SynJS
-        SchemeName = 'Assembler'
-      end>
-    DefaultHighlighter = SynDWS
-    DefaultLanguageName = 'DWScript'
-    Left = 160
-    Top = 264
-  end
-  object SynEditRegexSearch: TSynEditRegexSearch
-    Left = 48
-    Top = 120
-  end
-  object SynMacroRecorder: TSynMacroRecorder
-    RecordShortCut = 24658
-    PlaybackShortCut = 24656
-    OnStateChange = SynMacroRecorderStateChange
-    Left = 48
-    Top = 168
-  end
-  object SynDWS: TSynDWSSyn
-    DefaultFilter = 'DWScript Files (*.dws;*.pas;*.inc)|*.dws;*.pas;*.inc'
-    Options.AutoDetectEnabled = False
-    Options.AutoDetectLineLimit = 0
-    Options.Visible = False
-    Left = 160
-    Top = 24
-  end
-  object SynJS: TSynJScriptSyn
-    Options.AutoDetectEnabled = False
-    Options.AutoDetectLineLimit = 0
-    Options.Visible = False
-    Left = 160
-    Top = 72
-  end
-  object SynJSON: TSynJSONSyn
-    Options.AutoDetectEnabled = False
-    Options.AutoDetectLineLimit = 0
-    Options.Visible = False
-    Left = 160
-    Top = 120
-  end
-  object SynHTML: TSynHTMLSyn
-    Options.AutoDetectEnabled = False
-    Options.AutoDetectLineLimit = 0
-    Options.Visible = False
-    Left = 160
-    Top = 216
-  end
-  object SynCSS: TSynCssSyn
-    Options.AutoDetectEnabled = False
-    Options.AutoDetectLineLimit = 0
-    Options.Visible = False
-    Left = 160
-    Top = 168
-  end
   object ImageList16: TImageList
     ColorDepth = cd32Bit
     DrawingStyle = dsTransparent
-    Left = 48
-    Top = 216
+    Left = 32
+    Top = 40
     Bitmap = {
       494C010137003900040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000E0000000010020000000000000E0
@@ -1938,8 +1868,8 @@ object DataModuleCommon: TDataModuleCommon
     DrawingStyle = dsTransparent
     Height = 12
     Width = 12
-    Left = 48
-    Top = 264
+    Left = 32
+    Top = 88
     Bitmap = {
       494C01010300050004000C000C00FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000300000000C00000001002000000000000009
@@ -2022,131 +1952,5 @@ object DataModuleCommon: TDataModuleCommon
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000}
-  end
-  object SynCodeSuggestions: TSynCompletionProposal
-    Options = [scoLimitToMatchedText, scoTitleIsCentered, scoUseInsertList, scoUsePrettyText, scoUseBuiltInTimer, scoEndCharCompletion, scoCompleteWithEnter]
-    EndOfTokenChr = '()[]. '
-    TriggerChars = '.'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    TitleFont.Charset = DEFAULT_CHARSET
-    TitleFont.Color = clBtnText
-    TitleFont.Height = -11
-    TitleFont.Name = 'MS Sans Serif'
-    TitleFont.Style = [fsBold]
-    Columns = <
-      item
-        ColumnWidth = 50
-      end
-      item
-        ColumnWidth = 196
-        DefaultFontStyle = [fsBold]
-      end>
-    Resizeable = False
-    ItemHeight = 16
-    Images = ImageList16
-    OnExecute = SynCodeSuggestionsExecute
-    OnShow = SynCodeSuggestionsShow
-    ShortCut = 0
-    TimerInterval = 500
-    Left = 264
-    Top = 72
-  end
-  object SynParameters: TSynCompletionProposal
-    DefaultType = ctParams
-    Options = [scoLimitToMatchedText, scoUsePrettyText, scoUseBuiltInTimer]
-    ClBackground = clInfoBk
-    Width = 262
-    EndOfTokenChr = '()[].,; '
-    TriggerChars = '('
-    Title = 'Parameter Information'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    TitleFont.Charset = DEFAULT_CHARSET
-    TitleFont.Color = clBtnText
-    TitleFont.Height = -11
-    TitleFont.Name = 'MS Sans Serif'
-    TitleFont.Style = [fsBold]
-    Columns = <>
-    Images = ImageList16
-    OnClose = SynParametersClose
-    OnExecute = SynParametersExecute
-    OnShow = SynParametersShow
-    ShortCut = 24608
-    TimerInterval = 500
-    Left = 264
-    Top = 24
-  end
-  object SynMultiCSS: TSynMultiSyn
-    DefaultFilter = 'CSS Files (*.css)|*.css'
-    Options.AutoDetectEnabled = False
-    Options.AutoDetectLineLimit = 0
-    Options.DefaultExtension = '.css'
-    Options.Title = 'CSS Syntax Highlighter'
-    Options.Visible = False
-    Schemes = <
-      item
-        CaseSensitive = False
-        StartExpr = '</?pas'
-        EndExpr = '/?>'
-        Highlighter = SynObjectPascal
-        SchemeName = 'Object Pascal'
-      end
-      item
-        CaseSensitive = False
-        StartExpr = '</?pas='
-        EndExpr = '/?>'
-        Highlighter = SynObjectPascal
-        SchemeName = 'Object Pascal (direct)'
-      end>
-    DefaultHighlighter = SynCSS
-    DefaultLanguageName = 'CSS'
-    Left = 160
-    Top = 312
-  end
-  object SynMultiHTML: TSynMultiSyn
-    DefaultFilter = 'HTML files (*.html;*,htm)|*.html;*.htm'
-    Options.AutoDetectEnabled = False
-    Options.AutoDetectLineLimit = 0
-    Options.DefaultExtension = '.html'
-    Options.Title = 'HTML Highlighter'
-    Options.Visible = False
-    Schemes = <
-      item
-        CaseSensitive = False
-        StartExpr = '</?pas'
-        EndExpr = '/?>'
-        Highlighter = SynObjectPascal
-        SchemeName = 'Object Pascal'
-      end
-      item
-        CaseSensitive = False
-        StartExpr = '</?pas='
-        EndExpr = '/?>'
-        Highlighter = SynObjectPascal
-        SchemeName = 'Object Pascal (direct)'
-      end
-      item
-        StartExpr = '<script(.*?)>'
-        EndExpr = '</style>'
-        Highlighter = SynMultiCSS
-        SchemeName = 'CSS'
-      end
-      item
-        StartExpr = '<script(.*?)>'
-        EndExpr = '</script>'
-        Highlighter = SynJS
-        SchemeName = 'JavaScript'
-      end>
-    DefaultHighlighter = SynHTML
-    DefaultLanguageName = 'HTML'
-    Left = 160
-    Top = 360
   end
 end

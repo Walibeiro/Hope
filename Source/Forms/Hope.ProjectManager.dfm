@@ -65,7 +65,6 @@ inherited FormProjectManager: TFormProjectManager
     Header.Font.Name = 'Tahoma'
     Header.Font.Style = []
     Header.MainColumn = -1
-    Images = DataModuleCommon.ImageList16
     TabOrder = 1
     TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toInitOnSave, toWheelPanning, toEditOnClick]
     OnCompareNodes = TreeProjectCompareNodes

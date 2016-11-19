@@ -61,7 +61,7 @@ implementation
 {$R *.dfm}
 
 uses
-  Vcl.ClipBrd, dwsUtils, Hope.Main, Hope.DataModule, Hope.Editor;
+  Vcl.ClipBrd, dwsUtils, Hope.Main, Hope.DataModule.Common, Hope.Editor;
 
 { TFormCompilerMessages }
 

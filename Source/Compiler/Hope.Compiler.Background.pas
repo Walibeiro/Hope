@@ -68,7 +68,7 @@ implementation
 
 uses
   System.Math, dwsXPlatform, dwsUtils, dwsComp, dwsCompiler, dwsErrors,
-  dwsJSLibModule, Hope.Common.Constants, Hope.Main, Hope.DataModule,
+  dwsJSLibModule, Hope.Common.Constants, Hope.Main, Hope.DataModule.Common,
   Hope.Common.MonitoredBuffer;
 
 { THopeBackgroundCompiler }

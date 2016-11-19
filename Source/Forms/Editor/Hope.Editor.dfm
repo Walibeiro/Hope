@@ -98,7 +98,6 @@ object FormEditor: TFormEditor
     Anchors = [akLeft, akBottom]
     ButtonHeight = 19
     ButtonWidth = 19
-    Images = DataModuleCommon.ImageList12
     TabOrder = 2
     object ToolButtonPlay: TToolButton
       Left = 0

@@ -8,8 +8,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.Samples.Spin,
-  VirtualTrees, Hope.Dialog, Hope.DataModule, Hope.Project,
-  Hope.Project.Options;
+  VirtualTrees, Hope.Dialog, Hope.Project, Hope.Project.Options;
 
 type
   TTabSheetItem = record
@@ -119,7 +118,7 @@ type
 implementation
 
 uses
-  System.Math, Vcl.FileCtrl;
+  System.Math, Vcl.FileCtrl, Hope.DataModule.ImageLists;
 
 {$R *.dfm}
 

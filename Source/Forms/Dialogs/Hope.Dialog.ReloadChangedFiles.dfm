@@ -49,8 +49,6 @@ object FormReloadChangedFiles: TFormReloadChangedFiles
     Header.Font.Name = 'Tahoma'
     Header.Font.Style = []
     Header.MainColumn = -1
-    Images = DataModuleCommon.ImageList16
-    StateImages = DataModuleCommon.ImageList16
     TabOrder = 2
     TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
     TreeOptions.PaintOptions = [toShowRoot, toThemeAware, toUseBlendedImages]

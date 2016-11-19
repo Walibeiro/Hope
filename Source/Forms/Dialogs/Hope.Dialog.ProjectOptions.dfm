@@ -39,8 +39,8 @@ inherited FormProjectOptions: TFormProjectOptions
     Header.Font.Name = 'Tahoma'
     Header.Font.Style = []
     Header.MainColumn = -1
-    Images = DataModuleCommon.ImageList16
-    StateImages = DataModuleCommon.ImageList16
+    Images = DataModuleImageLists.ImageList16
+    StateImages = DataModuleImageLists.ImageList16
     TabOrder = 3
     OnChange = TreeCategoryChange
     OnGetText = TreeCategoryGetText
@@ -55,6 +55,8 @@ inherited FormProjectOptions: TFormProjectOptions
     Height = 471
     ActivePage = TabSheetFilter
     Anchors = [akLeft, akTop, akRight, akBottom]
+    Images = DataModuleImageLists.ImageList16
+    MultiLine = True
     Style = tsButtons
     TabOrder = 4
     object TabSheetProject: TTabSheet

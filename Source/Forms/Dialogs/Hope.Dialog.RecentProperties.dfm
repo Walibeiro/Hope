@@ -115,10 +115,8 @@ inherited FormRecentProperties: TFormRecentProperties
       Header.Font.Name = 'Tahoma'
       Header.Font.Style = []
       Header.MainColumn = -1
-      Images = DataModuleCommon.ImageList16
       Indent = 0
       PopupMenu = PopupMenu
-      StateImages = DataModuleCommon.ImageList16
       TabOrder = 3
       TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
       TreeOptions.PaintOptions = [toThemeAware, toUseBlendedImages]

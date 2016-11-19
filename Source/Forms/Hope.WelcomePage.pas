@@ -39,7 +39,7 @@ implementation
 {$R *.dfm}
 
 uses
-  SynZip, Hope.Main, Hope.DataModule, Hope.DockingUtils;
+  SynZip, Hope.Main, Hope.DataModule.Common, Hope.DockingUtils;
 
 const
   CWelcomePageURI = 'http://localhost:8092/index.html';

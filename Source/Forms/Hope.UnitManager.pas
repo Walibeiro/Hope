@@ -16,15 +16,25 @@ type
   private
     { Private-Deklarationen }
   public
-    { Public-Deklarationen }
+    procedure AfterConstruction; override;
   end;
 
 implementation
 
 uses
-  Hope.Main;
+  Hope.Main, Hope.DataModule.ImageLists;
 
 {$R *.dfm}
+
+{ TFormUnitManager }
+
+procedure TFormUnitManager.AfterConstruction;
+begin
+  inherited;
+
+  TreeUnitStructure.Images := DataModuleImageLists.ImageList16;
+  TreeUnitStructure.StateImages := DataModuleImageLists.ImageList16;
+end;
 
 end.
 

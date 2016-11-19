@@ -3,8 +3,9 @@ unit Hope.Dialog.ReloadChangedFiles;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.StdCtrls;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.StdCtrls, VirtualTrees;
 
 type
   TFileItem = record
@@ -27,13 +28,17 @@ implementation
 
 {$R *.dfm}
 
+uses
+  Hope.DataModule.ImageLists;
+
 procedure TFormReloadChangedFiles.AfterConstruction;
 begin
   inherited;
 
   TreeFiles.NodeDataSize := SizeOf(TFileItem);
+  TreeFiles.Images := DataModuleImageLists.ImageList16;
+  TreeFiles.StateImages := DataModuleImageLists.ImageList16;
 end;
-
 
 procedure TFormReloadChangedFiles.TreeFilesFreeNode(Sender: TBaseVirtualTree;
   Node: PVirtualNode);

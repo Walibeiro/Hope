@@ -25,7 +25,8 @@ uses
   Hope.Compiler.Background in 'Compiler\Hope.Compiler.Background.pas',
   Hope.Compiler.Base in 'Compiler\Hope.Compiler.Base.pas',
   Hope.Compiler.Internal in 'Compiler\Hope.Compiler.Internal.pas',
-  Hope.DataModule in 'DataModules\Hope.DataModule.pas' {DataModuleCommon: TDataModule},
+  Hope.DataModule.Common in 'DataModules\Hope.DataModule.Common.pas' {DataModuleCommon: TDataModule},
+  Hope.DataModule.ImageLists in 'DataModules\Hope.DataModule.ImageLists.pas' {DataModuleImageLists: TDataModule},
   Hope.Dialog in 'Forms\Dialogs\Hope.Dialog.pas' {FormDialog},
   Hope.Dialog.CodeTemplates in 'Forms\Dialogs\Hope.Dialog.CodeTemplates.pas' {FormCodeTemplates},
   Hope.Dialog.FindClass in 'Forms\Dialogs\Hope.Dialog.FindClass.pas' {FormFindClass},
@@ -65,6 +66,7 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.Title := 'HOPE Object Pascal Environment';
+  Application.CreateForm(TDataModuleImageLists, DataModuleImageLists);
   Application.CreateForm(TDataModuleCommon, DataModuleCommon);
   Application.CreateForm(TFormMain, FormMain);
   Application.Run;
