@@ -22,6 +22,9 @@ type
     procedure AddProject(FileName: string);
     procedure AddUnit(FileName: string);
 
+    procedure RemoveProject(FileName: string);
+    procedure RemoveUnit(FileName: string);
+
     property ProjectsHistory: TStringList read FProjectsHistory;
     property UnitsHistory: TStringList read FUnitsHistory;
   end;
@@ -75,6 +78,26 @@ begin
     FUnitsHistory.Add(FileName)
   else
     FUnitsHistory.Move(Index, 0);
+end;
+
+procedure THopeHistory.RemoveProject(FileName: string);
+var
+  Index: Integer;
+begin
+  FProjectsHistory.IndexOf(FileName);
+
+  if Index >= 0 then
+    FProjectsHistory.Delete(Index);
+end;
+
+procedure THopeHistory.RemoveUnit(FileName: string);
+var
+  Index: Integer;
+begin
+  FUnitsHistory.IndexOf(FileName);
+
+  if Index >= 0 then
+    FUnitsHistory.Delete(Index);
 end;
 
 procedure THopeHistory.ReadJson(const JsonValue: TdwsJSONObject);

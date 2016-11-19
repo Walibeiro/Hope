@@ -63,6 +63,8 @@ type
 
     procedure AddProjectToHistory(FileName: string);
     procedure AddUnitToHistory(FileName: string);
+    procedure RemoveProjectFromHistory(FileName: string);
+    procedure RemoveUnitFromHistory(FileName: string);
 
     procedure PerformMacro(Editor: TSynEdit; Action: TMacroAction);
 
@@ -171,6 +173,20 @@ procedure TDataModuleCommon.AddUnitToHistory(FileName: string);
 begin
   // add unit to history and save history
   FHistory.AddUnit(FileName);
+  FHistory.SaveToFile(FPaths.HistoryFileName);
+end;
+
+procedure TDataModuleCommon.RemoveProjectFromHistory(FileName: string);
+begin
+  // remove project from history and save history
+  FHistory.RemoveProject(FileName);
+  FHistory.SaveToFile(FPaths.HistoryFileName);
+end;
+
+procedure TDataModuleCommon.RemoveUnitFromHistory(FileName: string);
+begin
+  // remove unit from history and save history
+  FHistory.RemoveUnit(FileName);
   FHistory.SaveToFile(FPaths.HistoryFileName);
 end;
 

@@ -260,6 +260,10 @@ type
     procedure RecentProjectClickHandler(Sender: TObject);
     procedure RecentUnitClickHandler(Sender: TObject);
   protected
+    procedure LoadingProjectComplete(ProjectFileName: TFileName);
+    procedure LoadingProjectFailed(ProjectFileName: TFileName;
+      MessageText: string);
+
     procedure PreferencesChanged;
     procedure TabChanged;
   public
@@ -503,25 +507,44 @@ begin
   // abort any scheduled background compilation
   DataModuleCommon.BackgroundCompiler.Abort;
 
-  // load project (if possible)
-  if FProjects.LoadProject(ProjectFileName) then
-  begin
-    // update project manager
-    FProjectManager.UpdateNodes;
-    FProjectManager.TreeProject.Enabled := True;
+  try
+    if not FileExists(ProjectFileName) then
+      raise Exception.CreateFmt('File %s does not exist', [ProjectFileName]);
 
-    DataModuleCommon.MonitoredBuffer.AddPath(FProjects.ActiveProject.RootPath);
-
-    DataModuleCommon.BackgroundCompiler.Invalidate;
-
-    DataModuleCommon.AddProjectToHistory(ProjectFileName);
-
-    ActionFileSaveProject.Enabled := True;
-    ActionFileSaveProjectAs.Enabled := True;
-    ActionFileCloseProject.Enabled := True;
-
-    UpdateRecentFiles;
+    // load project (if possible)
+    if FProjects.LoadProject(ProjectFileName) then
+      LoadingProjectComplete(ProjectFileName)
+  except
+    on E: Exception do
+      LoadingProjectFailed(ProjectFileName, E.Message);
   end;
+end;
+
+procedure TFormMain.LoadingProjectComplete(ProjectFileName: TFileName);
+begin
+  // update project manager
+  FProjectManager.UpdateNodes;
+  FProjectManager.TreeProject.Enabled := True;
+
+  DataModuleCommon.MonitoredBuffer.AddPath(FProjects.ActiveProject.RootPath);
+
+  DataModuleCommon.BackgroundCompiler.Invalidate;
+
+  DataModuleCommon.AddProjectToHistory(ProjectFileName);
+
+  ActionFileSaveProject.Enabled := True;
+  ActionFileSaveProjectAs.Enabled := True;
+  ActionFileCloseProject.Enabled := True;
+
+  UpdateRecentFiles;
+end;
+
+procedure TFormMain.LoadingProjectFailed(ProjectFileName: TFileName;
+  MessageText: string);
+begin
+  DataModuleCommon.RemoveProjectFromHistory(ProjectFileName);
+
+  UpdateRecentFiles;
 end;
 
 procedure TFormMain.SaveProject;
