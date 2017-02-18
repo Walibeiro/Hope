@@ -20,6 +20,7 @@ type
 
     procedure WriteArgumentHelp;
     procedure WriteUsage(ErrorMessage: string = '');
+    function ValidateArguments: Boolean;
   public
     constructor Create(Arguments: THopeCommandLineArguments);
 
@@ -32,7 +33,7 @@ type
 implementation
 
 uses
-  dwsErrors, dwsXPlatform;
+  dwsErrors, dwsXPlatform, Hope.Project;
 
 { THopeCommandLineCompiler }
 
@@ -47,12 +48,8 @@ begin
     Exit;
   end;
 
-  if FArguments.FileNameCount = 0 then
-  begin
-    WriteUsage('No files specified');
-
+  if not ValidateArguments then
     Exit;
-  end;
 
   if LowerCase(ExtractFileExt(Arguments.Filename[0])) = '.pas' then
     CompileScript
@@ -63,6 +60,26 @@ begin
   begin
     WriteUsage('Unknown extension');
   end;
+end;
+
+function THopeCommandLineCompiler.ValidateArguments: Boolean;
+var
+  Index: Integer;
+begin
+  if FArguments.FileNameCount = 0 then
+  begin
+    WriteUsage('No files specified');
+
+    Exit(False);
+  end;
+
+  for Index := 0 to FArguments.FileNameCount - 1 do
+    if not FileExists(FArguments.FileName[Index]) then
+    begin
+      WriteLn('File ' + FArguments.FileName[Index] + ' does not exist');
+
+      Exit(False);
+    end;
 end;
 
 procedure THopeCommandLineCompiler.ParseArguments;
@@ -109,8 +126,19 @@ begin
 end;
 
 procedure THopeCommandLineCompiler.CompileProject;
+var
+  Index: Integer;
+  Project: THopeProject;
 begin
-
+  for Index := 0 to Arguments.FileNameCount - 1 do
+  begin
+    Project := THopeProject.Create;
+    try
+      Project.LoadFromFile(FArguments.FileName[Index]);
+    finally
+      Project.Free;
+    end;
+  end;
 end;
 
 procedure THopeCommandLineCompiler.CompileScript;
