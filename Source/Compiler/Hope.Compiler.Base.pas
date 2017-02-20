@@ -34,7 +34,7 @@ type
 implementation
 
 uses
-  dwsXPlatform, dwsExprList, Hope.Common.Constants;
+  dwsXPlatform, dwsExprList, dwsJSCodeGen, dwsJSLibModule, Hope.Common.Constants;
 
 { THopeBaseCompiler }
 

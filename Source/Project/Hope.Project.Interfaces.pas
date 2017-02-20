@@ -10,6 +10,7 @@ uses
 type
   IProjectInterface = interface
     procedure Clear;
+    function GetRootPath: string;
   end;
 
   IProjectListInterface = interface

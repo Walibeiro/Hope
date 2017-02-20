@@ -26,6 +26,7 @@ type
     procedure BeforeDestruction; override;
 
     procedure AddPath(Path: TFileName);
+    procedure Clear;
 
     function GetSourceCode(UnitName: string): string;
     function GetFileName(UnitName: string): string;
@@ -62,6 +63,12 @@ begin
   FBuffferList.Free;
 
   inherited;
+end;
+
+procedure TMonitoredBuffer.Clear;
+begin
+  FDirectoryMonitor.Clear;
+  FBuffferList.Clear;
 end;
 
 function TMonitoredBuffer.GetText(FileName: TFileName): string;

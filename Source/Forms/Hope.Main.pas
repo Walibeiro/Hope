@@ -12,7 +12,7 @@ uses
   Hope.DataModule.Common, Hope.WelcomePage, Hope.ProjectManager,
   Hope.UnitManager, Hope.MessageWindow.Compiler, Hope.MessageWindow.Output,
   Hope.Docking.Host, Hope.Project.IDE, Hope.Editor, Hope.EditorList,
-  Hope.Compiler.Internal, Hope.Dialog.FindReplace;
+  Hope.Compiler.Internal, Hope.Dialog.FindReplace, Hope.Dialog.NewMore;
 
 type
   TFormMain = class(TForm)
@@ -79,7 +79,7 @@ type
     ActionViewFileBrowser: TAction;
     ActionViewUnits: TAction;
     ActionViewWelcomePage: TAction;
-    Closeallotherpages1: TMenuItem;
+    MenuItemCloseAllOtherPages: TMenuItem;
     MainMenu: TMainMenu;
     MenuFileOpenRecentProperties: TMenuItem;
     MenuItemEdit: TMenuItem;
@@ -160,7 +160,7 @@ type
     N14: TMenuItem;
     N15: TMenuItem;
     N2: TMenuItem;
-    Pages1: TMenuItem;
+    MenuItemPages: TMenuItem;
     PanelBottom: TPanel;
     PanelLeft: TPanel;
     PanelMain: TPanel;
@@ -235,6 +235,7 @@ type
     procedure ActionViewMiniMapExecute(Sender: TObject);
     procedure ActionFileSaveExecute(Sender: TObject);
     procedure ActionFileSaveAsAccept(Sender: TObject);
+    procedure ActionFileNewMoreExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -869,6 +870,17 @@ begin
   ActionFileSaveProject.Enabled := Assigned(FProjects.ActiveProject);
   ActionFileSaveProjectAs.Enabled := Assigned(FProjects.ActiveProject);
   ActionFileCloseProject.Enabled := Assigned(FProjects.ActiveProject);
+end;
+
+procedure TFormMain.ActionFileNewMoreExecute(Sender: TObject);
+begin
+  // show 'object gallery' dialog
+  with TFormObjectGallery.Create(Self) do
+  try
+    ShowModal;
+  finally
+    Free;
+  end;
 end;
 
 procedure TFormMain.ActionFileNewProjectExecute(Sender: TObject);

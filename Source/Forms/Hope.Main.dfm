@@ -126,7 +126,6 @@ object FormMain: TFormMain
     end
   end
   object MainMenu: TMainMenu
-    Images = DataModuleCommon.ImageList16
     Left = 104
     Top = 104
     object MenuItemFile: TMenuItem
@@ -374,7 +373,6 @@ object FormMain: TFormMain
     end
   end
   object ActionList: TActionList
-    Images = DataModuleCommon.ImageList16
     Left = 176
     Top = 104
     object ActionFileNewProject: TAction
@@ -400,6 +398,7 @@ object FormMain: TFormMain
     object ActionFileNewMore: TAction
       Category = 'File'
       Caption = 'More...'
+      OnExecute = ActionFileNewMoreExecute
     end
     object ActionFileOpen: TFileOpen
       Category = 'File'
@@ -778,13 +777,13 @@ object FormMain: TFormMain
     object MenuItemPageClosePage: TMenuItem
       Action = ActionPageClosePage
     end
-    object Pages1: TMenuItem
+    object MenuItemPages: TMenuItem
       Caption = 'Pages'
     end
     object N2: TMenuItem
       Caption = '-'
     end
-    object Closeallotherpages1: TMenuItem
+    object MenuItemCloseAllOtherPages: TMenuItem
       Action = ActionPageCloseOthers
     end
   end

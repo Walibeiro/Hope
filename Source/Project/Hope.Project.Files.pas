@@ -6,7 +6,7 @@ interface
 
 uses
   System.SysUtils, System.Contnrs, System.Classes, Hope.Common.JSON,
-  dwsJSON;
+  Hope.Project.Interfaces, dwsJSON;
 
 type
   THopeProjectFile = class
@@ -23,12 +23,15 @@ type
 
   THopeProjectFiles = class
   private
+    FProject: IProjectInterface;
     FList: TObjectList;
     function GetCount: Integer;
     function GetItem(Index: Integer): THopeProjectFile;
     procedure ReadJson(const JsonValue: TdwsJsonObject);
     procedure WriteJson(const JsonValue: TdwsJsonObject);
   public
+    constructor Create(Project: IProjectInterface);
+
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
@@ -43,6 +46,7 @@ type
   end;
 
 implementation
+
 
 { THopeProjectFile }
 
@@ -63,6 +67,13 @@ end;
 
 
 { THopeProjectFiles }
+
+constructor THopeProjectFiles.Create(Project: IProjectInterface);
+begin
+  inherited Create;
+
+  FProject := Project;
+end;
 
 procedure THopeProjectFiles.AfterConstruction;
 begin
@@ -126,8 +137,21 @@ begin
 end;
 
 procedure THopeProjectFiles.SaveToJson(const Root: TdwsJsonObject);
+var
+  Index: Integer;
+  JsonArray: TdwsJsonArray;
+  RootPath: string;
+  FileName: string;
 begin
+  JsonArray := Root.AddArray('Files');
 
+  RootPath := FProject.GetRootPath;
+
+  for Index := 0 to FList.Count - 1 do
+  begin
+    FileName := THopeProjectFile(FList[Index]).FileName;
+    JsonArray.Add(ExtractRelativePath(RootPath, FileName));
+  end;
 end;
 
 procedure THopeProjectFiles.WriteJson(const JsonValue: TdwsJsonObject);
@@ -136,4 +160,3 @@ begin
 end;
 
 end.
-

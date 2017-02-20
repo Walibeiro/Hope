@@ -6,26 +6,25 @@ interface
 
 uses
   System.SysUtils, dwsJson, Hope.Common.JSON, Hope.Project.Interfaces,
-  Hope.Project.Files, Hope.Project.Options;
+  Hope.Project.Files, Hope.Project.Information, Hope.Project.Options;
 
 type
   EHopeProject = class(Exception);
 
   THopeProject = class(THopeJsonBase, IProjectInterface)
   private
-    FName: string;
     FCreateDateTime: TDateTime;
     FModifiedDateTime: TDateTime;
-    FAuthor: string;
-    FCompany: string;
-    FDescription: string;
-    FKeywords: string;
+    FInformation: THopeProjectInformation;
+    FVersion: THopeProjectVersion;
+    FIcon: THopeProjectIcon;
     FOptions: THopeProjectOptions;
-    FUrl: string;
     FFileName: TFileName;
     FFiles: THopeProjectFiles;
     FMainScript: THopeProjectFile;
     function GetRootPath: string;
+    function GetName: string;
+    procedure SetName(const Value: string);
   protected
     procedure ReadJson(const JsonValue: TdwsJsonObject); override;
     procedure WriteJson(const JsonValue: TdwsJsonObject); override;
@@ -41,14 +40,10 @@ type
     property RootPath: string read GetRootPath;
     property FileName: TFileName read FFileName;
 
-    property Name: string read FName write FName;
-    property CreateDateTime: TDateTime read FCreateDateTime write FCreateDateTime;
-    property ModifiedDateTime: TDateTime read FModifiedDateTime write FModifiedDateTime;
-    property Author: string read FAuthor write FAuthor;
-    property Company: string read FCompany write FCompany;
-    property Description: string read FDescription write FDescription;
-    property Keywords: string read FKeywords write FKeywords;
-    property Url: string read FUrl write FUrl;
+    property Name: string read GetName write SetName;
+    property Information: THopeProjectInformation read FInformation;
+    property Version: THopeProjectVersion read FVersion;
+    property Icon: THopeProjectIcon read FIcon;
     property Options: THopeProjectOptions read FOptions;
     property MainScript: THopeProjectFile read FMainScript;
     property Files: THopeProjectFiles read FFiles;
@@ -64,16 +59,22 @@ procedure THopeProject.AfterConstruction;
 begin
   inherited;
 
+  FInformation := THopeProjectInformation.Create;
+  FVersion := THopeProjectVersion.Create;
+  FIcon := THopeProjectIcon.Create;
   FOptions := THopeProjectOptions.Create;
-  FFiles := THopeProjectFiles.Create;
+  FFiles := THopeProjectFiles.Create(Self);
   FMainScript := THopeProjectFile.Create;
 end;
 
 procedure THopeProject.BeforeDestruction;
 begin
-  FOptions.Free;
-  FFiles.Free;
   FMainScript.Free;
+  FFiles.Free;
+  FOptions.Free;
+  FIcon.Free;
+  FVersion.Free;
+  FInformation.Free;
 
   inherited;
 end;
@@ -83,6 +84,11 @@ begin
   FCreateDateTime := Now;
   FModifiedDateTime := Now;
   FFiles.Clear;
+end;
+
+function THopeProject.GetName: string;
+begin
+  Result := FInformation.Name;
 end;
 
 function THopeProject.GetRootPath: string;
@@ -107,6 +113,11 @@ begin
   inherited;
 end;
 
+procedure THopeProject.SetName(const Value: string);
+begin
+  FInformation.Name := Value;
+end;
+
 procedure THopeProject.ReadJson(const JsonValue: TdwsJsonObject);
 var
   FormatSetting: TFormatSettings;
@@ -115,17 +126,9 @@ begin
 
   FormatSetting := TFormatSettings.Create('en-US');
 
-  FName := JsonValue.GetValue('Name', FName);
-(*
-  FCreateDateTime := StrToDateTime(JsonValue.GetValue('Create', DateTimeToStr(FCreateDateTime, FormatSetting)), FormatSetting);
-  FModifiedDateTime := StrToDateTime(JsonValue.GetValue('Modified', DateTimeToStr(FModifiedDateTime, FormatSetting)), FormatSetting);
-*)
-  FAuthor := JsonValue.GetValue('Author', FAuthor);
-  FCompany := JsonValue.GetValue('Company', FCompany);
-  FDescription := JsonValue.GetValue('Description', FDescription);
-  FKeywords := JsonValue.GetValue('Keywords', FKeywords);
-  FUrl := JsonValue.GetValue('Url', FUrl);
-
+  FInformation.LoadFromJson(JsonValue, True);
+  FVersion.LoadFromJson(JsonValue, True);
+  FIcon.LoadFromJson(JsonValue, True);
   FOptions.LoadFromJson(JsonValue);
 
   // project files
@@ -141,15 +144,9 @@ var
 begin
   FormatSetting := TFormatSettings.Create('en-US');
 
-  JsonValue.AddValue('Name', FName);
-  JsonValue.AddValue('Create', DateTimeToStr(FCreateDateTime, FormatSetting));
-  JsonValue.AddValue('Modified', DateTimeToStr(FModifiedDateTime, FormatSetting));
-  JsonValue.AddValue('Author', FAuthor);
-  JsonValue.AddValue('Company', FCompany);
-  JsonValue.AddValue('Description', FDescription);
-  JsonValue.AddValue('Keywords', FKeywords);
-  JsonValue.AddValue('Url', FUrl);
-
+  FInformation.SaveToJson(JsonValue);
+  FVersion.SaveToJson(JsonValue);
+  FIcon.SaveToJson(JsonValue);
   FOptions.SaveToJson(JsonValue);
 
   // project files

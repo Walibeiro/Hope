@@ -22,6 +22,7 @@ type
     procedure Add(FileName: TFileName);
     procedure Remove(FileName: TFileName);
     procedure Rename(LastFileName, NewFileName: TFileName);
+    procedure Clear;
 
     function Contains(FileName: TFileName): Boolean;
     function IndexOf(FileName: TFileName): Integer;
@@ -50,6 +51,11 @@ begin
   FList.Free;
 
   inherited;
+end;
+
+procedure THopeBufferList.Clear;
+begin
+  FList.Clear;
 end;
 
 function THopeBufferList.Contains(FileName: TFileName): Boolean;

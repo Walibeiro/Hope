@@ -48,6 +48,7 @@ type
     function GetValue(Name: string; DefaultValue: Boolean): Boolean; overload;
     function GetValue(Name: string; DefaultValue: string): string; overload;
     function GetArray(Name: string; out JsonArray: TdwsJSONArray): Boolean; overload;
+    function GetStringList(Name: string; const StringList: TStringList): Boolean; overload;
     function GetObject(Name: string; out JsonObject: TdwsJSONObject): Boolean; overload;
   end;
 
@@ -134,6 +135,19 @@ begin
   Result := Value is TdwsJsonObject;
   if Result then
     JsonObject := TdwsJsonObject(Value)
+end;
+
+function TdwsJSONObjectHelper.GetStringList(Name: string;
+  const StringList: TStringList): Boolean;
+var
+  Index: Integer;
+  StringArray: TdwsJSONArray;
+begin
+  Result := GetArray(Name, StringArray);
+
+  if Result then
+    for Index := 0 to StringArray.ElementCount - 1 do
+      StringList.Add(StringArray[Index].AsString);
 end;
 
 

@@ -28,6 +28,8 @@ type
     procedure BeginMonitor(Path: TFileName);
     procedure EndMonitor(Path: TFileName);
 
+    procedure Clear;
+
     property Extensions: TExtensionStringList read FExtensions;
 
     property OnFileChanged: TdwsFileChangedEvent read FOnFileChanged write FOnFileChanged;
@@ -83,6 +85,11 @@ begin
   Notifier := TdwsFileNotifier.Create(Path, dnoDirectoryAndSubTree);
   Notifier.OnFileChanged := FileChanged;
   FDirectoryNotifiers.Add(Notifier);
+end;
+
+procedure TDirectoryMonitor.Clear;
+begin
+  FDirectoryNotifiers.Clear;
 end;
 
 procedure TDirectoryMonitor.EndMonitor(Path: TFileName);

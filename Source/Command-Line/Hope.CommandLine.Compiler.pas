@@ -4,15 +4,14 @@ interface
 
 uses
   System.SysUtils, dwsUtils, dwsComp, dwsCompiler, dwsExprs, dwsJSCodeGen,
-  dwsJSLibModule, dwsCodeGen, Hope.CommandLine.Arguments;
+  dwsJSLibModule, dwsCodeGen, Hope.CommandLine.Arguments,
+  Hope.Compiler.Base, Hope.Compiler.CommandLine;
 
 type
-  THopeCommandLineCompiler = class(TRefCountedObject)
+  THopeCommandLineProcessor = class(TRefCountedObject)
   private
     FArguments: THopeCommandLineArguments;
-    FDelphiWebScript: TDelphiWebScript;
-    FCodeGen: TdwsJSCodeGen;
-    FJSLib: TdwsJSLibModule;
+    FCompiler: THopeCommandLineCompiler;
 
     FOutputName: string;
 
@@ -23,6 +22,7 @@ type
     function ValidateArguments: Boolean;
   public
     constructor Create(Arguments: THopeCommandLineArguments);
+    destructor Destroy; override;
 
     procedure CompileScript;
     procedure CompileProject;
@@ -35,10 +35,14 @@ implementation
 uses
   dwsErrors, dwsXPlatform, Hope.Project;
 
-{ THopeCommandLineCompiler }
+{ THopeCommandLineProcessor }
 
-constructor THopeCommandLineCompiler.Create(Arguments: THopeCommandLineArguments);
+constructor THopeCommandLineProcessor.Create(Arguments: THopeCommandLineArguments);
 begin
+  inherited Create;
+
+  FCompiler := THopeCommandLineCompiler.Create;
+
   FArguments := Arguments;
 
   if FArguments.HasOption('h') or FArguments.HasOption('help') then
@@ -62,10 +66,18 @@ begin
   end;
 end;
 
-function THopeCommandLineCompiler.ValidateArguments: Boolean;
+destructor THopeCommandLineProcessor.Destroy;
+begin
+  FCompiler.Free;
+
+  inherited;
+end;
+
+function THopeCommandLineProcessor.ValidateArguments: Boolean;
 var
   Index: Integer;
 begin
+  Result := True;
   if FArguments.FileNameCount = 0 then
   begin
     WriteUsage('No files specified');
@@ -82,12 +94,12 @@ begin
     end;
 end;
 
-procedure THopeCommandLineCompiler.ParseArguments;
+procedure THopeCommandLineProcessor.ParseArguments;
 begin
   Arguments.GetOptionValue('OutputName', FOutputName);
 end;
 
-procedure THopeCommandLineCompiler.WriteArgumentHelp;
+procedure THopeCommandLineProcessor.WriteArgumentHelp;
 begin
   WriteLn('  /OutputName=<fileName>                   Output file name');
   WriteLn('');
@@ -111,7 +123,7 @@ begin
   WriteLn('  /MainBody=<string>                       Main body identifier');
 end;
 
-procedure THopeCommandLineCompiler.WriteUsage(ErrorMessage: string = '');
+procedure THopeCommandLineProcessor.WriteUsage(ErrorMessage: string = '');
 begin
   WriteLn('HOPE command-line compiler');
   WriteLn('');
@@ -125,7 +137,7 @@ begin
   WriteArgumentHelp;
 end;
 
-procedure THopeCommandLineCompiler.CompileProject;
+procedure THopeCommandLineProcessor.CompileProject;
 var
   Index: Integer;
   Project: THopeProject;
@@ -135,13 +147,15 @@ begin
     Project := THopeProject.Create;
     try
       Project.LoadFromFile(FArguments.FileName[Index]);
+
+      FCompiler.CompileProject(Project);
     finally
       Project.Free;
     end;
   end;
 end;
 
-procedure THopeCommandLineCompiler.CompileScript;
+procedure THopeCommandLineProcessor.CompileScript;
 var
   Prog: IdwsProgram;
   CodePas, CodeJS: string;
@@ -149,27 +163,21 @@ var
   Index: Integer;
 begin
   // create DWS compiler
-  FDelphiWebScript := TDelphiWebScript.Create(nil);
-  FDelphiWebScript.Config.CompilerOptions := [coAssertions, coOptimize,
+  FCompiler.DelphiWebScript.Config.CompilerOptions := [coAssertions, coOptimize,
     coAllowClosures];
 
-  // create JS lib modume
-  FJSLib := TdwsJSLibModule.Create(nil);
-  FJSLib.Script := FDelphiWebScript;
-
   // create JS code generator
-  FCodeGen := TdwsJSCodeGen.Create;
-  FCodeGen.Options := [cgoNoRangeChecks, cgoNoCheckInstantiated,
+  FCompiler.CodeGen.Options := [cgoNoRangeChecks, cgoNoCheckInstantiated,
     cgoNoCheckLoopStep, cgoNoConditions, cgoNoInlineMagics, cgoDeVirtualize,
     cgoNoRTTI, cgoNoFinalizations, cgoIgnorePublishedInImplementation];
-  FCodeGen.Verbosity := cgovNone;
-  FCodeGen.MainBodyName := '';
+  FCompiler.CodeGen.Verbosity := cgovNone;
+  TdwsJsCodeGen(FCompiler.CodeGen).MainBodyName := '';
 
   OutputName := FOutputName;
   for Index := 0 to Arguments.FileNameCount - 1 do
   begin
     CodePas := LoadTextFromFile(Arguments.Filename[Index]);
-    Prog := FDelphiWebScript.Compile(CodePas);
+    Prog := FCompiler.DelphiWebScript.Compile(CodePas);
 
     if Prog.Msgs.HasErrors then
     begin
@@ -177,9 +185,9 @@ begin
       Exit;
     end;
 
-    FCodeGen.Clear;
-    FCodeGen.CompileProgram(Prog);
-    CodeJS := FCodeGen.CompiledOutput(Prog);
+    FCompiler.CodeGen.Clear;
+    FCompiler.CodeGen.CompileProgram(Prog);
+    CodeJS := FCompiler.CodeGen.CompiledOutput(Prog);
 
     // eventually adapt output name
     if FOutputName = '' then
