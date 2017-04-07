@@ -6,7 +6,7 @@ interface
 
 uses
   System.SysUtils, dwsUtils, dwsComp, dwsCompiler, dwsExprs, dwsErrors,
-  dwsFunctions, dwsCodeGen, Hope.Project;
+  dwsFunctions, dwsCodeGen, dwsCompilerContext, Hope.Project;
 
 type
   THopeBaseCompiler = class

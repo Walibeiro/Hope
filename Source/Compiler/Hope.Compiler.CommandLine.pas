@@ -34,33 +34,30 @@ type
     function CompileProject(Project: THopeProject): IdwsProgram;
     procedure BuildProject(Project: THopeProject);
 
-    property OnCompilation: THopeCompilationEvent read FOnCompilation write FOnCompilation;
+    procedure AddLibraryPath(Path: TFileName);
+    procedure ClearLibraryPaths;
 
     property DelphiWebScript;
     property CodeGen;
+    property MonitoredBuffer: TMonitoredBuffer read FMonitoredBuffer;
+
+    property OnCompilation: THopeCompilationEvent read FOnCompilation write FOnCompilation;
   end;
 
 implementation
 
 uses
-  dwsXPlatform, dwsUtils, dwsCompiler, dwsErrors, dwsJSLibModule, dwsCodeGen,
-  dwsJSCodeGen, Hope.Common.Constants;
+  dwsXPlatform, dwsUtils, dwsCompiler, dwsCompilerContext, dwsErrors,
+  dwsJSLibModule, dwsCodeGen, dwsJSCodeGen, Hope.Common.Constants;
 
 
 { THopeCommandLineCompiler }
 
 procedure THopeCommandLineCompiler.AfterConstruction;
-var
-  RTLPath: string;
 begin
   inherited;
 
   FMonitoredBuffer := TMonitoredBuffer.Create;
-
-  RTLPath := ExpandFileName(ExtractFilePath(ParamStr(0)) + '..\Common\APIs');
-
-  if DirectoryExists(RTLPath) then
-    FMonitoredBuffer.AddPath(RTLPath);
 end;
 
 function THopeCommandLineCompiler.GetMainScript(Project: THopeProject): string;
@@ -75,7 +72,8 @@ begin
     MainSourceFile := ExpandFileName(Project.RootPath + MainSourceFile);
 
   // load text file
-  Result := LoadTextFromFile(MainSourceFile);
+  if FileExists(MainSourceFile) then
+    Result := LoadTextFromFile(MainSourceFile);
 end;
 
 procedure THopeCommandLineCompiler.OnIncludeEventHandler(const ScriptName: string;
@@ -103,6 +101,17 @@ begin
     cgoNoRTTI, cgoNoFinalizations, cgoIgnorePublishedInImplementation];
   FCodeGen.Verbosity := cgovNone;
   TdwsJSCodeGen(FCodeGen).MainBodyName := '';
+end;
+
+procedure THopeCommandLineCompiler.AddLibraryPath(Path: TFileName);
+begin
+  if Path <> '' then
+    FMonitoredBuffer.AddPath(Path);
+end;
+
+procedure THopeCommandLineCompiler.ClearLibraryPaths;
+begin
+  FMonitoredBuffer.Clear;
 end;
 
 procedure THopeCommandLineCompiler.SetupCompiler(Project: THopeProject);

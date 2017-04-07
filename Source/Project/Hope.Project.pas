@@ -19,13 +19,14 @@ type
     FVersion: THopeProjectVersion;
     FIcon: THopeProjectIcon;
     FOptions: THopeProjectOptions;
-    FFileName: TFileName;
     FFiles: THopeProjectFiles;
     FMainScript: THopeProjectFile;
     function GetRootPath: string;
+    function GetAbsoluteRootPath: string;
     function GetName: string;
     procedure SetName(const Value: string);
   protected
+    FFileName: TFileName;
     procedure ReadJson(const JsonValue: TdwsJsonObject); override;
     procedure WriteJson(const JsonValue: TdwsJsonObject); override;
   public
@@ -38,7 +39,7 @@ type
     procedure Clear;
 
     property RootPath: string read GetRootPath;
-    property FileName: TFileName read FFileName;
+    property FileName: TFileName read FFileName write FFileName;
 
     property Name: string read GetName write SetName;
     property Information: THopeProjectInformation read FInformation;
@@ -96,9 +97,14 @@ begin
   Result := '';
   if FFileName <> '' then
     Result := ExtractFilePath(FFileName);
+end;
+
+function THopeProject.GetAbsoluteRootPath: string;
+begin
+  Result := GetRootPath;
 
   if IsRelativePath(Result) then
-    Result := ExpandFileName(ExtractFilePath(ParamStr(0)) + Result);
+    Result := ExpandFileName(GetCurrentDir + '/'  + Result);
 end;
 
 procedure THopeProject.LoadFromFile(const FileName: TFileName);

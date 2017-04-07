@@ -5,7 +5,7 @@ interface
 {$I Hope.inc}
 
 uses
-  dwsJson, Hope.Common.JSON;
+  System.Classes, dwsJson, Hope.Common.JSON;
 
 type
   THopeVersionOptions = class(THopeJsonBase)
@@ -27,17 +27,20 @@ type
     FOptimizations: Boolean;
     FHintsLevel: Integer;
     FConditionalDefines: string;
+    FLibraryPaths: TStringList;
   protected
     procedure ReadJson(const JsonValue: TdwsJsonObject); override;
     procedure WriteJson(const JsonValue: TdwsJsonObject); override;
     class function GetPreferredName: string; override;
   public
     procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
 
     property Assertions: Boolean read FAssertions write FAssertions;
     property ConditionalDefines: string read FConditionalDefines write FConditionalDefines;
     property Optimizations: Boolean read FOptimizations write FOptimizations;
     property HintsLevel: Integer read FHintsLevel write FHintsLevel;
+    property LibraryPaths: TStringList read FLibraryPaths;
   end;
 
   THopeCodeGenJavaScriptOptions = class(THopeJsonBase)
@@ -210,6 +213,15 @@ begin
   FOptimizations := True;
   FConditionalDefines := '';
   FHintsLevel := 1;
+
+  FLibraryPaths := TStringList.Create;
+end;
+
+procedure THopeCompilerOptions.BeforeDestruction;
+begin
+  FLibraryPaths.Free;
+
+  inherited;
 end;
 
 class function THopeCompilerOptions.GetPreferredName: string;
@@ -223,14 +235,27 @@ begin
   FConditionalDefines := JsonValue.GetValue('ConditionalDefines', FConditionalDefines);
   FOptimizations := JsonValue.GetValue('Optimizations', FOptimizations);
   FHintsLevel := JsonValue.GetValue('HintsLevel', FHintsLevel);
+
+  // get library paths
+  JsonValue.GetStringList('LibraryPaths', FLibraryPaths);
 end;
 
 procedure THopeCompilerOptions.WriteJson(const JsonValue: TdwsJsonObject);
+var
+  Index: Integer;
+  LibraryPathsArray: TdwsJSONArray;
 begin
   JsonValue.AddValue('Assertions', FAssertions);
   JsonValue.AddValue('ConditionalDefines', FConditionalDefines);
   JsonValue.AddValue('Optimizations', FOptimizations);
   JsonValue.AddValue('HintsLevel', FHintsLevel);
+
+  if FLibraryPaths.Count > 0 then
+  begin
+    LibraryPathsArray := JsonValue.AddArray('LibraryPaths');
+    for Index := 0 to FLibraryPaths.Count - 1 do
+      LibraryPathsArray.Add(FLibraryPaths[Index]);
+  end;
 end;
 
 

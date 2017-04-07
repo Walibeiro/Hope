@@ -28,7 +28,7 @@ var
   FileUnitName: string;
 begin
   FileUnitName := ExtractUnitName(FileName);
-  Result := SimpleLowerCaseStringHash(FileUnitName);
+  Result := SimpleStringHash(Lowercase(FileUnitName));
 end;
 
 type

@@ -157,6 +157,8 @@ var
   FileList: TStringList;
   Index: Integer;
 begin
+  Assert(Path <> '');
+
   FileList := TStringList.Create;
   try
     // collect all files in the specified path

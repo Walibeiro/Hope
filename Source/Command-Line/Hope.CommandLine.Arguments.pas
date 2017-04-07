@@ -8,6 +8,7 @@ uses
 type
   TNameValuePair = record
     Name, Value: string;
+    function ValueAsBoolean: Boolean;
   end;
 
   EHopeCommandLineArguments = class(Exception);
@@ -16,6 +17,7 @@ type
   private
     FFileNames: array of string;
     FOptions: array of TNameValuePair;
+    FValid: Boolean;
     procedure AddFile(FileName: string);
     procedure AddOption(Item: string);
     function GetOption(Index: Integer): TNameValuePair;
@@ -39,6 +41,15 @@ implementation
 
 resourcestring
   RStrIndexOutOfBounds = 'Index out of bounds (%d)';
+
+
+{ TNameValuePair }
+
+function TNameValuePair.ValueAsBoolean: Boolean;
+begin
+  Result := (Value = 'true') or (Value = 'yes') or
+    (Value = '1') or (Value = '');
+end;
 
 
 { THopeCommandLineArguments }
@@ -80,6 +91,7 @@ procedure THopeCommandLineArguments.AddOption(Item: string);
 var
   ItemIndex: Integer;
   EqualPos: Integer;
+  OptionName: String;
 begin
   ItemIndex := Length(FOptions);
   SetLength(FOptions, ItemIndex + 1);
