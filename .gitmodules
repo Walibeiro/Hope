@@ -15,16 +15,16 @@
 	url = git@github.com:synopse/mORMot.git
 [submodule "Submodules/dcef3"]
 	path = Submodules/dcef3
-	url = git@github.com:hgourvest/dcef3.git
+	url = git@github.com:CWBudde/dcef3.git
 [submodule "Submodules/tango-icon-theme"]
 	path = Submodules/tango-icon-theme
 	url = git@github.com:stephenc/tango-icon-theme.git
 [submodule "Submodules/Graphics32"]
 	path = Submodules/Graphics32
-	url = https://github.com/graphics32/graphics32.git
+	url = git@github.com:graphics32/graphics32.git
 [submodule "Binaries/Common/Projects"]
 	path = Binaries/Common/Projects
-	url = https://github.com/Walibeiro/Hope-Projects
+	url = git@github.com:Walibeiro/Hope-Projects.git
 [submodule "Binaries/Common/Welcome Page"]
 	path = Binaries/Common/Welcome Page
-	url = https://github.com/Walibeiro/Hope-Welcome
+	url = git@github.com:Walibeiro/Hope-Elcome.git
