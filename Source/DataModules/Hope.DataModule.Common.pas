@@ -87,8 +87,9 @@ implementation
 
 uses
   Vcl.Forms, Vcl.Graphics, ceflib, dwsUtils, dwsExprs, dwsUnitSymbols,
-  dwsSymbols, dwsErrors, dwsCompiler, dwsSuggestions, Hope.Common.DWS,
-  Hope.Common.FileUtilities, Hope.Main, Hope.Editor,
+  dwsSymbols, dwsErrors, dwsCompiler, dwsSuggestions, dwsScriptSource,
+  dwsSymbolDictionary,
+  Hope.Common.DWS, Hope.Common.FileUtilities, Hope.Main, Hope.Editor,
   Hope.Dialog.ReloadChangedFiles;
 
 { TDataModuleCommon }
@@ -378,6 +379,7 @@ var
   FuncSymbol: TFuncSymbol;
   SymbolDictionary: TdwsSymbolDictionary;
   Symbol, TestSymbol: TSymbol;
+  SymbolPosition: TSymbolPositionList;
 begin
   // make sure the string list is present
   Assert(Assigned(ParameterInfos));
@@ -410,9 +412,9 @@ begin
 
     if TFuncSymbol(Symbol).IsOverloaded then
     begin
-      for ItemIndex := 0 to SymbolDictionary.Count - 1 do
+      for SymbolPosition in SymbolDictionary do
       begin
-        TestSymbol := SymbolDictionary.Items[ItemIndex].Symbol;
+        TestSymbol := SymbolPosition.Symbol;
         FuncSymbol := TFuncSymbol(TestSymbol);
 
         if (TestSymbol <> Symbol) and (TestSymbol.ClassType = Symbol.ClassType) and

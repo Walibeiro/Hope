@@ -60,7 +60,8 @@ uses
   Hope.ProjectManager in 'Forms\Hope.ProjectManager.pas' {FormProjectManager},
   Hope.UnicodeExplorer in 'Forms\Hope.UnicodeExplorer.pas' {FormUnicodeExplorer},
   Hope.UnitManager in 'Forms\Hope.UnitManager.pas' {FormUnitManager},
-  Hope.WelcomePage in 'Forms\Hope.WelcomePage.pas' {FormWelcomePage};
+  Hope.WelcomePage in 'Forms\Hope.WelcomePage.pas' {FormWelcomePage},
+  Hope.Project.Information in 'Project\Hope.Project.Information.pas';
 
 begin
   Application.Initialize;

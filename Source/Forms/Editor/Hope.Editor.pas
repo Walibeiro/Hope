@@ -143,10 +143,11 @@ type
 implementation
 
 uses
-  System.Contnrs, System.Math, dwsExprs, dwsSymbols, dwsTokenizer, dwsUtils,
-  dwsXPlatform, Hope.Common.Constants, Hope.Common.FileUtilities,
-  Hope.Common.MonitoredBuffer, Hope.Common.Preferences, Hope.DataModule.Common,
-  Hope.DataModule.ImageLists, Hope.Main;
+  System.Contnrs, System.Math, dwsExprs, dwsSymbols, dwsSymbolDictionary,
+  dwsTokenizer, dwsUtils, dwsXPlatform, Hope.Common.Constants,
+  Hope.Common.FileUtilities, Hope.Common.MonitoredBuffer,
+  Hope.Common.Preferences, Hope.DataModule.Common, Hope.DataModule.ImageLists,
+  Hope.Main;
 
 {$R *.dfm}
 

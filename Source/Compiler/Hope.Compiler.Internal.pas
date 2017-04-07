@@ -36,8 +36,8 @@ implementation
 
 uses
   dwsXPlatform, dwsUtils, dwsCompiler, dwsErrors, dwsJSLibModule, dwsCodeGen,
-  dwsJSCodeGen, Hope.Common.Constants, Hope.Main, Hope.DataModule.Common,
-  Hope.Common.MonitoredBuffer;
+  dwsJSCodeGen, dwsCompilerContext, Hope.Common.Constants, Hope.Main,
+  Hope.DataModule.Common, Hope.Common.MonitoredBuffer;
 
 
 { THopeInternalCompiler }

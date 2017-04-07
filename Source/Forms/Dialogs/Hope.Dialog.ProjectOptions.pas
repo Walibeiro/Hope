@@ -8,7 +8,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.Samples.Spin,
-  VirtualTrees, Hope.Dialog, Hope.Project, Hope.Project.Options;
+  VirtualTrees, Hope.Dialog, Hope.Project, Hope.Project.Information,
+  Hope.Project.Options;
 
 type
   TTabSheetItem = record
@@ -292,20 +293,6 @@ end;
 
 procedure TFormProjectOptions.LoadOptions(Options: THopeProjectOptions);
 begin
-  // project information
-  EditProjectName.Text := Options.Information.Name;
-  MemoDescription.Text := Options.Information.Description;
-  EditAuthorName.Text := Options.Information.Author.Name;
-  EditAuthorEmail.Text := Options.Information.Author.Email;
-  EditAuthorWebsite.Text := Options.Information.Author.Website;
-
-  // version
-  SpinEditVersionMajor.Text := IntToStr(Options.Version.Major);
-  SpinEditVersionMinor.Text := IntToStr(Options.Version.Minor);
-  SpinEditVersionRelease.Text := IntToStr(Options.Version.Release);
-  SpinEditVersionBuild.Text := IntToStr(Options.Version.Build);
-  CheckBoxAutoIncrement.Checked := Options.Version.AutoIncrement;
-
   // compiler options
   CheckBoxAssertions.Checked := Options.CompilerOptions.Assertions;
   CheckBoxOptimizations.Checked := Options.CompilerOptions.Optimizations;
@@ -335,20 +322,6 @@ end;
 
 procedure TFormProjectOptions.SaveOptions(Options: THopeProjectOptions);
 begin
-  // project information
-  Options.Information.Name := EditProjectName.Text;
-  Options.Information.Description := MemoDescription.Text;
-  Options.Information.Author.Name := EditAuthorName.Text;
-  Options.Information.Author.Email := EditAuthorEmail.Text;
-  Options.Information.Author.Website := EditAuthorWebsite.Text;
-
-  // version
-  Options.Version.Major := StrToInt(SpinEditVersionMajor.Text);
-  Options.Version.Minor := StrToInt(SpinEditVersionMinor.Text);
-  Options.Version.Release := StrToInt(SpinEditVersionRelease.Text);
-  Options.Version.Build := StrToInt(SpinEditVersionBuild.Text);
-  Options.Version.AutoIncrement := CheckBoxAutoIncrement.Checked;
-
   // compiler options
   Options.CompilerOptions.Assertions := CheckBoxAssertions.Checked;
   Options.CompilerOptions.Optimizations := CheckBoxOptimizations.Checked;
@@ -378,22 +351,38 @@ end;
 
 procedure TFormProjectOptions.LoadFromProject(Project: THopeProject);
 begin
-(*
-  EditProjectName.Text := Project.Name;
-  MemoDescription.Text := Project.Description;
-  EditAuthorEmail.Text := Project.Author;
-  EditAuthorName.Text := Project.Au;
-*)
+  // project information
+  EditProjectName.Text := Project.Information.Name;
+  MemoDescription.Text := Project.Information.Description;
+  EditAuthorName.Text := Project.Information.Author.Name;
+  EditAuthorEmail.Text := Project.Information.Author.Email;
+  EditAuthorWebsite.Text := Project.Information.Author.Website;
+
+  // version
+  SpinEditVersionMajor.Text := IntToStr(Project.Version.Major);
+  SpinEditVersionMinor.Text := IntToStr(Project.Version.Minor);
+  SpinEditVersionRelease.Text := IntToStr(Project.Version.Release);
+  SpinEditVersionBuild.Text := IntToStr(Project.Version.Build);
+//  CheckBoxAutoIncrement.Checked := Project.Version.AutoIncrement;
 
   LoadOptions(Project.Options);
 end;
 
 procedure TFormProjectOptions.SaveToProject(Project: THopeProject);
 begin
-(*
-  Project.Name := EditProjectName.Text;
-  Project.Description := MemoDescription.Text;
-*)
+  // project information
+  Project.Information.Name := EditProjectName.Text;
+  Project.Information.Description := MemoDescription.Text;
+  Project.Information.Author.Name := EditAuthorName.Text;
+  Project.Information.Author.Email := EditAuthorEmail.Text;
+  Project.Information.Author.Website := EditAuthorWebsite.Text;
+
+  // version
+  Project.Version.Major := StrToInt(SpinEditVersionMajor.Text);
+  Project.Version.Minor := StrToInt(SpinEditVersionMinor.Text);
+  Project.Version.Release := StrToInt(SpinEditVersionRelease.Text);
+  Project.Version.Build := StrToInt(SpinEditVersionBuild.Text);
+//  Project.Version.AutoIncrement := CheckBoxAutoIncrement.Checked;
 
   SaveOptions(Project.Options);
 end;
