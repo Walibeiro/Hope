@@ -147,7 +147,7 @@ object FormEditor: TFormEditor
     FontSmoothing = fsmNone
   end
   object PopupMenu: TPopupMenu
-    Left = 384
+    Left = 320
     Top = 304
     object MenuItemClosePage: TMenuItem
       Action = FormMain.ActionPageClosePage

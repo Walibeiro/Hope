@@ -728,10 +728,12 @@ object FormMain: TFormMain
     object ActionEditorFindDeclaration: TAction
       Category = 'Editor'
       Caption = 'Find Declaration'
+      OnExecute = ActionEditorFindDeclarationExecute
     end
     object ActionEditorFindUsage: TAction
       Category = 'Editor'
       Caption = 'Find Usage'
+      OnExecute = ActionEditorFindUsageExecute
     end
     object ActionEditorFormatSource: TAction
       Category = 'Editor'
@@ -758,6 +760,7 @@ object FormMain: TFormMain
     object ActionEditorAddTodo: TAction
       Category = 'Editor'
       Caption = 'Add To-Do Item...'
+      OnExecute = ActionEditorAddTodoExecute
     end
     object ActionViewMiniMap: TAction
       Category = 'View'

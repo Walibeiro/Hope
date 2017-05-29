@@ -8,7 +8,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ToolWin, Vcl.Menus,
-  SynEdit, SynEditTypes, SynEditKeyCmds, Hope.Project.Local;
+  SynEdit, SynEditTypes, SynEditKeyCmds, Hope.Project.Local, System.Actions,
+  Vcl.ActnList;
 
 type
   TStatusBar = class(Vcl.ComCtrls.TStatusBar)
@@ -21,10 +22,13 @@ type
     procedure InvokeParameterInformation;
     procedure GotoInterface;
     procedure GotoImplementation;
+    procedure FindDeclaration;
+    procedure FindUsage;
     procedure OpenFileAtCursor;
     procedure CompleteClassAtCursor;
     procedure ToggleComment;
     procedure FormatSource;
+    procedure AddTodo(Text: string; Priority: Integer; Owner, Category: string);
     procedure MoveLines(MoveUp: Boolean);
     procedure SetupEditorFromPreferences;
 
@@ -125,10 +129,13 @@ type
     procedure SaveToFile;
     procedure LoadFromFile;
 
+    procedure AddTodo(Text: string; Priority: Integer; Owner, Category: string);
     procedure InvokeCodeSuggestions;
     procedure InvokeParameterInformation;
     procedure GotoInterface;
     procedure GotoImplementation;
+    procedure FindDeclaration;
+    procedure FindUsage;
     procedure OpenFileAtCursor;
     procedure CompleteClassAtCursor;
     procedure ToggleComment;
@@ -162,6 +169,28 @@ end;
 
 
 { TFormEditor }
+
+procedure TFormEditor.AddTodo(Text: string; Priority: Integer; Owner,
+  Category: string);
+var
+  TodoText: string;
+begin
+  Editor.BlockEnd := Editor.BlockBegin;
+  TodoText := '{ TODO ';
+  if Priority <> 0 then
+    TodoText := TodoText + IntToStr(Priority) + ' ';
+  if Owner <> '' then
+    TodoText := TodoText + '-o' + Owner + ' ';
+  if Category <> '' then
+    TodoText := TodoText + '-c' + Category + ' ';
+  if (Priority <> 0) or (Owner <> '') or (Category <> '') then
+    TodoText := TodoText + ': ' + #13;
+
+  TodoText := TodoText + Text;
+
+  TodoText := TodoText + '}';
+  Editor.SelText := TodoText;
+end;
 
 procedure TFormEditor.AfterConstruction;
 begin
@@ -384,6 +413,43 @@ begin
   end;
 
   Caption := FShortFileName;
+end;
+
+procedure TFormEditor.FindDeclaration;
+var
+  CurrentProgram: IdwsProgram;
+  Symbol: TSymbol;
+  SymbolPosition: TSymbolPosition;
+  Index: Integer;
+const
+  CUsages: array [0..1] of TSymbolUsage = (suForward, suDeclaration);
+begin
+  // get script program
+  CurrentProgram := DataModuleCommon.BackgroundCompiler.GetCompiledProgram;
+  if CurrentProgram = nil then
+    Exit;
+
+  // find current symbol
+  Symbol := CurrentProgram.SymbolDictionary.FindSymbolAtPosition(
+    Editor.CaretX, Editor.CaretY, ExtractUnitName(FileName));
+
+  // find according implementation symbol
+  for Index := Low(CUsages) to High(CUsages) do
+  begin
+    SymbolPosition := CurrentProgram.SymbolDictionary.FindSymbolUsage(Symbol, CUsages[Index]);
+    if Assigned(SymbolPosition) then
+    begin
+      Editor.CaretXY := BufferCoord(
+        SymbolPosition.ScriptPos.Col,
+        SymbolPosition.ScriptPos.Line);
+      Exit;
+    end;
+  end
+end;
+
+procedure TFormEditor.FindUsage;
+begin
+  // TODO
 end;
 
 procedure TFormEditor.FormatSource;

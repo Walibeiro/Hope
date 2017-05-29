@@ -28,6 +28,7 @@ uses
   Hope.DataModule.Common in 'DataModules\Hope.DataModule.Common.pas' {DataModuleCommon: TDataModule},
   Hope.DataModule.ImageLists in 'DataModules\Hope.DataModule.ImageLists.pas' {DataModuleImageLists: TDataModule},
   Hope.Dialog in 'Forms\Dialogs\Hope.Dialog.pas' {FormDialog},
+  Hope.Dialog.AddToDoItem in 'Forms\Dialogs\Hope.Dialog.AddToDoItem.pas',
   Hope.Dialog.CodeTemplates in 'Forms\Dialogs\Hope.Dialog.CodeTemplates.pas' {FormCodeTemplates},
   Hope.Dialog.FindClass in 'Forms\Dialogs\Hope.Dialog.FindClass.pas' {FormFindClass},
   Hope.Dialog.FindInFiles in 'Forms\Dialogs\Hope.Dialog.FindInFiles.pas' {FormFindInFiles},
@@ -52,16 +53,17 @@ uses
   Hope.Project in 'Project\Hope.Project.pas',
   Hope.Project.Files in 'Project\Hope.Project.Files.pas',
   Hope.Project.IDE in 'Project\Hope.Project.IDE.pas',
+  Hope.Project.Information in 'Project\Hope.Project.Information.pas',
   Hope.Project.Interfaces in 'Project\Hope.Project.Interfaces.pas',
   Hope.Project.List in 'Project\Hope.Project.List.pas',
   Hope.Project.Local in 'Project\Hope.Project.Local.pas',
   Hope.Project.Options in 'Project\Hope.Project.Options.pas',
   Hope.Project.Statistics in 'Project\Hope.Project.Statistics.pas',
   Hope.ProjectManager in 'Forms\Hope.ProjectManager.pas' {FormProjectManager},
+  Hope.SymbolUsage in 'Forms\Hope.SymbolUsage.pas' {FormSymbolUsage},
   Hope.UnicodeExplorer in 'Forms\Hope.UnicodeExplorer.pas' {FormUnicodeExplorer},
   Hope.UnitManager in 'Forms\Hope.UnitManager.pas' {FormUnitManager},
-  Hope.WelcomePage in 'Forms\Hope.WelcomePage.pas' {FormWelcomePage},
-  Hope.Project.Information in 'Project\Hope.Project.Information.pas';
+  Hope.WelcomePage in 'Forms\Hope.WelcomePage.pas' {FormWelcomePage};
 
 begin
   Application.Initialize;

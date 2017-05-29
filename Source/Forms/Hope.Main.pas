@@ -236,6 +236,9 @@ type
     procedure ActionFileSaveExecute(Sender: TObject);
     procedure ActionFileSaveAsAccept(Sender: TObject);
     procedure ActionFileNewMoreExecute(Sender: TObject);
+    procedure ActionEditorFindDeclarationExecute(Sender: TObject);
+    procedure ActionEditorFindUsageExecute(Sender: TObject);
+    procedure ActionEditorAddTodoExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -279,7 +282,8 @@ type
 
     procedure SyncEditorToBuffer;
     function FocusEditor(FileName: TFileName): TFormEditor;
-    function FocusUnitEditor(AUnitName: string): TFormEditor;
+    function FocusUnitEditor(AUnitName: string): TFormEditor; overload;
+    function FocusUnitEditor(AUnitName: string; Line, Char: Integer): TFormEditor; overload;
     function RegisterNewEditor(FileName: TFileName): TFormEditor;
 
     procedure UpdateUnitMap(CompiledProgran: IdwsProgram);
@@ -302,10 +306,10 @@ var
 implementation
 
 uses
-  dwsUtils, dwsXPlatform, SynCompletionProposal,
+  dwsUtils, dwsXPlatform, SynCompletionProposal, SynEditTypes,
   Hope.About, Hope.AsciiChart, Hope.ColorPicker, Hope.Common.History,
-  Hope.Dialog.CodeTemplates, Hope.Dialog.FindClass, Hope.Dialog.FindInFiles,
-  Hope.Dialog.GotoLineNumber, Hope.Dialog.Preferences,
+  Hope.Dialog.AddToDoItem, Hope.Dialog.CodeTemplates, Hope.Dialog.FindClass,
+  Hope.Dialog.FindInFiles, Hope.Dialog.GotoLineNumber, Hope.Dialog.Preferences,
   Hope.Dialog.ProjectOptions, Hope.Dialog.RecentProperties,
   Hope.Docking.Form, Hope.UnicodeExplorer;
 
@@ -691,6 +695,13 @@ begin
   Result := FocusEditor(FileName);
 end;
 
+function TFormMain.FocusUnitEditor(AUnitName: string; Line,
+  Char: Integer): TFormEditor;
+begin
+  Result := FocusUnitEditor(AUnitName);
+  Result.Editor.CaretXY := BufferCoord(Char, Line);
+end;
+
 function TFormMain.FocusEditor(FileName: TFileName): TFormEditor;
 begin
   Result := FEditors.GetEditorForFileName(FileName);
@@ -853,6 +864,19 @@ begin
   end;
 end;
 
+procedure TFormMain.ActionEditorAddTodoExecute(Sender: TObject);
+begin
+  if Assigned(FFocusedEditorForm) then
+    with TFormAddToDoItem.Create(Self) do
+    try
+      if ShowModal = mrOK then
+        FFocusedEditorForm.AddTodo(MemoItem.Lines.Text, SpinEditPriority.Value,
+          ComboBoxOwner.Text, ComboBoxCategory.Text);
+    finally
+      Free;
+    end;
+end;
+
 procedure TFormMain.ActionEditorCodeSuggestionsExecute(Sender: TObject);
 begin
   if Assigned(FFocusedEditorForm) then
@@ -932,6 +956,18 @@ procedure TFormMain.ActionEditorCompleteClassAtCursorExecute(Sender: TObject);
 begin
   if Assigned(FFocusedEditorForm) then
     FFocusedEditorForm.CompleteClassAtCursor;
+end;
+
+procedure TFormMain.ActionEditorFindDeclarationExecute(Sender: TObject);
+begin
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditorForm.FindDeclaration;
+end;
+
+procedure TFormMain.ActionEditorFindUsageExecute(Sender: TObject);
+begin
+  if Assigned(FFocusedEditorForm) then
+    FFocusedEditorForm.FindUsage;
 end;
 
 procedure TFormMain.ActionEditorFormatSourceExecute(Sender: TObject);
