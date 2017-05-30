@@ -55,6 +55,7 @@ type
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
 
+    function IsModified(FileName: TFileName): Boolean; inline;
     function GetText(FileName: TFileName): string; inline;
     function GetUnit(UnitName: string): string; inline;
 

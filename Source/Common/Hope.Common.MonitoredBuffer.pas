@@ -17,10 +17,11 @@ type
     FLastFileName: TFileName;
     FOnModified: TOnModifiedEvent;
 
-    function GetText(FileName: TFileName): string;
-    procedure SetText(FileName: TFileName; const Text: string);
     procedure FileChangedEventHandler(Sender: TdwsFileNotifier; const FileName: string;
       ChangeAction : TFileNotificationAction);
+    function GetModified(FileName: TFileName): Boolean;
+    function GetText(FileName: TFileName): string;
+    procedure SetText(FileName: TFileName; const Text: string);
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
@@ -34,6 +35,7 @@ type
     property BuffferList: THopeBufferList read FBuffferList;
     property DirectoryMonitor: TDirectoryMonitor read FDirectoryMonitor;
     property Text[FileName: TFileName]: string read GetText write SetText; default;
+    property Modified[FileName: TFileName]: Boolean read GetModified;
 
     property OnModified: TOnModifiedEvent read FOnModified write FOnModified;
   end;
@@ -136,6 +138,20 @@ begin
   // eventually return buffered text
   if Index >= 0 then
     Exit(FBuffferList[Index].FileName);
+end;
+
+function TMonitoredBuffer.GetModified(FileName: TFileName): Boolean;
+var
+  Index: Integer;
+begin
+  Result := False;
+
+  // get index of unit name (if buffered)
+  Index := FBuffferList.IndexOfUnit(UnitName);
+
+  // eventually return buffered text
+  if Index >= 0 then
+    Exit(FBuffferList[Index].Modified);
 end;
 
 function TMonitoredBuffer.GetSourceCode(UnitName: string): string;

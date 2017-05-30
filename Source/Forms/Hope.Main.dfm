@@ -523,6 +523,7 @@ object FormMain: TFormMain
     object ActionFileSaveProject: TAction
       Category = 'File'
       Caption = '&Save Project'
+      ShortCut = 16467
       OnExecute = ActionFileSaveProjectExecute
     end
     object ActionFileClose: TAction

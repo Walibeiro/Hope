@@ -13,6 +13,7 @@ type
     FFileName: TFileName;
     FUnitNameHash: Cardinal;
     FText: string;
+    FModified: Boolean;
     procedure SetText(const Value: string);
     procedure SetFileName(const Value: TFileName);
   protected
@@ -23,6 +24,7 @@ type
     property Text: string read FText write SetText;
     property FileName: TFileName read FFileName write SetFileName;
     property UnitNameHash: Cardinal read FUnitNameHash;
+    property Modified: Boolean read FModified;
   end;
 
 implementation
@@ -44,6 +46,7 @@ end;
 procedure THopeBuffer.SetText(const Value: String);
 begin
   FText := Value;
+  FModified := True;
 end;
 
 procedure THopeBuffer.FileNameChanged;
@@ -58,6 +61,7 @@ end;
 procedure THopeBuffer.Reload;
 begin
   FText := LoadTextFromFile(FFileName);
+  FModified := False;
 end;
 
 end.

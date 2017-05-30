@@ -110,12 +110,14 @@ end;
 procedure THopeProject.LoadFromFile(const FileName: TFileName);
 begin
   FFileName := FileName;
+
   inherited;
 end;
 
 procedure THopeProject.SaveToFile(const FileName: TFileName);
 begin
   FFileName := FileName;
+
   inherited;
 end;
 

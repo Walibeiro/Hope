@@ -81,7 +81,8 @@ type
 implementation
 
 uses
-  Hope.Main, Hope.Editor, Hope.Common.JSON, SynEditTypes;
+  Hope.Main, Hope.Editor, Hope.Common.JSON, Hope.DataModule.Common,
+  SynEditTypes, dwsXPlatform;
 
 { THopeProjectStatistics }
 
@@ -307,7 +308,8 @@ begin
     FormEditor := FormMain.Editors.GetEditorForFileName(OpenedFile.FileName);
 
     if not Assigned(FormEditor) then
-      FormEditor := FormMain.RegisterNewEditor(OpenedFile.FileName);
+      if FileExists(OpenedFile.FileName) then
+        FormEditor := FormMain.RegisterNewEditor(OpenedFile.FileName);
 
     // assign form properties from local file
     if Assigned(FormEditor) then
@@ -373,13 +375,35 @@ procedure THopeProjectIDE.SaveToFile(const FileName: TFileName);
 var
   LocalFile: TFileName;
   StatisticsFile: TFileName;
+  Index: Integer;
+  FileName: TFileName
+  Text: string;
 begin
   inherited;
 
+  // store file content from cache to local file
   StoreToLocalFile;
 
   LocalFile := ChangeFileExt(FileName, '.hloc');
   FLocal.SaveToFile(LocalFile);
+
+  for Index := 0 to Files.Count - 1 do
+  begin
+    FileName := Files[Index].FileName;
+
+    if DataModuleCommon.IsModified(FileName) then
+    begin
+      // get the content for the file
+      Text := DataModuleCommon.GetText(FileName);
+
+      // eventually expand file name with root path
+      if IsRelativePath(FileName) then
+        FileName := ExpandFileName(RootPath + FileName);
+
+      // save text to file
+      SaveTextToUTF8File(FileName, Text);
+    end;
+  end;
 
   StatisticsFile := ChangeFileExt(FileName, '.hstc');
   FStatistics.SaveToFile(StatisticsFile);
