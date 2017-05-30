@@ -14,7 +14,7 @@ uses
 
   Hope.Common.History, Hope.Common.Paths, Hope.Common.MonitoredBuffer,
   Hope.Common.Preferences, Hope.Compiler.Internal, Hope.Compiler.Background,
-  Hope.Common.IDE;
+  Hope.Common.IDE, Hope.FindReference;
 
 type
   TMacroAction = (maRecord, maStop, maPlay);
@@ -50,6 +50,7 @@ type
     FMonitoredBuffer: TMonitoredBuffer;
     FInternalCompiler: THopeInternalCompiler;
     FBackgroundCompiler: THopeBackgroundCompilerThread;
+    FFormFindReference: TFormFindReference;
     procedure FileModifiedHandler(Sender: TObject; const FileName: TFileName);
   public
     procedure AfterConstruction; override;
@@ -75,6 +76,7 @@ type
     property Paths: THopePaths read FPaths;
     property Preferences: THopePreferences read FPreferences;
     property MonitoredBuffer: TMonitoredBuffer read FMonitoredBuffer;
+    property FormFindReference: TFormFindReference read FFormFindReference;
   end;
 
 var
@@ -101,29 +103,40 @@ begin
 
   FPaths := THopePaths.Create;
 
+  // create and load preferences
   FPreferences := THopePreferences.Create;
   if FileExists(FPaths.PreferenceFileName) then
     FPreferences.LoadFromFile(FPaths.PreferenceFileName);
 
+  // create and load history
   FHistory := THopeHistory.Create;
   if FileExists(FPaths.HistoryFileName) then
     FHistory.LoadFromFile(FPaths.HistoryFileName);
 
+  // create and load form positions
   FPositions := THopePositions.Create;
   if FileExists(FPaths.PositionsFileName) then
     FPositions.LoadFromFile(FPaths.PositionsFileName);
 
+  // create and setup monitored buffer
   FMonitoredBuffer := TMonitoredBuffer.Create;
   FMonitoredBuffer.AddPath(ExpandFileName(Paths.Root + '..\Common\APIs\'));
   FMonitoredBuffer.AddPath(ExpandFileName(Paths.Root + '..\Common\Frameworks\'));
   FMonitoredBuffer.OnModified := FileModifiedHandler;
 
+  // create compiler
   FInternalCompiler := THopeInternalCompiler.Create;
   FBackgroundCompiler := THopeBackgroundCompilerThread.Create;
+
+  // create symbol usage explorer
+  FFormFindReference := TFormFindReference.Create(Self);
 end;
 
 procedure TDataModuleCommon.BeforeDestruction;
 begin
+  // free symbol usage explorer
+  FFormFindReference.Free;
+
   // save history and preferences
   FHistory.SaveToFile(FPaths.HistoryFileName);
   FPositions.SaveToFile(FPaths.PositionsFileName);
@@ -159,6 +172,11 @@ end;
 function TDataModuleCommon.GetUnit(UnitName: string): string;
 begin
   Result := FMonitoredBuffer.GetSourceCode(UnitName);
+end;
+
+function TDataModuleCommon.IsModified(FileName: TFileName): Boolean;
+begin
+  Result := FMonitoredBuffer.Modified[FileName];
 end;
 
 procedure TDataModuleCommon.AddProjectToHistory(FileName: string);

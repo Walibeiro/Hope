@@ -146,10 +146,10 @@ var
 begin
   Result := False;
 
-  // get index of unit name (if buffered)
-  Index := FBuffferList.IndexOfUnit(UnitName);
+  // get index of file name (if buffered)
+  Index := FBuffferList.IndexOf(FileName);
 
-  // eventually return buffered text
+  // eventually return if the buffer has been modified
   if Index >= 0 then
     Exit(FBuffferList[Index].Modified);
 end;

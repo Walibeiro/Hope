@@ -52,7 +52,12 @@ inherited FormFindClass: TFormFindClass
     Header.Font.Name = 'Tahoma'
     Header.Font.Style = []
     Header.MainColumn = -1
+    IncrementalSearch = isVisibleOnly
     TabOrder = 4
+    OnCompareNodes = TreeClassesCompareNodes
+    OnFreeNode = TreeClassesFreeNode
+    OnGetText = TreeClassesGetText
+    OnIncrementalSearch = TreeClassesIncrementalSearch
     Columns = <>
   end
 end

@@ -154,7 +154,7 @@ uses
   dwsTokenizer, dwsUtils, dwsXPlatform, Hope.Common.Constants,
   Hope.Common.FileUtilities, Hope.Common.MonitoredBuffer,
   Hope.Common.Preferences, Hope.DataModule.Common, Hope.DataModule.ImageLists,
-  Hope.Main, Hope.SymbolUsage;
+  Hope.Main, Hope.FindReference;
 
 {$R *.dfm}
 

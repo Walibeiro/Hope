@@ -6,7 +6,8 @@ interface
 
 uses
   System.SysUtils, System.Classes, System.Contnrs, Vcl.ExtCtrls, dwsJSON,
-  Hope.Project, Hope.Project.List, Hope.Project.Local, Hope.Project.Statistics;
+  Hope.Project, Hope.Project.Files, Hope.Project.List, Hope.Project.Local,
+  Hope.Project.Statistics;
 
 type
   THopeProjectStatistics = class(TCustomProjectStatistics)
@@ -56,6 +57,8 @@ type
     FStatistics: THopeProjectStatistics;
     procedure RecallFromLocalFile;
     procedure StoreToLocalFile;
+    procedure SaveProjectFile(ProjectFile: THopeProjectFile;
+      ForceSave: Boolean = False);
   public
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
@@ -371,15 +374,36 @@ begin
   FStatistics.SaveToFile(StatisticsFile);
 end;
 
+procedure THopeProjectIDE.SaveProjectFile(ProjectFile: THopeProjectFile;
+  ForceSave: Boolean = False);
+var
+  FileName: TFileName;
+  Text: string;
+begin
+  FileName := RootPath + ProjectFile.FileName;
+  if ForceSave or DataModuleCommon.IsModified(FileName) then
+  begin
+    // get the content for the file
+    Text := DataModuleCommon.GetText(FileName);
+
+    // eventually expand file name with root path
+    if IsRelativePath(FileName) then
+      FileName := ExpandFileName(FileName);
+
+    // save text to file
+    SaveTextToUTF8File(FileName, Text);
+  end;
+end;
+
 procedure THopeProjectIDE.SaveToFile(const FileName: TFileName);
 var
   LocalFile: TFileName;
   StatisticsFile: TFileName;
   Index: Integer;
-  FileName: TFileName
-  Text: string;
 begin
   inherited;
+
+  FormMain.SyncEditorToBuffer;
 
   // store file content from cache to local file
   StoreToLocalFile;
@@ -387,23 +411,10 @@ begin
   LocalFile := ChangeFileExt(FileName, '.hloc');
   FLocal.SaveToFile(LocalFile);
 
+  // save project files
+  SaveProjectFile(MainScript);
   for Index := 0 to Files.Count - 1 do
-  begin
-    FileName := Files[Index].FileName;
-
-    if DataModuleCommon.IsModified(FileName) then
-    begin
-      // get the content for the file
-      Text := DataModuleCommon.GetText(FileName);
-
-      // eventually expand file name with root path
-      if IsRelativePath(FileName) then
-        FileName := ExpandFileName(RootPath + FileName);
-
-      // save text to file
-      SaveTextToUTF8File(FileName, Text);
-    end;
-  end;
+    SaveProjectFile(Files[Index]);
 
   StatisticsFile := ChangeFileExt(FileName, '.hstc');
   FStatistics.SaveToFile(StatisticsFile);

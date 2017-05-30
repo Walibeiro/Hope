@@ -33,6 +33,7 @@ uses
   Hope.Dialog.FindClass in 'Forms\Dialogs\Hope.Dialog.FindClass.pas' {FormFindClass},
   Hope.Dialog.FindInFiles in 'Forms\Dialogs\Hope.Dialog.FindInFiles.pas' {FormFindInFiles},
   Hope.Dialog.FindReplace in 'Forms\Dialogs\Hope.Dialog.FindReplace.pas' {FormFindReplace},
+  Hope.Dialog.FindUnit in 'Forms\Dialogs\Hope.Dialog.FindUnit.pas' {FormFindUnit},
   Hope.Dialog.GotoLineNumber in 'Forms\Dialogs\Hope.Dialog.GotoLineNumber.pas' {FormGotoLineNumber},
   Hope.Dialog.NewMore in 'Forms\Dialogs\Hope.Dialog.NewMore.pas' {FormObjectGallery},
   Hope.Dialog.Preferences in 'Forms\Dialogs\Hope.Dialog.Preferences.pas' {FormPreferences},
@@ -60,7 +61,7 @@ uses
   Hope.Project.Options in 'Project\Hope.Project.Options.pas',
   Hope.Project.Statistics in 'Project\Hope.Project.Statistics.pas',
   Hope.ProjectManager in 'Forms\Hope.ProjectManager.pas' {FormProjectManager},
-  Hope.SymbolUsage in 'Forms\Hope.SymbolUsage.pas' {FormSymbolUsage},
+  Hope.FindReference in 'Forms\Hope.FindReference.pas' {FormFindReference},
   Hope.UnicodeExplorer in 'Forms\Hope.UnicodeExplorer.pas' {FormUnicodeExplorer},
   Hope.UnitManager in 'Forms\Hope.UnitManager.pas' {FormUnitManager},
   Hope.WelcomePage in 'Forms\Hope.WelcomePage.pas' {FormWelcomePage};
@@ -72,5 +73,6 @@ begin
   Application.CreateForm(TDataModuleImageLists, DataModuleImageLists);
   Application.CreateForm(TDataModuleCommon, DataModuleCommon);
   Application.CreateForm(TFormMain, FormMain);
+  Application.CreateForm(TFormFindUnit, FormFindUnit);
   Application.Run;
 end.

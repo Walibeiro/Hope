@@ -19,13 +19,14 @@ object FormFindReference: TFormFindReference
     Width = 680
     Height = 165
     Align = alClient
-    Header.AutoSizeIndex = 0
+    Header.AutoSizeIndex = 1
     Header.Font.Charset = DEFAULT_CHARSET
     Header.Font.Color = clWindowText
     Header.Font.Height = -11
     Header.Font.Name = 'Tahoma'
     Header.Font.Style = []
     Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
+    IncrementalSearch = isVisibleOnly
     TabOrder = 0
     OnCompareNodes = TreeViewSymbolPositionsCompareNodes
     OnDblClick = TreeViewSymbolPositionsDblClick
@@ -34,15 +35,15 @@ object FormFindReference: TFormFindReference
     OnIncrementalSearch = TreeViewSymbolPositionsIncrementalSearch
     Columns = <
       item
+        Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus, coEditable]
         Position = 0
-        Width = 292
-        WideText = 'Text'
+        Width = 81
+        WideText = 'UnitName'
       end
       item
-        Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus, coEditable]
         Position = 1
-        Width = 192
-        WideText = 'Source Unit'
+        Width = 484
+        WideText = 'Item'
       end
       item
         Position = 2
