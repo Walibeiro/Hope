@@ -1,9 +1,9 @@
-object FormSymbolUsage: TFormSymbolUsage
+object FormFindReference: TFormFindReference
   Left = 0
   Top = 0
   Caption = 'Symbol Usage'
-  ClientHeight = 168
-  ClientWidth = 503
+  ClientHeight = 165
+  ClientWidth = 680
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,8 +16,8 @@ object FormSymbolUsage: TFormSymbolUsage
   object TreeViewSymbolPositions: TVirtualStringTree
     Left = 0
     Top = 0
-    Width = 503
-    Height = 168
+    Width = 680
+    Height = 165
     Align = alClient
     Header.AutoSizeIndex = 0
     Header.Font.Charset = DEFAULT_CHARSET
@@ -34,18 +34,23 @@ object FormSymbolUsage: TFormSymbolUsage
     OnIncrementalSearch = TreeViewSymbolPositionsIncrementalSearch
     Columns = <
       item
-        Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus, coEditable]
         Position = 0
-        Width = 307
+        Width = 292
+        WideText = 'Text'
+      end
+      item
+        Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus, coEditable]
+        Position = 1
+        Width = 192
         WideText = 'Source Unit'
       end
       item
-        Position = 1
+        Position = 2
         Width = 96
         WideText = 'Line'
       end
       item
-        Position = 2
+        Position = 3
         Width = 96
         WideText = 'Character'
       end>

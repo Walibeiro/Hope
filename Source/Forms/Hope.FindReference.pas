@@ -1,4 +1,4 @@
-unit Hope.SymbolUsage;
+unit Hope.FindReference;
 
 interface
 
@@ -8,7 +8,10 @@ uses
   Vcl.StdCtrls, VirtualTrees, dwsSymbolDictionary;
 
 type
-  TFormSymbolUsage = class(TForm)
+  TFindReferenceItem = record
+  end;
+
+  TFormFindReference = class(TForm)
     TreeViewSymbolPositions: TVirtualStringTree;
     procedure TreeViewSymbolPositionsGetText(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
@@ -22,6 +25,8 @@ type
       Node: PVirtualNode);
   public
     procedure AfterConstruction; override;
+
+    procedure FindUsage(UnitName: string; Line, Char: Integer);
   end;
 
 implementation
@@ -29,11 +34,12 @@ implementation
 {$R *.dfm}
 
 uses
-  System.Math, Hope.DataModule.ImageLists, Hope.Main;
+  System.Math, dwsExprs, dwsSymbols,
+  Hope.DataModule.ImageLists, Hope.Main, Hope.DataModule.Common;
 
 { TFormSymbolUsage }
 
-procedure TFormSymbolUsage.AfterConstruction;
+procedure TFormFindReference.AfterConstruction;
 begin
   inherited;
 
@@ -46,7 +52,41 @@ begin
   TreeViewSymbolPositions.StateImages := DataModuleImageLists.ImageList16;
 end;
 
-procedure TFormSymbolUsage.TreeViewSymbolPositionsCompareNodes(
+procedure TFormFindReference.FindUsage(UnitName: string; Line, Char: Integer);
+var
+  CurrentProgram: IdwsProgram;
+  Symbol: TSymbol;
+  SymbolPosition: TSymbolPosition;
+  Index: Integer;
+const
+  CUsages: array [0..1] of TSymbolUsage = (suForward, suDeclaration);
+begin
+  // get script program
+  CurrentProgram := DataModuleCommon.BackgroundCompiler.GetCompiledProgram;
+  if CurrentProgram = nil then
+    Exit;
+
+  // find current symbol
+  Symbol := CurrentProgram.SymbolDictionary.FindSymbolAtPosition(
+    Char, Line, UnitName);
+
+  // find according implementation symbol
+  for Index := Low(CUsages) to High(CUsages) do
+  begin
+    SymbolPosition := CurrentProgram.SymbolDictionary.FindSymbolUsage(Symbol, CUsages[Index]);
+(*
+    if Assigned(SymbolPosition) then
+    begin
+      Editor.CaretXY := BufferCoord(
+        SymbolPosition.ScriptPos.Col,
+        SymbolPosition.ScriptPos.Line);
+      Exit;
+    end;
+*)
+  end
+end;
+
+procedure TFormFindReference.TreeViewSymbolPositionsCompareNodes(
   Sender: TBaseVirtualTree; Node1, Node2: PVirtualNode; Column: TColumnIndex;
   var Result: Integer);
 var
@@ -65,7 +105,7 @@ begin
   end;
 end;
 
-procedure TFormSymbolUsage.TreeViewSymbolPositionsDblClick(Sender: TObject);
+procedure TFormFindReference.TreeViewSymbolPositionsDblClick(Sender: TObject);
 var
   Node: PVirtualNode;
   NodeData: TSymbolPosition;
@@ -81,7 +121,7 @@ begin
   end;
 end;
 
-procedure TFormSymbolUsage.TreeViewSymbolPositionsFreeNode(
+procedure TFormFindReference.TreeViewSymbolPositionsFreeNode(
   Sender: TBaseVirtualTree; Node: PVirtualNode);
 var
   NodeData: TSymbolPosition;
@@ -90,7 +130,7 @@ begin
   Finalize(NodeData^);
 end;
 
-procedure TFormSymbolUsage.TreeViewSymbolPositionsGetText(
+procedure TFormFindReference.TreeViewSymbolPositionsGetText(
   Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex;
   TextType: TVSTTextType; var CellText: string);
 var
@@ -107,7 +147,7 @@ begin
   end;
 end;
 
-procedure TFormSymbolUsage.TreeViewSymbolPositionsIncrementalSearch(
+procedure TFormFindReference.TreeViewSymbolPositionsIncrementalSearch(
   Sender: TBaseVirtualTree; Node: PVirtualNode; const SearchText: string;
   var Result: Integer);
 var

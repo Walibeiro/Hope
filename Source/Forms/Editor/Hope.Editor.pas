@@ -154,7 +154,7 @@ uses
   dwsTokenizer, dwsUtils, dwsXPlatform, Hope.Common.Constants,
   Hope.Common.FileUtilities, Hope.Common.MonitoredBuffer,
   Hope.Common.Preferences, Hope.DataModule.Common, Hope.DataModule.ImageLists,
-  Hope.Main;
+  Hope.Main, Hope.SymbolUsage;
 
 {$R *.dfm}
 
@@ -449,7 +449,8 @@ end;
 
 procedure TFormEditor.FindUsage;
 begin
-  // TODO
+  DataModuleCommon.FormFindReference.FindUsage(ExtractUnitName(FileName),
+    Editor.CaretY, Editor.CaretX);
 end;
 
 procedure TFormEditor.FormatSource;
