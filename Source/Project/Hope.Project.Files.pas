@@ -37,6 +37,7 @@ type
 
     procedure AddProjectFile(FileName: TFileName);
     procedure Clear;
+    function Contains(FileName: TFileName): Boolean;
 
     procedure LoadFromJson(const RootNode: TdwsJsonObject);
     procedure SaveToJson(const Root: TdwsJsonObject);
@@ -101,6 +102,16 @@ end;
 procedure THopeProjectFiles.Clear;
 begin
   FList.Clear;
+end;
+
+function THopeProjectFiles.Contains(FileName: TFileName): Boolean;
+var
+  Index: Integer;
+begin
+  Result := False;
+  for Index := 0 to FList.Count - 1 do
+    if THopeProjectFile(FList[Index]).FileName = FileName then
+      Exit(True);
 end;
 
 function THopeProjectFiles.GetCount: Integer;

@@ -16,10 +16,15 @@ uses
 
 type
   TFormMain = class(TForm)
-    ActionEditorCodeSuggestions: TAction;
     ActionEditCopy: TEditCopy;
     ActionEditCut: TEditCut;
     ActionEditDelete: TEditDelete;
+    ActionEditorCodeSuggestions: TAction;
+    ActionEditorGotoImplementation: TAction;
+    ActionEditorGotoInterface: TAction;
+    ActionEditorMoveDown: TAction;
+    ActionEditorMoveUp: TAction;
+    ActionEditorParameterInfo: TAction;
     ActionEditPaste: TEditPaste;
     ActionEditRedo: TAction;
     ActionEditSelectAll: TEditSelectAll;
@@ -39,18 +44,13 @@ type
     ActionFileSaveAs: TFileSaveAs;
     ActionFileSaveProject: TAction;
     ActionFileSaveProjectAs: TFileSaveAs;
-    ActionEditorGotoImplementation: TAction;
-    ActionEditorGotoInterface: TAction;
     ActionHelpAbout: TAction;
     ActionList: TActionList;
     ActionMacroPlay: TAction;
     ActionMacroRecord: TAction;
     ActionMacroStop: TAction;
-    ActionEditorMoveDown: TAction;
-    ActionEditorMoveUp: TAction;
     ActionPageCloseOthers: TAction;
     ActionPageClosePage: TAction;
-    ActionEditorParameterInfo: TAction;
     ActionProjectAdd: TAction;
     ActionProjectBuild: TAction;
     ActionProjectBuildAll: TAction;
@@ -79,9 +79,9 @@ type
     ActionViewFileBrowser: TAction;
     ActionViewUnits: TAction;
     ActionViewWelcomePage: TAction;
-    MenuItemCloseAllOtherPages: TMenuItem;
     MainMenu: TMainMenu;
     MenuFileOpenRecentProperties: TMenuItem;
+    MenuItemCloseAllOtherPages: TMenuItem;
     MenuItemEdit: TMenuItem;
     MenuItemEditCopy: TMenuItem;
     MenuItemEditCut: TMenuItem;
@@ -189,56 +189,56 @@ type
       Y: Integer; State: TDragState; var Accept: Boolean);
     procedure FormGetSiteInfo(Sender: TObject; DockClient: TControl;
       var InfluenceRect: TRect; MousePos: TPoint; var CanDock: Boolean);
-    procedure ActionProjectSyntaxCheckExecute(Sender: TObject);
-    procedure ActionProjectCompileExecute(Sender: TObject);
-    procedure ActionProjectBuildExecute(Sender: TObject);
-    procedure ActionFileSaveProjectExecute(Sender: TObject);
-    procedure ActionSearchFindExecute(Sender: TObject);
-    procedure ActionSearchReplaceExecute(Sender: TObject);
-    procedure ActionSearchFindNextExecute(Sender: TObject);
+    procedure ActionEditorAddTodoExecute(Sender: TObject);
+    procedure ActionEditorCodeSuggestionsExecute(Sender: TObject);
+    procedure ActionEditorCompleteClassAtCursorExecute(Sender: TObject);
+    procedure ActionEditorFindDeclarationExecute(Sender: TObject);
+    procedure ActionEditorFindUsageExecute(Sender: TObject);
+    procedure ActionEditorFormatSourceExecute(Sender: TObject);
+    procedure ActionEditorGotoImplementationExecute(Sender: TObject);
+    procedure ActionEditorGotoInterfaceExecute(Sender: TObject);
+    procedure ActionEditorMoveDownExecute(Sender: TObject);
+    procedure ActionEditorMoveUpExecute(Sender: TObject);
+    procedure ActionEditorOpenFileAtCursorExecute(Sender: TObject);
+    procedure ActionEditorParameterInfoExecute(Sender: TObject);
+    procedure ActionEditorToggleCommentExecute(Sender: TObject);
     procedure ActionFileCloseProjectExecute(Sender: TObject);
+    procedure ActionFileNewMoreExecute(Sender: TObject);
     procedure ActionFileNewProjectExecute(Sender: TObject);
     procedure ActionFileOpenProjectAccept(Sender: TObject);
+    procedure ActionFileOpenRecentPropertiesExecute(Sender: TObject);
+    procedure ActionFileSaveAsAccept(Sender: TObject);
+    procedure ActionFileSaveExecute(Sender: TObject);
+    procedure ActionFileSaveProjectExecute(Sender: TObject);
     procedure ActionHelpAboutExecute(Sender: TObject);
     procedure ActionMacroPlayExecute(Sender: TObject);
     procedure ActionMacroRecordExecute(Sender: TObject);
     procedure ActionMacroStopExecute(Sender: TObject);
+    procedure ActionPageCloseOthersExecute(Sender: TObject);
+    procedure ActionPageClosePageExecute(Sender: TObject);
+    procedure ActionProjectBuildExecute(Sender: TObject);
+    procedure ActionProjectCompileExecute(Sender: TObject);
     procedure ActionProjectOptionsExecute(Sender: TObject);
+    procedure ActionProjectSyntaxCheckExecute(Sender: TObject);
+    procedure ActionSearchFindClassExecute(Sender: TObject);
+    procedure ActionSearchFindExecute(Sender: TObject);
     procedure ActionSearchFindInFilesExecute(Sender: TObject);
+    procedure ActionSearchFindNextExecute(Sender: TObject);
+    procedure ActionSearchGotoLineNumberExecute(Sender: TObject);
+    procedure ActionSearchReplaceExecute(Sender: TObject);
     procedure ActionToolsAsciiChartExecute(Sender: TObject);
     procedure ActionToolsCodeTemplatesExecute(Sender: TObject);
     procedure ActionToolsColorPickerExecute(Sender: TObject);
     procedure ActionToolsPreferencesExecute(Sender: TObject);
     procedure ActionToolsUnicodeExplorerExecute(Sender: TObject);
+    procedure ActionViewMiniMapExecute(Sender: TObject);
+    procedure ActionViewWelcomePageExecute(Sender: TObject);
+    procedure PanelTabsDockDrop(Sender: TObject; Source: TDragDockObject;
+      X, Y: Integer);
     procedure PanelUnDock(Sender: TObject; Client: TControl;
       NewTarget: TWinControl; var Allow: Boolean);
-    procedure PanelTabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
-      Y: Integer);
     procedure TabSetChange(Sender: TObject; NewTab: Integer;
       var AllowChange: Boolean);
-    procedure ActionFileOpenRecentPropertiesExecute(Sender: TObject);
-    procedure ActionSearchFindClassExecute(Sender: TObject);
-    procedure ActionSearchGotoLineNumberExecute(Sender: TObject);
-    procedure ActionViewWelcomePageExecute(Sender: TObject);
-    procedure ActionPageClosePageExecute(Sender: TObject);
-    procedure ActionPageCloseOthersExecute(Sender: TObject);
-    procedure ActionEditorMoveUpExecute(Sender: TObject);
-    procedure ActionEditorMoveDownExecute(Sender: TObject);
-    procedure ActionEditorCodeSuggestionsExecute(Sender: TObject);
-    procedure ActionEditorParameterInfoExecute(Sender: TObject);
-    procedure ActionEditorGotoInterfaceExecute(Sender: TObject);
-    procedure ActionEditorGotoImplementationExecute(Sender: TObject);
-    procedure ActionEditorOpenFileAtCursorExecute(Sender: TObject);
-    procedure ActionEditorFormatSourceExecute(Sender: TObject);
-    procedure ActionEditorToggleCommentExecute(Sender: TObject);
-    procedure ActionEditorCompleteClassAtCursorExecute(Sender: TObject);
-    procedure ActionViewMiniMapExecute(Sender: TObject);
-    procedure ActionFileSaveExecute(Sender: TObject);
-    procedure ActionFileSaveAsAccept(Sender: TObject);
-    procedure ActionFileNewMoreExecute(Sender: TObject);
-    procedure ActionEditorFindDeclarationExecute(Sender: TObject);
-    procedure ActionEditorFindUsageExecute(Sender: TObject);
-    procedure ActionEditorAddTodoExecute(Sender: TObject);
   private
     FWelcomePage: TFormWelcomePage;
 
@@ -263,6 +263,7 @@ type
     function GetCompiler: THopeInternalCompiler; inline;
     procedure RecentProjectClickHandler(Sender: TObject);
     procedure RecentUnitClickHandler(Sender: TObject);
+    procedure UpdateSaveShortcut;
   protected
     procedure LoadingProjectComplete(ProjectFileName: TFileName);
     procedure LoadingProjectFailed(ProjectFileName: TFileName;
@@ -749,6 +750,8 @@ begin
   ActionFileSave.Enabled := Assigned(FFocusedEditorForm);
   ActionFileSaveAs.Enabled := Assigned(FFocusedEditorForm);
 
+  UpdateSaveShortcut;
+
   if Assigned(FFocusedEditor) then
     FFocusedEditor.SetFocus;
 end;
@@ -796,6 +799,21 @@ begin
   // eventually sync focused editor
   if Assigned(FFocusedEditorForm) then
     FFocusedEditorForm.EditorToBuffer;
+end;
+
+procedure TFormMain.UpdateSaveShortcut;
+begin
+  ActionFileSave.ShortCut := 0;
+  ActionFileSaveProject.ShortCut := 0;
+
+  // only assign short cut if there is something to save
+  if not Assigned(FFocusedEditor) then
+    Exit;
+
+  if Assigned(FProjects.ActiveProject) and FProjects.ActiveProject.ContainsFile(FFocusedEditorForm.FileName) then
+    ActionFileSaveProject.ShortCut := 16467
+  else
+    ActionFileSave.ShortCut := 16467;
 end;
 
 procedure TFormMain.UpdateRecentFiles;
@@ -945,6 +963,8 @@ begin
   FormEditor := FFocusedEditorForm;
   if not Assigned(FormEditor) then
     Exit;
+
+  FFocusedEditorForm.SaveToFile;
 end;
 
 procedure TFormMain.ActionFileSaveProjectExecute(Sender: TObject);
@@ -1126,6 +1146,8 @@ begin
 
   FFormFindReplace.CheckBoxReplace.Checked := False;
   FFormFindReplace.Show;
+
+  FFormFindReplace.ComboBoxSearchText.SetFocus;
 end;
 
 procedure TFormMain.ActionSearchFindInFilesExecute(Sender: TObject);
@@ -1165,6 +1187,15 @@ begin
 
   FFormFindReplace.CheckBoxReplace.Checked := True;
   FFormFindReplace.Show;
+
+  if Assigned(FFocusedEditor) and (FFocusedEditor.WordAtCursor <> '') then
+  begin
+    FFormFindReplace.ComboBoxSearchText.Text := FFocusedEditor.WordAtCursor;
+    FFormFindReplace.ComboBoxReplaceText.SetFocus;
+  end
+  else
+    FFormFindReplace.ComboBoxSearchText.SetFocus;
+
 end;
 
 procedure TFormMain.ActionToolsCodeTemplatesExecute(Sender: TObject);

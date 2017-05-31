@@ -34,6 +34,7 @@ type
     procedure CheckBoxReplaceClick(Sender: TObject);
     procedure ButtonReplaceAllClick(Sender: TObject);
     procedure ButtonOKClick(Sender: TObject);
+    procedure ButtonCancelClick(Sender: TObject);
   private
     FLastOptions: TSynSearchOptions;
     procedure SetupOptions(Editor: TSynEdit);
@@ -186,12 +187,21 @@ begin
   Editor.SearchReplace(ComboBoxSearchText.Text, ComboBoxReplaceText.Text, FLastOptions);
 end;
 
+procedure TFormFindReplace.ButtonCancelClick(Sender: TObject);
+begin
+  if not (fsModal in FormState) then
+    Close;
+end;
+
 procedure TFormFindReplace.ButtonOKClick(Sender: TObject);
 begin
   if CheckBoxReplace.Checked then
-    PerformSearch
+    PerformReplace
   else
-    PerformReplace;
+    PerformSearch;
+
+  if not (fsModal in FormState) then
+    Close;
 end;
 
 procedure TFormFindReplace.ButtonReplaceAllClick(Sender: TObject);

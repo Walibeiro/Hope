@@ -13,19 +13,24 @@ inherited FormFindReplace: TFormFindReplace
     Width = 38
     Height = 15
     Caption = 'Search:'
+    FocusControl = ComboBoxSearchText
   end
   inherited ButtonOK: TButton
     Left = 267
     Top = 199
+    TabOrder = 10
     OnClick = ButtonOKClick
   end
   inherited ButtonCancel: TButton
     Left = 348
     Top = 199
+    TabOrder = 11
+    OnClick = ButtonCancelClick
   end
   inherited ButtonHelp: TButton
     Left = 429
     Top = 199
+    TabOrder = 12
   end
   object ComboBoxSearchText: TComboBox
     Left = 88
@@ -33,7 +38,7 @@ inherited FormFindReplace: TFormFindReplace
     Width = 387
     Height = 23
     Anchors = [akLeft, akTop, akRight]
-    TabOrder = 3
+    TabOrder = 0
   end
   object ComboBoxReplaceText: TComboBox
     Left = 88
@@ -41,7 +46,7 @@ inherited FormFindReplace: TFormFindReplace
     Width = 387
     Height = 23
     Anchors = [akLeft, akTop, akRight]
-    TabOrder = 4
+    TabOrder = 2
   end
   object ButtonPresetSearch: TButton
     Left = 481
@@ -50,7 +55,7 @@ inherited FormFindReplace: TFormFindReplace
     Height = 23
     Anchors = [akTop, akRight]
     Caption = '?'
-    TabOrder = 5
+    TabOrder = 1
   end
   object ButtonPresetReplace: TButton
     Left = 481
@@ -59,7 +64,7 @@ inherited FormFindReplace: TFormFindReplace
     Height = 23
     Anchors = [akTop, akRight]
     Caption = '?'
-    TabOrder = 6
+    TabOrder = 3
   end
   object GroupBoxSearchOptions: TGroupBox
     Left = 8
@@ -67,7 +72,7 @@ inherited FormFindReplace: TFormFindReplace
     Width = 193
     Height = 121
     Caption = 'Search Options'
-    TabOrder = 7
+    TabOrder = 5
     DesignSize = (
       193
       121)
@@ -114,7 +119,7 @@ inherited FormFindReplace: TFormFindReplace
     Width = 146
     Height = 121
     Caption = 'Direction'
-    TabOrder = 8
+    TabOrder = 6
     DesignSize = (
       146
       121)
@@ -152,7 +157,7 @@ inherited FormFindReplace: TFormFindReplace
     Width = 146
     Height = 121
     Caption = 'Scope'
-    TabOrder = 9
+    TabOrder = 7
     DesignSize = (
       146
       121)
@@ -182,7 +187,7 @@ inherited FormFindReplace: TFormFindReplace
     Height = 17
     Anchors = [akLeft, akTop, akRight]
     Caption = '&Transparency'
-    TabOrder = 10
+    TabOrder = 8
   end
   object CheckBoxReplace: TCheckBox
     Left = 8
@@ -190,7 +195,7 @@ inherited FormFindReplace: TFormFindReplace
     Width = 65
     Height = 17
     Caption = 'Replace:'
-    TabOrder = 11
+    TabOrder = 4
     OnClick = CheckBoxReplaceClick
   end
   object ButtonReplaceAll: TButton
@@ -201,7 +206,7 @@ inherited FormFindReplace: TFormFindReplace
     Anchors = [akRight, akBottom]
     Caption = '&Replace All'
     ModalResult = 1
-    TabOrder = 12
+    TabOrder = 9
     Visible = False
     OnClick = ButtonReplaceAllClick
   end

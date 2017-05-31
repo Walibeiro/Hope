@@ -37,6 +37,7 @@ type
     procedure SaveToFile(const FileName: TFileName); override;
 
     procedure Clear;
+    function ContainsFile(Filename: TFileName): Boolean;
 
     property RootPath: string read GetRootPath;
     property FileName: TFileName read FFileName write FFileName;
@@ -85,6 +86,16 @@ begin
   FCreateDateTime := Now;
   FModifiedDateTime := Now;
   FFiles.Clear;
+end;
+
+function THopeProject.ContainsFile(Filename: TFileName): Boolean;
+begin
+  // check for main script filename
+  if FileName = RootPath + MainScript.FileName then
+    Exit(True);
+
+  // check files
+  Result := Files.Contains(Filename);
 end;
 
 function THopeProject.GetName: string;
